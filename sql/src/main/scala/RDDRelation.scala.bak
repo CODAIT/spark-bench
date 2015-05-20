@@ -1,0 +1,94 @@
+package src.main.scala
+
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SQLContext
+import org.apache.spark.rdd._
+import scala.reflect._
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
+// One method for defining the schema of an RDD is to make a case class with the desired column
+// names and types.
+case class Record(key: Int, value: String)
+
+object RDDRelation {
+  def main(args: Array[String]) {
+    if (args.length < 4) {
+      println("usage:  <output> <num batch> <batch size> <numPartition> ")
+      System.exit(0)
+    }
+	    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
+    Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
+    val conf = new SparkConf
+    conf.setAppName("Spark RDDRelation Application")
+    val sc = new SparkContext(conf)
+
+    //val input = args(0)
+    val output = args(0)
+    val nBatch = args(1).toInt
+    val batch=args(2).toInt
+	val par=args(3).toInt
+	
+    val outputfile=output+"/pair.parquet"
+    val sqlContext = new SQLContext(sc)
+
+    // Importing the SQL context gives access to all the SQL functions and implicit conversions.
+    import sqlContext._
+	
+	//val batch=1000000
+	
+	var rdd:RDD[Record]=sc.emptyRDD(classTag[Record])
+	(0 to nBatch).foreach(i=>{
+			val newrdd = sc.parallelize((i*batch to (i+1)*batch).map(j => Record(j, s"val_$j")),par)
+			rdd=sc.union(rdd,newrdd)
+		}
+
+	)
+    
+	
+	
+    // Any RDD containing case classes can be registered as a table.  The schema of the table is
+    // automatically inferred using scala reflection.
+    rdd.registerTempTable("records")
+
+    // Once tables have been registered, you can run SQL queries over them.
+    println("Result of SELECT *:")
+    //sql("SELECT * FROM records").collect().foreach(println)
+	var cnt=0;
+	sql("SELECT * FROM records").collect().foreach(_=>cnt=cnt+1)
+	
+    // Aggregation queries are also supported.
+    val count = sql("SELECT COUNT(*) FROM records").collect().head.getLong(0)
+    println(s"COUNT(*): $count")
+
+    // The results of SQL queries are themselves RDDs and support all normal RDD functions.  The
+    // items in the RDD are of type Row, which allows you to access each column by ordinal.
+    val rddFromSql = sql("SELECT key, value FROM records WHERE key < 10")
+	cnt=0;
+    println("Result of RDD.map:")
+    rddFromSql.map(row => s"Key: ${row(0)}, Value: ${row(1)}").collect().foreach(_=>cnt=cnt+1)
+	println(s"count $cnt")
+	
+    // Queries can also be written using a LINQ-like Scala DSL.
+    //rdd.where($"key" === 1).orderBy($"value".asc).select($"key").collect().foreach(_=>cnt=cnt+1)
+	rdd.where('key === 1).orderBy('value.asc).select('key).collect().foreach(_=>cnt=cnt+1)
+	println(s"count $cnt")
+    // Write out an RDD as a parquet file.
+    //rdd.saveAsParquetFile("pair.parquet")
+	rdd.saveAsParquetFile(outputfile)
+
+    // Read in parquet file.  Parquet files are self-describing so the schmema is preserved.
+    val parquetFile = sqlContext.parquetFile(outputfile)
+
+    // Queries can be run using the DSL on parequet files just like the original RDD.
+	cnt=0;
+    //parquetFile.where($"key" === 1).select($"value".as("a")).collect().foreach(_=>cnt=cnt+1)
+	parquetFile.where('key === 1).select('value.as("a")).collect().foreach(_=>cnt=cnt+1)
+	println(s"count $cnt")
+	
+    // These files can also be registered as tables.
+    parquetFile.registerTempTable("parquetFile")
+    sql("SELECT * FROM parquetFile").collect().foreach(_=>cnt=cnt+1)
+	println(s"count $cnt")
+    sc.stop()
+  }
+}

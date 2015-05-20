@@ -1,0 +1,40 @@
+<project>
+  <groupId>com.ibm</groupId>
+  <artifactId>sparkbench-data-gen-project</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>SparkBench DataGen</name>
+  <packaging>jar</packaging>
+  <version>1.0</version>
+  <build>
+    <pluginManagement>
+         <plugins>
+             <plugin>
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>2.3.2</version>
+                 <configuration>
+                     <source>1.6</source>
+                     <target>1.6</target>
+                     <compilerArgument></compilerArgument>
+                 </configuration>
+             </plugin>
+         </plugins>
+    </pluginManagement>
+</build>
+  <dependencies>
+      <!--dependency>
+	<groupId>org.json</groupId>
+	<artifactId>json</artifactId>
+	<version>20090211</version>
+    </dependency-->
+   <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>1.1</version>
+    </dependency>
+	<dependency>
+       <groupId>edu.jhu.nlp</groupId>
+        <artifactId>wikixmlj</artifactId>
+        <version>1.0</version>
+    </dependency>
+  </dependencies>
+</project>
