@@ -62,10 +62,10 @@
 
 1. Configures for running workloads.
 
-The conf/benchmarks.lst file under the package folder defines the workloads to run when you execute the bin/run-all.sh script under the package folder. Each line in the list file specifies one workload. You can use # at the beginning of each line to skip the corresponding bench if necessary.
+	The `<SparkBench_Root>/bin/applications.lst` file defines the workloads to run when you execute the bin/run-all.sh script under the package folder. Each line in the list file specifies one workload. You can use # at the beginning of each line to skip the corresponding bench if necessary.
 
-You can also run each workload separately. In general, there are 3 different files under one workload folder.
+	You can also run each workload separately. In general, there are 3 different files under one workload folder.
 
-<Workload>/bin/config.sh      change the configurations specific 
-<Workload>/bin/gen_data.sh
-<Workload>/bin/run.sh
+	<Workload>/bin/config.sh      change the workload specific configurations 
+	<Workload>/bin/gen_data.sh
+	<Workload>/bin/run.sh
