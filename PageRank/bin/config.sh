@@ -11,7 +11,7 @@ if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
 fi
 
 # for preparation 
-numV=19200 #1920000
+numV=1920000
 numPar=400
 mu=4.0
 sigma=1.3
@@ -29,7 +29,7 @@ dmem=1g
 emem=1g
 [ -n "$EXECUTOR_GLOBAL_MEM"  ] && emem=$EXECUTOR_GLOBAL_MEM
 ecore=6
-memoryFraction=0.48  #0.001 rdd=0
+memoryFraction=0.48
 [ -n "$MEM_FRACTION_GLOBAL"  ] && memoryFraction=${MEM_FRACTION_GLOBAL}
 rdd_compression=false
 spark_ser=KryoSerializer

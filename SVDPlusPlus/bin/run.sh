@@ -13,7 +13,7 @@ echo "========== running ${APP} benchmark =========="
 
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-JAR="${DIR}/target/scala-2.10/svdplusplusapp_2.10-1.0.jar"
+JAR="${DIR}/target/SVDPlusPlusApp-1.0.jar"
 CLASS="src.main.scala.SVDPlusPlusApp"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${NUM_ITERATION} ${RANK} ${MINVAL} ${MAXVAL} ${GAMMA1} ${GAMMA2} ${GAMMA6} ${GAMMA7} ${STORAGE_LEVEL}"
 

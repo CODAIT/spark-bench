@@ -12,7 +12,7 @@ DIR=`cd $bin/../; pwd`
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
-JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-1.2.0-hadoop2.3.0.jar"
+JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-${SPARK_VERSION}-hadoop2.3.0.jar"
 if [[ -z "$JAR" ]]; then
   echo "Failed to find Spark examples assembly in  ${SPARK_HOME}/examples/target" 1>&2
   echo "You need to build Spark before running this program" 1>&2

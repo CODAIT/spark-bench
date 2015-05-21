@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "========== running DecisionTree benchmark =========="
+echo "========== running ${APP} benchmark =========="
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 DIR=`cd $bin/../; pwd`

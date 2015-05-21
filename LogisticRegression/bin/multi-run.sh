@@ -4,16 +4,17 @@ bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 DIR=`cd $bin/../; pwd`
 
-mode="inputsize"
+#mode="inputsize"
+#mode="iter"
 #mode="partition"
 #mode="mem"
 #mode="mem_par"
-#mode="feature"
+mode="feature"
 #mode="sercmp"
 
 if [ $mode = "partition" ]; then
 	n="0.5"
-	sed -i "/memoryFraction=/ c memoryFraction=$n" bin/config.sh; 
+	sed -i "/memoryFraction=0/ c memoryFraction=$n" bin/config.sh; 
 	n="70000000"
 	sed -i "/NUM_OF_EXAMPLES=/ c NUM_OF_EXAMPLES=$n" bin/config.sh;
 	#vals="360 480 540  720   960  180  420 600 840 1080"; 				
@@ -29,15 +30,15 @@ elif [ $mode = "mem" ]; then
 	vals="0.15 0.1 0.05"
 	for n in $vals; do 	
 		echo "memoryfraction $n"
-		sed -i "/memoryFraction=/ c memoryFraction=$n" bin/config.sh; 
+		sed -i "/memoryFraction=0/ c memoryFraction=$n" bin/config.sh; 
 		bin/run.sh; 
 	done
 elif [ $mode = "feature" ]; then	
 	#vals="0.15 0.1 0.05"
 	# 70M =data of4G
 	n="0.5"
-	sed -i "/memoryFraction=/ c memoryFraction=$n" bin/config.sh; 
-	n="4000000"	
+	sed -i "/memoryFraction=0/ c memoryFraction=$n" bin/config.sh; 
+	n="25000000"	
 	sed -i "/NUM_OF_EXAMPLES=/ c NUM_OF_EXAMPLES=$n" bin/config.sh;
 	n="720"
 	sed -i "/NUM_OF_PARTITIONS=/ c NUM_OF_PARTITIONS=$n" bin/config.sh; 
@@ -45,9 +46,9 @@ elif [ $mode = "feature" ]; then
 	for n in $vals; do 	
 		echo "number of features $n"
 		sed -i "/NUM_OF_FEATURES=/ c NUM_OF_FEATURES=$n" bin/config.sh;
-		sed -i "/memoryFraction=/ c memoryFraction=0.1" bin/config.sh; 
+		sed -i "/memoryFraction=0/ c memoryFraction=0.1" bin/config.sh; 
 		bin/gen_data.sh;
-		sed -i "/memoryFraction=/ c memoryFraction=0.5" bin/config.sh; 
+		sed -i "/memoryFraction=0/ c memoryFraction=0.5" bin/config.sh; 
 		bin/run.sh; 		
 	done		
 elif [ $mode = "mem_par" ]; then
@@ -58,7 +59,7 @@ elif [ $mode = "mem_par" ]; then
 		va="0.5 0.4 0.2";
 		for n in $va; do 	
 			echo "memoryfraction $n"
-			sed -i "/memoryFraction=/ c memoryFraction=$n" bin/config.sh; 
+			sed -i "/memoryFraction=0/ c memoryFraction=$n" bin/config.sh; 
 			bin/gen_data.sh; 
 			bin/run.sh; 
 		done	
@@ -67,7 +68,7 @@ elif [ $mode = "inputsize_old" ]; then
 	n="4";
 	sed -i "/NUM_OF_FEATURES=/ c NUM_OF_FEATURES=$n" bin/config.sh;
 	n="0.5"
-	sed -i "/memoryFraction=/ c memoryFraction=$n" bin/config.sh; 	
+	sed -i "/memoryFraction=0/ c memoryFraction=$n" bin/config.sh; 	
 	n="720"
 	sed -i "/NUM_OF_PARTITIONS=/ c NUM_OF_PARTITIONS=$n" bin/config.sh; 
 	vals="10000000 50000000 100000000 200000000 300000000 400000000"
@@ -77,11 +78,18 @@ elif [ $mode = "inputsize_old" ]; then
 		bin/gen_data.sh;		
 		bin/run.sh; 		
 	done
+elif [ $mode = "iter" ]; then	
+	vals="4 6 8 10 12"
+	for n in $vals; do 	
+		echo "number of iteration $n"
+		sed -i "/MAX_ITERATION=/ c MAX_ITERATION=$n" bin/config.sh; 
+		bin/run.sh; 
+	done	
 elif [ $mode = "inputsize" ]; then	
 	file=$DIR/bin/config.sh
 
-	#for i in 1 5 10 15 20 25 30 35 40; do
-	for i in 4 8 12 16 20 24; do
+	for i in 1 5 10 15 20 25 30 35 40; do
+	#for i in 4 8 12 16 20 24; do
 		base=12.5 #7.5 million data points =1G size of data
 					
 												

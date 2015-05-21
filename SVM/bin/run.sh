@@ -1,17 +1,18 @@
 #!/bin/bash
 
-echo "========== running SVM benchmark =========="
+
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 DIR=`cd $bin/../; pwd`
 . "${DIR}/../bin/config.sh"
 . "${DIR}/bin/config.sh"
 
+echo "========== Running ${APP} Workload =========="
 
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 CLASS="SVM.src.main.java.SVMApp"
 OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${MAX_ITERATION} ${STORAGE_LEVEL}"
-JAR="${DIR}/target/SVM-project-1.0.jar"
+JAR="${DIR}/target/SVMApp-1.0.jar"
 
 
 for((i=0;i<${NUM_TRIALS};i++)); do

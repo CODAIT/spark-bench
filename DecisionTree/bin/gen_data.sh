@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "========== preparing DecisionTree data =========="
+
 # configure
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
@@ -8,7 +8,7 @@ DIR=`cd $bin/../; pwd`
 . "${DIR}/../bin/config.sh"
 . "${DIR}/bin/config.sh"
 
-
+echo "========== preparing ${APP} data =========="
 
 # paths check
 ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
@@ -17,7 +17,7 @@ ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 # "Usage: SVMGenerator <master> <output_dir> [num_examples] [num_features] [num_partitions]"
 
 
-JAR="${MllibJarDir}/spark-mllib_2.10-1.1.0.jar"
+JAR="${MllibJar}"
 CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
 OPTION=" ${SPARK_MASTER} ${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 

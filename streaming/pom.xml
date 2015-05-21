@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   
   <parent>
-     <groupId>com.ibm.sparkbench</groupId>
+    <groupId>com.ibm.sparkbench</groupId>
 	<artifactId>sparkbench</artifactId>  		
 	<version>2.0</version>
    </parent>
    
   <groupId>com.ibm</groupId>
-  <artifactId>LinearRegressionApp</artifactId>  
-  <name>LinearRegressionApp</name>
+  <artifactId>StreamingApp</artifactId>  
+  <name>StreamingApp</name>
   <packaging>jar</packaging>
   <version>1.0</version>
 
@@ -31,7 +31,16 @@
 		<artifactId>spark-mllib_${scala.binary.version}</artifactId>
 		<version>${spark.version}</version>
 	</dependency>
-	
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-graphx_${scala.binary.version}</artifactId>
+		<version>${spark.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-streaming_${scala.binary.version}</artifactId>
+		<version>${spark.version}</version>
+	</dependency>
   </dependencies> 
  
 </project>

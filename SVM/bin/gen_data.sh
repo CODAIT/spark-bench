@@ -1,16 +1,14 @@
 #!/bin/bash
 
-echo "========== preparing SVM data =========="
-# configuration
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 DIR=`cd $bin/../; pwd`
 . "${DIR}/../bin/config.sh"
 . "${DIR}/bin/config.sh"
 
+echo "========== preparing ${APP} data =========="
 
-
-JAR="${MllibJarDir}/spark-mllib_2.10-1.1.0.jar"
+JAR="${MllibJar}"
 CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
 OPTION=" ${APP_MASTER} ${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}

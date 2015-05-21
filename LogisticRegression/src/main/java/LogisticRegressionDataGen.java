@@ -52,5 +52,6 @@ public class LogisticRegressionDataGen {
                 }
         );
         parsedData.saveAsTextFile(output);
+		sc.stop();
     }
 }

@@ -12,7 +12,7 @@ fi
 
 # for preparation 
 numV=10000 #100000
-numPar=800
+numPar=60
 mu=4.0
 sigma=1.3
 # for running

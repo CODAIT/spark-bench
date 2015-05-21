@@ -1,20 +1,38 @@
-<project>
-  <groupId>edu.berkeley</groupId>
-  <artifactId>DecisionTree-project</artifactId>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <name>DecisionTree Project</name>
+  
+  <parent>
+     <groupId>com.ibm.sparkbench</groupId>
+	<artifactId>sparkbench</artifactId>  		
+	<version>2.0</version>
+   </parent>
+   
+  <groupId>com.ibm</groupId>
+  <artifactId>DecisionTreeApp</artifactId>  
+  <name>DecisionTreeApp</name>
   <packaging>jar</packaging>
   <version>1.0</version>
+
+  
   <dependencies>
+	<dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-client</artifactId>
+		<version>${hadoop.mr2.version}</version>
+	</dependency>
     <dependency> <!-- Spark dependency -->
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
-      <version>1.3.0</version>
+      <artifactId>spark-core_${scala.binary.version}</artifactId>
+      <version>${spark.version}</version>
     </dependency>
 	<dependency>
 		<groupId>org.apache.spark</groupId>
-		<artifactId>spark-mllib_2.10</artifactId>
-		<version>1.3.0</version>
+		<artifactId>spark-mllib_${scala.binary.version}</artifactId>
+		<version>${spark.version}</version>
 	</dependency>
-  </dependencies>
+
+  </dependencies> 
+ 
 </project>
+

@@ -31,6 +31,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}
 done
+
 exit 0
 
 

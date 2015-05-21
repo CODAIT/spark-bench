@@ -16,7 +16,7 @@ SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 #CLASS="org.apache.spark.streaming.util.RawTextSender"
 #OPTION="9999 /tmp/config.sh 65536 1024"
 
-JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-1.2.0-hadoop2.3.0.jar"
+JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-${SPARK_VERSION}-hadoop2.3.0.jar"
 #CLASS="org.apache.spark.examples.streaming.FeederActor"
 #OPTION="minli1 9999"
 

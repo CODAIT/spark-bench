@@ -39,22 +39,22 @@ object MFDataGenerator {
   def main(args: Array[String]) {
     if (args.length < 2) {
       println("Usage: MFDataGenerator " +
-        "<master> <outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact]")
+        " <outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact]")
       System.exit(1)
     }
 
-    val sparkMaster: String = args(0)
-    val outputPath: String = args(1)
-    val m: Int = if (args.length > 2) args(2).toInt else 100
-    val n: Int = if (args.length > 3) args(3).toInt else 100
-    val rank: Int = if (args.length > 4) args(4).toInt else 10
-    val trainSampFact: Double = if (args.length > 5) args(5).toDouble else 1.0
-    val noise: Boolean = if (args.length > 6) args(6).toBoolean else false
-    val sigma: Double = if (args.length > 7) args(7).toDouble else 0.1
-    val test: Boolean = if (args.length > 8) args(8).toBoolean else false
-    val testSampFact: Double = if (args.length > 9) args(9).toDouble else 0.1
+   
+    val outputPath: String = args(0)
+    val m: Int = if (args.length > 1) args(1).toInt else 100
+    val n: Int = if (args.length > 2) args(2).toInt else 100
+    val rank: Int = if (args.length > 3) args(3).toInt else 10
+    val trainSampFact: Double = if (args.length > 4) args(4).toDouble else 1.0
+    val noise: Boolean = if (args.length > 5) args(5).toBoolean else false
+    val sigma: Double = if (args.length > 6) args(6).toDouble else 0.1
+    val test: Boolean = if (args.length > 7) args(7).toBoolean else false
+    val testSampFact: Double = if (args.length > 8) args(8).toDouble else 0.1
 
-    val sc = new SparkContext(sparkMaster, "MFDataGenerator")
+    val sc = new SparkContext("MFDataGenerator")
 
     val A = DoubleMatrix.randn(m, rank)
     val B = DoubleMatrix.randn(rank, n)

@@ -1,9 +1,9 @@
 #!/bin/sh
-echo "========== running ${APP} benchmark =========="
+
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 DIR=`cd $bin/../; pwd`
-
+echo "========== running ${APP} benchmark =========="
 mode="sercmp"
 #mode="inputsize"
 #mode="partition"

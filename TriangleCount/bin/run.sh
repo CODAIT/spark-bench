@@ -10,7 +10,7 @@ echo "========== running ${APP} benchmark =========="
 
 # path check
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
-JAR="${DIR}/target/scala-2.10/trianglecountapp_2.10-1.0.jar"
+JAR="${DIR}/target/TriangleCountApp-1.0.jar"
 CLASS="src.main.scala.triangleCountApp"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${STORAGE_LEVEL}"
 echo "opt ${OPTION}"

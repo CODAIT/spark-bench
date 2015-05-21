@@ -10,19 +10,13 @@ echo "========== preparing ${APP} data =========="
 # paths check
 ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 
-# generate data
-
 
 JAR="${DIR}/../common/DataGen/target/scala-2.10/datagen_2.10-1.0.jar"
 CLASS="src.main.scala.GraphDataGen"
-
 OPTION="${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 
 START_TIME=`timestamp`
 START_TS=`ssh ${master} "date +%F-%T"`
-
-#${HADOOP_HOME}/bin/hadoop fs -copyFromLocal ${SPARK_HOME}/graphx/data/followers.txt ${INPUT_HDFS}
-#${HADOOP_HOME}/bin/hadoop fs -copyFromLocal ${SPARK_HOME}/graphx/data/users.txt ${INPUT_HDFS}
 
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat
 

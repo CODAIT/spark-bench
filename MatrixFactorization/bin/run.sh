@@ -1,14 +1,14 @@
 #!/bin/bash
 
 
-echo "========== running MF benchmark =========="
+
 # configure
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 DIR=`cd $bin/../; pwd`
 . "${DIR}/../bin/config.sh"
 . "${DIR}/bin/config.sh"
-
+echo "========== running MF benchmark =========="
 
 
 
@@ -18,7 +18,7 @@ SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 CLASS="MatrixFactorization.src.main.java.MFApp"
 OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${rank} ${MAX_ITERATION} ${LAMBDA} ${STORAGE_LEVEL}"
-JAR="${DIR}/target/MF-project-1.0.jar"
+JAR="${DIR}/target/MFApp-1.0.jar"
 
 #CLASS="src.main.scala.MFMovieLens"
 #OPTION=" ${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/ml-10M100K/personalRatings.txt"

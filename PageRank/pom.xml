@@ -9,8 +9,8 @@
    </parent>
    
   <groupId>com.ibm</groupId>
-  <artifactId>LinearRegressionApp</artifactId>  
-  <name>LinearRegressionApp</name>
+  <artifactId>PageRankApp</artifactId>  
+  <name>PageRankApp</name>
   <packaging>jar</packaging>
   <version>1.0</version>
 
@@ -31,7 +31,11 @@
 		<artifactId>spark-mllib_${scala.binary.version}</artifactId>
 		<version>${spark.version}</version>
 	</dependency>
-	
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-graphx_${scala.binary.version}</artifactId>
+		<version>${spark.version}</version>
+	</dependency>
   </dependencies> 
  
 </project>

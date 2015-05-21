@@ -1,4 +1,4 @@
-Kmeans
+KMeans
 LinearRegression
 LogisticRegression
 SVM
@@ -12,3 +12,5 @@ SVDPlusPlus
 ConnectedComponent
 StronglyConnectedComponent
 PregelOperation
+SQL
+Streaming

@@ -3,7 +3,7 @@
 # paths
 APP=SVM
 APP_DIR=${DATA_HDFS}/${APP}
-INPUT_HDFS=${DATA_HDFS}/${APP}/Input
+INPUT_HDFS=${DATA_HDFS}/LogisticRegression/Input
 OUTPUT_HDFS=${DATA_HDFS}/${APP}/Output
 
 if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
@@ -13,7 +13,7 @@ fi
 
 # for prepare #600M example=40G
 NUM_OF_EXAMPLES=300000 #300000000
-NUM_OF_FEATURES=4
+NUM_OF_FEATURES=2
 NUM_OF_PARTITIONS=720
 # for running
 MAX_ITERATION=3

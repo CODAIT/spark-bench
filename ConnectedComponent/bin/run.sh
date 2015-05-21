@@ -13,7 +13,7 @@ echo "========== running ${APP} benchmark =========="
 
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-JAR="${DIR}/target/scala-2.10/connectedcomponentapp_2.10-1.0.jar"
+JAR="${DIR}/target/ConnectedComponentApp-1.0.jar"
 CLASS="src.main.scala.ConnectedComponentApp"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${numV}"
 
@@ -31,6 +31,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}
 done
+
 exit 0
 
 

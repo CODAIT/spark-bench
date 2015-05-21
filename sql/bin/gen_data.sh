@@ -13,7 +13,7 @@ DIR=`cd $bin/../; pwd`
 # "Usage: SVMGenerator <master> <output_dir> [num_examples] [num_features] [num_partitions]"
 
 
-#JAR="${MllibJarDir}/spark-mllib_2.10-1.1.0.jar"
+#JAR="${MllibJar}"
 #CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
 #OPTION=" ${APP_MASTER} ${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 

@@ -14,7 +14,7 @@ DIR=`cd $bin/../; pwd`
 ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 
 # generate data
-JAR="${DIR}/target/LogisticRegression-project-1.0.jar"
+JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 CLASS="LogisticRegression.src.main.java.LogisticRegressionDataGen"
 OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${INPUT_HDFS}"
 

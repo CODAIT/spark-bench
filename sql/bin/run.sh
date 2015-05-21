@@ -9,10 +9,9 @@ DIR=`cd $bin/../; pwd`
 
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-#JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-1.2.0-hadoop2.3.0.jar"
-#CLASS="org.apache.spark.examples.sql.RDDRelation"
+
 APP=sql_rddRelation
-JAR="${DIR}/target/scala-2.10/sqlapp_2.10-1.0.jar"
+JAR="${DIR}/target/SQLApp_2.10-1.0.jar"
 CLASS="src.main.scala.RDDRelation"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar}  "
 if  [ $# -ge 1 ] && [ $1 = "hive" ]; then	
@@ -20,20 +19,15 @@ if  [ $# -ge 1 ] && [ $1 = "hive" ]; then
 	APP=sql_hive
 	JAR="${DIR}/target/scala-2.10/sqlapp_2.10-1.0.jar"
 	CLASS="src.main.scala.HiveFromSpark"
-	#OPTION="${OUTPUT_HDFS} ${batch} "
 	OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} "
 fi
 
 
 
-#OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB}"
-
-#echo "opt ${OPTION}"
-
 echo "========== running ${APP} benchmark =========="
 
 for((i=0;i<${NUM_TRIALS};i++)); do
-	#$HADOOP_HOME/bin/hdfs dfs -rm -r pair.parquet
+
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TIME=`timestamp`

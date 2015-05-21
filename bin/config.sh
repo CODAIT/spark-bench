@@ -5,8 +5,10 @@ bin=$(cd -P -- "$(dirname -- "$this")" && pwd -P)
 script="$(basename -- "$this")"
 this="$bin/$script"
 
-SPARK_VERSION=1.3.0
+SPARK_VERSION=1.4.0-SNAPSHOT
 master=minli2.sl.cloud9.ibm.com
+
+#A list of machines where the spark cluster is running
 MC_LIST="minli3 minli4 minli5 minli6 minli7 minli8 minli12 minli13 minli14 minli15"
 SPARK_MASTER="spark://${master}:7077"
 HDFS_URL="hdfs://${master}:9000"
@@ -14,8 +16,9 @@ HDFS_URL="hdfs://${master}:9000"
 export BENCH_VERSION="1.0"
 
 ###################### Global Paths ##################
-if [ -z "$MllibJarDir" ]; then
-	export MllibJarDir=~/.ivy2/cache/org.apache.spark/spark-mllib_2.10/jars
+if [ -z "$MllibJar" ]; then
+	export MllibJar=~/.m2/repository/org/apache/spark/spark-mllib_2.10/${SPARK_VERSION}/spark-mllib_2.10-${SPARK_VERSION}.jar
+
 fi
 if [ -z "$BENCH_HOME" ]; then
     export BENCH_HOME=`dirname "$this"`/..
@@ -30,7 +33,7 @@ if [ -f "${BENCH_CONF}/funcs.sh" ]; then
 fi
 
 if [ -z "$SPARK_HOME" ]; then
-    export SPARK_HOME=/mnt/nfs_dir/spark-1.3.0/spark
+    export SPARK_HOME=/mnt/nfs_dir/spark-latest/spark
 fi
 
 if [ -z "$HADOOP_HOME" ]; then

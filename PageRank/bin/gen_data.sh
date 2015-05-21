@@ -16,7 +16,7 @@ START_TS=`ssh ${master} "date +%F-%T"`
 
 genOpt="small"
 if [ $genOpt = "small" ];then
-	JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
+	JAR="${DIR}/target/PageRankApp-1.0.jar"
 	CLASS="src.main.scala.pageRankDataGen"
 	OPTION="${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat

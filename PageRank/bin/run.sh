@@ -12,7 +12,8 @@ echo "========== running ${APP} benchmark =========="
 # path check
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
+#JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
+JAR="${DIR}/target/PageRankApp-1.0.jar"
 CLASS="src.main.scala.pagerankApp"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB} ${STORAGE_LEVEL}"
 
