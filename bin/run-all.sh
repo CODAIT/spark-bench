@@ -18,7 +18,7 @@ for workload in `cat $DIR/applications.lst`; do
 
     if [ $? -ne 0 ]
     then
-	echo "ERROR: ${workload} prepare failed!" 
+	echo "ERROR: ${workload} failed to generate data !" 
         continue
     fi
 

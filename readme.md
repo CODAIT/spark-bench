@@ -16,6 +16,41 @@
 ---
 ### OVERVIEW ###
 
+**What's SparkBench?**
+
+**Why SparkBench?**
+
+	There are four main use cases of SparkBench.
+	
+	Usecase 1. It enables quantitative comparison for Spark system optimizations such as caching policy and memory management optimization, scheduling policy optimization. Researchers and developers can use SparkBench to comprehensively evaluate and compare the performance of their optimization and the vanilla Spark. 
+	
+	Usecase 2. It provides quantitative comparison for different platforms and hardware cluster setups such as Google cloud and Amazon cloud. 
+	
+	Usecase 3. It offers insights and guidance for cluster sizing and provision. It also helps to identify the bottleneck resources and minimize the impact of resource contention.
+	
+	Usecase 4.
+	
+**Machine Learning Workloads:**
+- Logistic Regression
+- Support Vector Machine
+- Matrix Factorization
+
+**Graph Computation Workloads:**
+- PageRank
+- SVD++
+- Triangle Count
+
+**SQL Workloads:**
+- Hive
+- RDD Relation
+
+**Streaming Workloads:**
+- Twitter Tag
+- Page View
+
+**Other Workloads:**
+- KMeans,LinearRegression,DecisionTree,ShortestPaths, LabelPropagation, ConnectedComponent, StronglyConnectedComponent,PregelOperation
+
 **Supported Spark releases:**
  
   - Spark1.2
@@ -69,3 +104,8 @@
 	<Workload>/bin/config.sh      change the workload specific configurations 
 	<Workload>/bin/gen_data.sh
 	<Workload>/bin/run.sh
+
+2. Spark configuration.
+	spark.executors.memory                Executor memory, standalone or YARN mode
+    spark.driver.memory                   Driver memory, standalone or YARN mode
+	spark.rdd.cache
