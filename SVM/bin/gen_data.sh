@@ -28,9 +28,9 @@ if [ genOpt = "large" ];then
 	OPTION="${tmp_dir} ${INPUT_HDFS} ${NUM_OF_PARTITIONS} "
 fi
 
-START_TIME=`timestamp`
 START_TS=`ssh ${master} "date +%F-%T"`
 
+START_TIME=`timestamp`
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/SVM_gendata_${START_TS}.dat
 
 END_TIME=`timestamp`

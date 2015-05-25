@@ -21,8 +21,8 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS_Classification}
 	purge_data "${MC_LIST}"	
 	OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS_Classification} ${NUM_OF_CLASS_C} ${impurityC} ${maxDepthC} ${maxBinsC} ${modeC}"
-	START_TIME=`timestamp`
 	START_TS=`ssh ${master} "date +%F-%T"`
+	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat
 	END_TIME=`timestamp`
 	gen_report "DecisionTree-classification" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}

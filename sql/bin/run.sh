@@ -30,9 +30,9 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
-	START_TIME=`timestamp`
 	START_TS=`ssh ${master} "date +%F-%T"`	
 	export logf=${BENCH_NUM}/${APP}_run_${START_TS}.dat
+	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee $logf
 	END_TIME=`timestamp`
 	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}

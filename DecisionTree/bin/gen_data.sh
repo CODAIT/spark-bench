@@ -21,8 +21,8 @@ JAR="${MllibJar}"
 CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
 OPTION=" ${SPARK_MASTER} ${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 
-START_TIME=`timestamp`
 START_TS=`ssh ${master} "date +%F-%T"`
+START_TIME=`timestamp`
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_gendata_${START_TS}.dat
 END_TIME=`timestamp`
 
