@@ -63,3 +63,16 @@ function purge_data(){
 	done;
 	echo "date purged on ${mc_list}"
 }
+
+function setup(){
+  if [ "${MASTER}" = "spark" ]; then
+    "${SPARK_HOME}/sbin/stop-all.sh"
+    "${SPARK_HOME}/sbin/start-all.sh"
+  fi
+}
+function teardown(){
+  if [ "${MASTER}" = "spark" ]; then
+    "${SPARK_HOME}/sbin/stop-all.sh"
+  fi
+
+}

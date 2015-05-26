@@ -27,6 +27,7 @@ JAR="${DIR}/target/MFApp-1.0.jar"
 #JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 
 
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# path check
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
@@ -40,6 +41,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	gen_report "MF" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}
 done
+teardown
 exit 0
 
 

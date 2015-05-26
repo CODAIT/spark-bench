@@ -6,11 +6,31 @@ script="$(basename -- "$this")"
 this="$bin/$script"
 
 SPARK_VERSION=1.4.0-SNAPSHOT
-master=minli2.sl.cloud9.ibm.com
+master=`hostname`
 
 #A list of machines where the spark cluster is running
 MC_LIST="minli3 minli4 minli5 minli6 minli7 minli8 minli12 minli13 minli14 minli15"
-SPARK_MASTER="spark://${master}:7077"
+
+#SPARK_MASTER=local
+#SPARK_MASTER=local[K]
+#SPARK_MASTER=local[*]
+#SPARK_MASTER=spark://HOST:PORT
+##SPARK_MASTER=mesos://HOST:PORT
+##SPARK_MASTER=yarn-client
+##SPARK_MASTER=yarn-cluster
+SPARK_MASTER=spark://${master}:7077
+if [ ! -z `echo $SPARK_MASTER | grep "^spark://"` ]; then
+  MASTER=spark
+  MC_LIST="$master"
+elif [ ! -z `echo $SPARK_MASTER | grep "^mesos://"` ]; then
+  MASTER=mesos
+elif [ ! -z `echo $SPARK_MASTER | grep "^yarn"` ]; then
+  MASTER=yarn
+else
+  MASTER=local
+  MC_LIST="$master"
+fi
+
 HDFS_URL="hdfs://${master}:9000"
 
 export BENCH_VERSION="1.0"
