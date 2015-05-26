@@ -15,6 +15,7 @@ OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${MAX_ITERATION} ${STORAGE_LEVEL}"
 JAR="${DIR}/target/SVMApp-1.0.jar"
 
 
+start
 for((i=0;i<${NUM_TRIALS};i++)); do
 	# path check	
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
@@ -25,5 +26,6 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	gen_report "SVM" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}
 done
+teardown
 exit 0
 

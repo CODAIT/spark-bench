@@ -20,6 +20,7 @@ OPTION="${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 
 START_TS=`ssh ${master} "date +%F-%T"`
 
+setup
 START_TIME=`timestamp`
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat
 
@@ -30,6 +31,7 @@ SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 gen_report "${APP}_gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}
+teardown
 exit 0
 
 

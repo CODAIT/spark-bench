@@ -16,6 +16,7 @@ JAR="${DIR}/target/DecisionTreeApp-1.0.jar"
 CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 
 
+start
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# classification
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS_Classification}
@@ -28,6 +29,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	gen_report "DecisionTree-classification" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}	
 done
+teardown
 
 exit 0
 

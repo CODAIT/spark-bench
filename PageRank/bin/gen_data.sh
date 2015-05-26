@@ -13,6 +13,7 @@ ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 # generate data
 START_TS=`ssh ${master} "date +%F-%T"`
 
+start
 genOpt="small"
 if [ $genOpt = "small" ];then
 	JAR="${DIR}/target/PageRankApp-1.0.jar"
@@ -35,6 +36,7 @@ END_TIME=`timestamp`
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 gen_report "${APP}_gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}
+teardown
 exit 0
 
 

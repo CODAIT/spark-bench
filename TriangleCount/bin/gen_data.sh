@@ -12,6 +12,7 @@ ${HADOOP_HOME}/bin/hdfs dfs -rm -r ${INPUT_HDFS}
 
 # generate data
 START_TS=`ssh ${master} "date +%F-%T"`
+setup
 genOpt="small"
 if [ $genOpt = "large" ];then
 	${HADOOP_HOME}/bin/hdfs dfs -mkdir ${APP_DIR}
@@ -35,6 +36,7 @@ END_TIME=`timestamp`
 SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
 gen_report "${APP}_gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}
+teardown
 exit 0
 
 
