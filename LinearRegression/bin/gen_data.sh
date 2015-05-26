@@ -17,9 +17,9 @@ JAR="${DIR}/target/LinearRegression-project-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionDataGen"
 OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${INTERCEPTS} ${INPUT_HDFS}"
 
-START_TIME=`timestamp`
 START_TS=`ssh ${master} "date +%F-%T"`
 
+START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LinearRegression_gendata_${START_TS}.dat
 
 END_TIME=`timestamp`
