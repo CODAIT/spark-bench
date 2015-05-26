@@ -13,7 +13,7 @@ ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 # generate data
 START_TS=`ssh ${master} "date +%F-%T"`
 
-start
+setup
 genOpt="small"
 if [ $genOpt = "small" ];then
 	JAR="${DIR}/target/PageRankApp-1.0.jar"

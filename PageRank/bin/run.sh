@@ -18,7 +18,7 @@ CLASS="src.main.scala.pagerankApp"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB} ${STORAGE_LEVEL}"
 
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	echo "${APP} opt ${OPTION}"
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}

@@ -20,7 +20,7 @@ JAR="${DIR}/target/LinearRegression-project-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionApp"
 OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${MAX_ITERATION} "
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}

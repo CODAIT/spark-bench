@@ -80,7 +80,7 @@ fi
 echo "========== running ${APP}-${subApp} benchmark =========="
 
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}

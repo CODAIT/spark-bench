@@ -15,7 +15,7 @@ OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS}  ${MAX_ITERATION} ${STORAGE_LEVEL} "
 
 JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	

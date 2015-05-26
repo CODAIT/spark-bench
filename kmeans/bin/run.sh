@@ -22,7 +22,7 @@ OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_
 #CLASS="kmeans_java.src.main.java.KmeansApp"
 #OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	

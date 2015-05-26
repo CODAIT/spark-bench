@@ -16,7 +16,7 @@ JAR="${DIR}/target/DecisionTreeApp-1.0.jar"
 CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# classification
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS_Classification}

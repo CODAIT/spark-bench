@@ -15,7 +15,7 @@ OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${MAX_ITERATION} ${STORAGE_LEVEL}"
 JAR="${DIR}/target/SVMApp-1.0.jar"
 
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	# path check	
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}

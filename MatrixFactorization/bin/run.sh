@@ -27,7 +27,7 @@ JAR="${DIR}/target/MFApp-1.0.jar"
 #JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# path check
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}

@@ -15,7 +15,7 @@ CLASS="src.main.scala.triangleCountApp"
 OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${STORAGE_LEVEL}"
 echo "opt ${OPTION}"
 
-start
+setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
