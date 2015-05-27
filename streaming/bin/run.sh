@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 
 # path check
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
 JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-${SPARK_VERSION}-hadoop2.3.0.jar"
@@ -83,7 +83,7 @@ echo "========== running ${APP}-${subApp} benchmark =========="
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`	
 	START_TIME=`timestamp`

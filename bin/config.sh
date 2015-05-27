@@ -31,7 +31,20 @@ else
   MC_LIST="$master"
 fi
 
-HDFS_URL="hdfs://${master}:9000"
+# base dir HDFS
+#export DATA_HDFS=hdfs://SparkBench
+#export DATA_HDFS="hdfs://${master}:9000/SparkBench"
+export DATA_HDFS=/home/`whoami`/SparkBench
+
+if [ ! -z `echo $DATA_HDFS | grep "^hdfs://"` ]; then
+  FILESYSTEM=hdfs
+  HDFS_URL="hdfs://${master}:9000"
+else
+  FILESYSTEM=local
+fi
+if [ "$MASTER" = "spark" ] && [ "$FILESYSTEM" = "local" ]; then
+  INOUT_SCHEME="file://"
+fi
 
 export BENCH_VERSION="1.0"
 
@@ -81,9 +94,19 @@ fi
 
 HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-$HADOOP_HOME/conf}"
 
-# base dir HDFS
-export DATA_HDFS=/Bench
-
+if [ "${FILESYSTEM}" = "local" ]; then
+  MKDIR="/bin/mkdir -p"
+  RM="/bin/rm"
+  CPFROM="/bin/cp -r"
+  CPTO="/bin/cp -r"
+  DU="/usr/bin/du -b"
+else
+  MKDIR="${HADOOP_HOME}/bin/hadoop fs -mkdir -p"
+  RM="${HADOOP_HOME}/bin/hadoop fs -rm"
+  CPFROM="${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal"
+  CPTO="${HADOOP_HOME}/bin/hdfs dfs -copyToLocal"
+  DU="${HADOOP_HOME}/bin/hadoop fs -du"
+fi
 
 export BENCH_NUM=${BENCH_HOME}/num;
 if [ ! -d ${BENCH_NUM} ]; then

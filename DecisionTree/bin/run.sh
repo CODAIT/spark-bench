@@ -11,7 +11,7 @@ DIR=`cd $bin/../; pwd`
 
 
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 JAR="${DIR}/target/DecisionTreeApp-1.0.jar"
 CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 
@@ -19,9 +19,9 @@ CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# classification
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS_Classification}
+	${RM} -r ${OUTPUT_HDFS_Classification}
 	purge_data "${MC_LIST}"	
-	OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS_Classification} ${NUM_OF_CLASS_C} ${impurityC} ${maxDepthC} ${maxBinsC} ${modeC}"
+	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Classification} ${NUM_OF_CLASS_C} ${impurityC} ${maxDepthC} ${maxBinsC} ${modeC}"
 	START_TS=`ssh ${master} "date +%F-%T"`
 	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat
@@ -37,9 +37,9 @@ exit 0
 ######################## unused ########################
 if [ 1 -eq 0 ]; then
 # Regression
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS_Regression}
+	${RM} -r ${OUTPUT_HDFS_Regression}
 	purge_data "${MC_LIST}"	
-	OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS_Regression} ${NUM_OF_CLASS_R} ${impurityR} ${maxDepthR} ${maxBinsR} ${modeR} "
+	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Regression} ${NUM_OF_CLASS_R} ${impurityR} ${maxDepthR} ${maxBinsR} ${modeR} "
 	START_TIME=`timestamp`
 	START_TS=`ssh ${master} "date +%F-%T"`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat

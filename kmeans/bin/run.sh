@@ -9,22 +9,22 @@ DIR=`cd $bin/../; pwd`
 
 
 # path check
-$HADOOP_HOME/bin/hadoop dfs -rm-r ${OUTPUT_HDFS}
+${RM} -r ${OUTPUT_HDFS}
 
 # pre-running
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $2 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $2 }'`
 
 JAR="${DIR}/target/scala-2.10/kmeans-app_2.10-1.0.jar"
 CLASS="KmeansApp"
-OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
+OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
 
 #JAR="${DIR}/target/kmeans-project-1.0.jar"
 #CLASS="kmeans_java.src.main.java.KmeansApp"
-#OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
+#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
 
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`
 	START_TIME=`timestamp`
