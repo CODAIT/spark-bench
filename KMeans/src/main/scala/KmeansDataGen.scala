@@ -18,10 +18,6 @@ object KmeansDataGen {
     }
     val conf = new SparkConf
     conf.setAppName("Spark KMeans DataGen")
-   // conf.setMaster("spark://minli8.almaden.ibm.com:7077")
-   // conf.setJars(List("/mnt/nfs_dir/limin/mronline/spark_app/"+
-    //                  "kmeans_min/target/scala-2.10/kmeans-app_2.10-1.0.jar"))
-    conf.setSparkHome("/mnt/nfs_dir/limin/spark")
     val sc = new SparkContext(conf)
     
     

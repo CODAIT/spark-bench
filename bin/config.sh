@@ -31,6 +31,9 @@ else
   MC_LIST="$master"
 fi
 
+# base dir for DataSet
+export DATASET_DIR=/home/`whoami`/SparkBench/dataset
+
 # base dir HDFS
 #export DATA_HDFS=hdfs://SparkBench
 #export DATA_HDFS="hdfs://${master}:9000/SparkBench"
@@ -49,10 +52,6 @@ fi
 export BENCH_VERSION="1.0"
 
 ###################### Global Paths ##################
-if [ -z "$MllibJar" ]; then
-	export MllibJar=~/.m2/repository/org/apache/spark/spark-mllib_2.10/${SPARK_VERSION}/spark-mllib_2.10-${SPARK_VERSION}.jar
-
-fi
 if [ -z "$BENCH_HOME" ]; then
     export BENCH_HOME=`dirname "$this"`/..
 fi
@@ -77,6 +76,12 @@ if [ -z "$HIVE_HOME" ]; then
     export HIVE_HOME=${BENCH_HOME}/common/hive-0.9.0-bin
 fi
 
+if [ -z "$MllibJar" ]; then
+    export MllibJar=~/.m2/repository/org/apache/spark/spark-mllib_2.10/${SPARK_VERSION}/spark-mllib_2.10-${SPARK_VERSION}.jar
+    if [ ! -f "$MllibJar" ]; then
+        export MllibJar=${SPARK_HOME}/lib/spark-assembly-*.jar
+    fi
+fi
 
 
 

@@ -47,7 +47,6 @@ public class SVMApp {
 		
 	//	conf.registerKryoClasses(new Class<?>[]{ Class1.class,Class2.class});
         JavaSparkContext sc = new JavaSparkContext(conf);
-		//sc.addJar("file:///mnt/nfs_dir/sperf/spark_app/SVM/target/SVM-project-1.0.jar");
 		//conf.registerKryoClasses(new Class<?>[]{ SVMApp.class});
        // SparkContext sc = new SparkContext(conf);
     

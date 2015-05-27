@@ -11,14 +11,9 @@ object KmeansApp {
     }
     val conf = new SparkConf
     conf.setAppName("Spark KMeans Example")
-   // conf.setMaster("spark://minli8.almaden.ibm.com:7077")
-   // conf.setJars(List("/mnt/nfs_dir/limin/mronline/spark_app/"+
-   //                   "kmeans_min/target/scala-2.10/kmeans-app_2.10-1.0.jar"))
-    
-    conf.setSparkHome("/mnt/nfs_dir/limin/spark")
     val sc = new SparkContext(conf)
     
-    val input = args(0) //"/mnt/nfs_dir/limin/spark_example/kmeans_data.txt"
+    val input = args(0)
     val output = args(1)
     val K = args(2).toInt
     val maxIterations = args(3).toInt

@@ -21,8 +21,8 @@ OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${rank} ${MA
 JAR="${DIR}/target/MFApp-1.0.jar"
 
 #CLASS="src.main.scala.MFMovieLens"
-#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/ml-10M100K/personalRatings.txt"
-#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Graph_datagen/personalRatings.txt $numPar"
+#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${DATASET_DIR}/ml-10M100K/personalRatings.txt"
+#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${DATASET_DIR}/BigDataGeneratorSuite/Graph_datagen/personalRatings.txt $numPar"
 
 #JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 
