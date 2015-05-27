@@ -9,15 +9,15 @@ DIR=`cd $bin/../; pwd`
 echo "========== running ${APP} workload =========="
 
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 CLASS="LogisticRegression.src.main.java.LogisticRegressionApp"
-OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS}  ${MAX_ITERATION} ${STORAGE_LEVEL} "
+OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS}  ${MAX_ITERATION} ${STORAGE_LEVEL} "
 
 JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`
 

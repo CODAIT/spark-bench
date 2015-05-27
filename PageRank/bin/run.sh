@@ -10,18 +10,18 @@ echo "========== running ${APP} benchmark =========="
 
 
 # path check
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 #JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
 JAR="${DIR}/target/PageRankApp-1.0.jar"
 CLASS="src.main.scala.pagerankApp"
-OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB} ${STORAGE_LEVEL}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${numPar} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB} ${STORAGE_LEVEL}"
 
 
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	echo "${APP} opt ${OPTION}"
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`	
 	START_TIME=`timestamp`

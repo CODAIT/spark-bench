@@ -8,7 +8,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== preparing ${APP} data =========="
 
 # paths check
-${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
+${RM} -r ${INPUT_HDFS}
 
 # generate data
 
@@ -16,7 +16,7 @@ ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 JAR="${DIR}/../common/DataGen/target/scala-2.10/datagen_2.10-1.0.jar"
 CLASS="src.main.scala.GraphDataGen"
 
-OPTION="${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 
 START_TS=`ssh ${master} "date +%F-%T"`
 
@@ -27,7 +27,7 @@ exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN
 
 END_TIME=`timestamp`
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 gen_report "${APP}_gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}

@@ -15,20 +15,20 @@ DIR=`cd $bin/../; pwd`
 
 #JAR="${MllibJar}"
 #CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
-#OPTION=" ${APP_MASTER} ${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
+#OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 
 # paths check
 #tmp_dir=${APP_DIR}/tmp
-${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
-${HADOOP_HOME}/bin/hdfs dfs -mkdir ${APP_DIR}
-${HADOOP_HOME}/bin/hdfs dfs -mkdir ${INPUT_HDFS}
-#${HADOOP_HOME}/bin/hdfs dfs -rm -r $tmp_dir
+${RM} -r ${INPUT_HDFS}
+${MKDIR} ${APP_DIR}
+${MKDIR} ${INPUT_HDFS}
+#${RM} -r $tmp_dir
 
-#${HADOOP_HOME}/bin/hdfs dfs -mkdir $tmp_dir
+#${MKDIR} $tmp_dir
 #srcf=/mnt/nfs_dir/sperf/data_set/tmp-10k
 srcf=/mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Table_datagen/e-com/output
 
-${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal $srcf/* ${INPUT_HDFS}
+${CPFROM} $srcf/* ${INPUT_HDFS}
 
 JAR="${DIR}/target/scala-2.10/svmapp_2.10-1.0.jar"
 CLASS="src.main.scala.DocToTFIDF"
@@ -42,7 +42,7 @@ START_TIME=`timestamp`
 
 END_TIME=`timestamp`
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 gen_report "SVM-gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}
 teardown

@@ -11,12 +11,12 @@ DIR=`cd $bin/../; pwd`
 
 
 # paths check
-${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
+${RM} -r ${INPUT_HDFS}
 
 # generate data
 JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 CLASS="LogisticRegression.src.main.java.LogisticRegressionDataGen"
-OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${INPUT_HDFS}"
+OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${INOUT_SCHEME}${INPUT_HDFS}"
 
 START_TS=`ssh ${master} "date +%F-%T"`
 setup
@@ -25,7 +25,7 @@ exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN
 
 END_TIME=`timestamp`
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 gen_report "LogisticRegression-gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}

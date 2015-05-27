@@ -11,11 +11,11 @@ echo "========== running ${APP} benchmark =========="
 
 # path check
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 JAR="${DIR}/target/ConnectedComponentApp-1.0.jar"
 CLASS="src.main.scala.ConnectedComponentApp"
-OPTION="${INPUT_HDFS} ${OUTPUT_HDFS} ${numPar} ${numV}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${numPar} ${numV}"
 
 echo "opt ${OPTION}"
 
@@ -23,7 +23,7 @@ echo "opt ${OPTION}"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`
 	START_TIME=`timestamp`

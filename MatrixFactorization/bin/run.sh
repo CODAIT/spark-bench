@@ -13,16 +13,16 @@ echo "========== running MF benchmark =========="
 
 
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
 CLASS="MatrixFactorization.src.main.java.MFApp"
-OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${rank} ${MAX_ITERATION} ${LAMBDA} ${STORAGE_LEVEL}"
+OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${rank} ${MAX_ITERATION} ${LAMBDA} ${STORAGE_LEVEL}"
 JAR="${DIR}/target/MFApp-1.0.jar"
 
 #CLASS="src.main.scala.MFMovieLens"
-#OPTION=" ${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/ml-10M100K/personalRatings.txt"
-#OPTION=" ${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Graph_datagen/personalRatings.txt $numPar"
+#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/ml-10M100K/personalRatings.txt"
+#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} /mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Graph_datagen/personalRatings.txt $numPar"
 
 #JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 
@@ -30,7 +30,7 @@ JAR="${DIR}/target/MFApp-1.0.jar"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# path check
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`
 	

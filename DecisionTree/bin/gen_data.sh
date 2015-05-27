@@ -11,7 +11,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== preparing ${APP} data =========="
 
 # paths check
-${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
+${RM} -r ${INPUT_HDFS}
 
 
 # "Usage: SVMGenerator <master> <output_dir> [num_examples] [num_features] [num_partitions]"
@@ -19,7 +19,7 @@ ${HADOOP_HOME}/bin/hadoop fs -rm -r ${INPUT_HDFS}
 
 JAR="${MllibJar}"
 CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
-OPTION=" ${SPARK_MASTER} ${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
+OPTION=" ${SPARK_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 
 START_TS=`ssh ${master} "date +%F-%T"`
 setup
@@ -27,7 +27,7 @@ START_TIME=`timestamp`
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_gendata_${START_TS}.dat
 END_TIME=`timestamp`
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 gen_report "DecisionTree-gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
 print_config ${BENCH_REPORT}
 teardown

@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 
 # path check
 
-SIZE=`$HADOOP_HOME/bin/hadoop fs -du -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
 #JAR="${SPARK_HOME}/streaming/target/spark-streaming_2.10-1.2.0.jar"
@@ -89,7 +89,7 @@ echo "========== running ${APP}-${subApp} gen data =========="
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
-	$HADOOP_HOME/bin/hadoop dfs -rm -r ${OUTPUT_HDFS}
+	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`ssh ${master} "date +%F-%T"`	
 	START_TIME=`timestamp`
