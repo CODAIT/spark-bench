@@ -25,8 +25,8 @@ ${MKDIR} ${INPUT_HDFS}
 #${RM} -r $tmp_dir
 
 #${MKDIR} $tmp_dir
-#srcf=/mnt/nfs_dir/sperf/data_set/tmp-10k
-srcf=/mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Table_datagen/e-com/output
+#srcf=${DATASET_DIR}/tmp-10k
+srcf=${DATASET_DIR}/BigDataGeneratorSuite/Table_datagen/e-com/output
 
 ${CPFROM} $srcf/* ${INPUT_HDFS}
 

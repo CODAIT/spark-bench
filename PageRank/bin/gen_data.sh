@@ -15,17 +15,17 @@ START_TS=`ssh ${master} "date +%F-%T"`
 
 setup
 genOpt="small"
-if [ $genOpt = "small" ];then
+if [ $genOpt = "small" ]; then
 	JAR="${DIR}/target/PageRankApp-1.0.jar"
 	CLASS="src.main.scala.pageRankDataGen"
 	OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat
-elif [ $genOpt = "large" ];then
+elif [ $genOpt = "large" ]; then
 	START_TIME=`timestamp`
 	${MKDIR} ${APP_DIR}
 	${MKDIR}r ${INPUT_HDFS}
-	srcf=/mnt/nfs_dir/sperf/data_set/web-Google.txt	#srcf=/mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Graph_datagen/AMR_gen_edge_24.txt
+	srcf=${DATASET_DIR}/web-Google.txt	#srcf=${DATASET_DIR}/BigDataGeneratorSuite/Graph_datagen/AMR_gen_edge_24.txt
 	${CPFROM} $srcf ${INPUT_HDFS}
 else
 	echo "error"

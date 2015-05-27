@@ -17,8 +17,8 @@ genOpt="small"
 if [ $genOpt = "large" ];then
 	${MKDIR} ${APP_DIR}
 	${MKDIR} ${INPUT_HDFS}
-	#srcf=/mnt/nfs_dir/sperf/data_set/web-Google.txt
-	srcf=/mnt/nfs_dir/sperf/data_set/BigDataGeneratorSuite/Graph_datagen/AMR_gen_edge_24.txt
+	#srcf=${DATASET_DIR}/web-Google.txt
+	srcf=${DATASET_DIR}/BigDataGeneratorSuite/Graph_datagen/AMR_gen_edge_24.txt
 	START_TIME=`timestamp`
 	${CPFROM} $srcf ${INPUT_HDFS}	
 elif [ $genOpt = "small" ];then

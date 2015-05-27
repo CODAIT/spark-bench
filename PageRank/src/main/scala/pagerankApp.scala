@@ -29,7 +29,6 @@ object pagerankApp extends Logging {
     val conf = new SparkConf
     conf.setAppName("Spark PageRank Application")
     val sc = new SparkContext(conf)
-	sc.addJar("file:///mnt/nfs_dir/sperf/spark_app/PageRank/target/scala-2.10/pagerankapp_2.10-1.0.jar")
 	//conf.registerKryoClasses(Array(classOf[pagerankApp] ))
 		
     val input = args(0)

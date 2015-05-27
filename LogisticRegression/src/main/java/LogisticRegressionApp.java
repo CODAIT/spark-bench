@@ -41,7 +41,6 @@ public class LogisticRegressionApp {
 
         SparkConf conf = new SparkConf().setAppName("LogisticRegressionApp Example");
         JavaSparkContext sc = new JavaSparkContext(conf);
-		sc.addJar("file:///mnt/nfs_dir/sperf/spark_app/LogisticRegression/target/LogisticRegression-project-1.0.jar");
 		conf.registerKryoClasses(new Class<?>[]{ LogisticRegressionApp.class});
 		
         // Load and parse data

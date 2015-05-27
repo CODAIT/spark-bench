@@ -16,7 +16,6 @@ public class SimpleApp {
 
     public static void main(String[] args) {
 
-        //String logFile = "file:///mnt/nfs_dir/spark/README.md"; // Should be some file on your system
         String logFile = "hdfs:///README.md"; // Should be some file on your system
         SparkConf conf = new SparkConf().setAppName("Simple Application");
         JavaSparkContext sc = new JavaSparkContext(conf);

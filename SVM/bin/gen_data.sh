@@ -14,13 +14,13 @@ OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_
 ${RM} -r ${INPUT_HDFS}
 
 # paths check
-if [ genOpt = "large" ];then
+if [ $genOpt = "large" ]; then
 	tmp_dir=${APP_DIR}/tmp	
 	${RM} -r $tmp_dir
 	${MKDIR} ${APP_DIR}
 	${MKDIR} $tmp_dir
-	#srcf=/mnt/nfs_dir/sperf/data_set/tmp-10k
-	srcf=/home/limin/data_set/enwiki-doc
+	#srcf=${DATASET_DIR}/tmp-10k
+	srcf=${DATASET_DIR}/enwiki-doc
 	${CPFROM} $srcf $tmp_dir
 
 	JAR="${DIR}/target/scala-2.10/svmapp_2.10-1.0.jar"
