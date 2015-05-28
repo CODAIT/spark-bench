@@ -16,7 +16,7 @@ DIR=`cd $bin/../; pwd`
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 #JAR="${DIR}/target/scala-2.10/LinearRegression-app_2.10-1.0.jar"
-JAR="${DIR}/target/LinearRegression-project-1.0.jar"
+JAR="${DIR}/target/LinearRegressionApp-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionApp"
 OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${MAX_ITERATION} "
 
