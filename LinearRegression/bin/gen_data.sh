@@ -13,7 +13,7 @@ DIR=`cd $bin/../; pwd`
 
 ${RM} -r ${INPUT_HDFS}
 
-JAR="${DIR}/target/LinearRegression-project-1.0.jar"
+JAR="${DIR}/target/LinearRegressionApp-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionDataGen"
 OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${INTERCEPTS} ${INOUT_SCHEME}${INPUT_HDFS}"
 
