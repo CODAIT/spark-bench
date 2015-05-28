@@ -6,6 +6,7 @@ import scala.util.Random
 import org.jblas.DoubleMatrix
 
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import java.io._
@@ -23,7 +24,6 @@ import java.io._
  * to use for testing.
  *
  * This method takes the following inputs:
- *   sparkMaster    (String) The master URL.
  *   outputPath     (String) Directory to save output.
  *   m              (Int) Number of rows in data matrix.
  *   n              (Int) Number of columns in data matrix.
@@ -37,13 +37,12 @@ import java.io._
 
 object MFDataGenerator {
   def main(args: Array[String]) {
-    if (args.length < 2) {
+    if (args.length < 1) {
       println("Usage: MFDataGenerator " +
-        " <outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact]")
+        "<outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact]")
       System.exit(1)
     }
 
-   
     val outputPath: String = args(0)
     val m: Int = if (args.length > 1) args(1).toInt else 100
     val n: Int = if (args.length > 2) args(2).toInt else 100
@@ -54,7 +53,8 @@ object MFDataGenerator {
     val test: Boolean = if (args.length > 7) args(7).toBoolean else false
     val testSampFact: Double = if (args.length > 8) args(8).toDouble else 0.1
 
-    val sc = new SparkContext("MFDataGenerator")
+    val conf = new SparkConf().setAppName("MFDataGenerator")
+    val sc = new SparkContext(conf)
 
     val A = DoubleMatrix.randn(m, rank)
     val B = DoubleMatrix.randn(rank, n)
@@ -69,6 +69,7 @@ object MFDataGenerator {
     val rand = new Random()
     val mn = m * n
     
+/*
     val canonicalFilename="/mnt/nfs_dir/tmp_data/tmp"
     val file = new File(canonicalFilename)
     file.delete()
@@ -79,6 +80,7 @@ object MFDataGenerator {
     1 to mn foreach {i=> bw.write(i.toString+"\n");}
     bw.flush()
     bw.close()
+*/
 
     //val shuffled = rand.shuffle(1 to mn toList)
    // val shuffled = 1 to mn toList
@@ -86,7 +88,8 @@ object MFDataGenerator {
     //val omega = shuffled.slice(0, sampSize)
     //val ordered = omega.sortWith(_ < _).toArray
 
-    val my_rdd=sc.textFile("file://"+canonicalFilename,400)
+/*    val my_rdd=sc.textFile("file://"+canonicalFilename,400) */
+    val my_rdd=sc.makeRDD(1 to mn)
     my_rdd.persist(StorageLevel.MEMORY_AND_DISK)
     val trainData: RDD[(Int, Int, Double)] = my_rdd
         .map(x => (fullData.indexRows(x.toInt - 1), fullData.indexColumns(x.toInt - 1), fullData.get(x.toInt - 1)))
