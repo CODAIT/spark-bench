@@ -14,7 +14,7 @@ OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_
 ${RM} -r ${INPUT_HDFS}
 
 # paths check
-if [ $genOpt = "large" ]; then
+if [ "$genOpt" = "large" ]; then
 	tmp_dir=${APP_DIR}/tmp	
 	${RM} -r $tmp_dir
 	${MKDIR} ${APP_DIR}
