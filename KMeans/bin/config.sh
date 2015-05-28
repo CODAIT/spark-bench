@@ -19,11 +19,13 @@ NUM_OF_PARTITION=10
 #SAMPLES_PER_INPUTFILE=6000000
 MAX_ITERATION=5
 NUM_RUN=1
+NUM_TRIALS=1
 
 
 # either stand alone or yarn cluster
 APP_MASTER=${SPARK_MASTER}
-#APP_MASTER=yarn-cluster 
+#APP_MASTER=yarn-cluster
+numPar=${NUM_OF_PARTITION}
 nexe=10
 dmem=1g
 emem=1g

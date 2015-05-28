@@ -12,7 +12,7 @@ ${RM} -r ${INPUT_HDFS}
 
 #JAR="${DIR}/target/kmeans-project-1.0.jar"
 #CLASS="kmeans_java.src.main.java.KmeansGenData"
-JAR="${DIR}/target/scala-2.10/kmeans-app_2.10-1.0.jar"
+JAR="${DIR}/target/KMeansApp-1.0.jar"
 CLASS="kmeans_min.src.main.scala.KmeansDataGen"
 OPTION="${NUM_OF_POINTS} ${NUM_OF_CLUSTERS} ${DIMENSIONS} ${SCALING} ${NUM_OF_PARTITION} ${INOUT_SCHEME}${INPUT_HDFS}"
 
