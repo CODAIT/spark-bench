@@ -12,9 +12,9 @@ DIR=`cd $bin/../; pwd`
 ${RM} -r ${OUTPUT_HDFS}
 
 # pre-running
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $2 }'`
+SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-JAR="${DIR}/target/scala-2.10/kmeans-app_2.10-1.0.jar"
+JAR="${DIR}/target/KMeansApp-1.0.jar"
 CLASS="KmeansApp"
 OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
 

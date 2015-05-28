@@ -54,7 +54,7 @@ SPARK_OPT="--conf spark.storage.memoryFraction=${memoryFraction} \
  --conf spark.io.compression.codec=${rddcodec} \
  --conf spark.default.parallelism=${num_task} "
 #YARN_OPT="--num-executors $nexe --driver-memory $dmem \
---executor-memory $emem --executor-cores $ecore"
+#--executor-memory $emem --executor-cores $ecore"
 
 
 #input benreport
