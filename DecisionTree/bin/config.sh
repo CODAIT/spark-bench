@@ -36,6 +36,7 @@ NUM_TRIALS=1
 # either stand alone or yarn cluster
 APP_MASTER=${SPARK_MASTER}
 #APP_MASTER=yarn-cluster 
+num_task=20
 nexe=60
 dmem=1024m
 ecore=1
