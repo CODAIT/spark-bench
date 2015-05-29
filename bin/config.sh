@@ -5,6 +5,12 @@ bin=$(cd -P -- "$(dirname -- "$this")" && pwd -P)
 script="$(basename -- "$this")"
 this="$bin/$script"
 
+if [ -f "${bin}/../conf/env.sh" ]; then
+  set -a
+  . "${bin}/../conf/env.sh"
+  set +a
+fi
+
 SPARK_VERSION=1.4.0-SNAPSHOT
 master=`hostname`
 

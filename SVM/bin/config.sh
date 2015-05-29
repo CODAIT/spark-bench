@@ -1,5 +1,14 @@
 #!/bin/bash
 #==SVM==
+
+this="${BASH_SOURCE-$0}"
+bin=$(cd -P -- "$(dirname -- "$this")" && pwd -P)
+if [ -f "${bin}/../conf/env.sh" ]; then
+  set -a
+  . "${bin}/../conf/env.sh"
+  set +a
+fi
+
 # paths
 APP=SVM
 APP_DIR=${DATA_HDFS}/${APP}

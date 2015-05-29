@@ -1,5 +1,12 @@
 #!/bin/bash
 
+this="${BASH_SOURCE-$0}"
+bin=$(cd -P -- "$(dirname -- "$this")" && pwd -P)
+if [ -f "${bin}/../conf/env.sh" ]; then
+  set -a
+  . "${bin}/../conf/env.sh"
+  set +a
+fi
 
 APP=SVDPlusPlus
 INPUT_HDFS=${DATA_HDFS}/${APP}/Input
