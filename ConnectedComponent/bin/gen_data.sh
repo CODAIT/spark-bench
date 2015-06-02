@@ -13,7 +13,7 @@ JAR="${DIR}/../common/DataGen/target/scala-2.10/datagen_2.10-1.0.jar"
 CLASS="src.main.scala.GraphDataGen"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 
 setup
 START_TIME=`timestamp`

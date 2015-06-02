@@ -34,7 +34,7 @@ JAR="${DIR}/target/scala-2.10/svmapp_2.10-1.0.jar"
 CLASS="src.main.scala.DocToTFIDF"
 OPTION="${tmp_dir} ${INPUT_HDFS} ${num_task} "
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 
 setup
 START_TIME=`timestamp`

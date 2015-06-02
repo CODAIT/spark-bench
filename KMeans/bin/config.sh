@@ -17,42 +17,41 @@ if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
     OUTPUT_HDFS=${OUTPUT_HDFS}-comp
 fi
 
-# for prepare
-NUM_OF_POINTS=1000
-NUM_OF_CLUSTERS=10
-DIMENSIONS=20
-SCALING=0.6
-NUM_OF_PARTITION=10
-#NUM_OF_SAMPLES=20000000
-#SAMPLES_PER_INPUTFILE=4000000
-#SAMPLES_PER_INPUTFILE=6000000
-MAX_ITERATION=5
-NUM_RUN=1
-NUM_TRIALS=1
-
-
-# either stand alone or yarn cluster
+# Either stand alone or yarn cluster
 APP_MASTER=${SPARK_MASTER}
-#APP_MASTER=yarn-cluster
-numPar=${NUM_OF_PARTITION}
-nexe=10
-dmem=1g
-emem=1g
-[ -n "$EXECUTOR_GLOBAL_MEM"  ] && emem=$EXECUTOR_GLOBAL_MEM
-ecore=6
-memoryFraction=0.48
-#0.001 rdd=0
-[ -n "$MEM_FRACTION_GLOBAL"  ] && memoryFraction=${MEM_FRACTION_GLOBAL}
 
-rdd_compression=false
-spark_ser=KryoSerializer
-rddcodec=lzf
-SPARK_OPT="--conf spark.storage.memoryFraction=${memoryFraction} --conf spark.executor.memory=${emem}  --conf spark.serializer=org.apache.spark.serializer.${spark_ser} --conf spark.rdd.compress=${rdd_compression} --conf spark.io.compression.codec=${rddcodec} --conf spark.default.parallelism=${numPar}"
+SPARK_OPT=
+if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+  SPARK_OPT="${SPARK_OPT} --conf spark.storage.memoryFraction=${SPARK_STORAGE_MEMORYFRACTION}"
+fi
+if [ ! -z "$SPARK_EXECUTOR_MEMORY" ]; then
+  SPARK_OPT="${SPARK_OPT} --conf spark.executor.memory=${SPARK_EXECUTOR_MEMORY}"
+fi
+if [ ! -z "$SPARK_SERIALIZER" ]; then
+  SPARK_OPT="${SPARK_OPT} --conf spark.serializer=${SPARK_SERIALIZER}"
+fi
+if [ ! -z "$SPARK_RDD_COMPRESS" ]; then
+  SPARK_OPT="${SPARK_OPT} --conf spark.rdd.compress=${SPARK_RDD_COMPRESS}"
+fi
+if [ ! -z "$SPARK_IO_COMPRESSION_CODEC" ]; then
+  SPARK_OPT="${SPARK_OPT} --conf spark.io.compression.codec=${SPARK_IO_COMPRESSION_CODEC}"
+fi
+if [ ! -z "$SPARK_DEFAULT_PARALLELISM" ]; then
+  SPARK_OPT="${SPARK_OPT} --conf spark.default.parallelism=${SPARK_DEFAULT_PARALLELISM}"
+fi
 
-
-YARN_OPT=""
-#YARN_OPT="--num-executors $nexe --driver-memory $dmem --executor-memory $emem --executor-cores $ecore"
-
+YARN_OPT=
+if [ "$MASTER" = "yarn" ]; then
+  if [ ! -z "$SPARK_EXECUTOR_INSTANCES" ]; then
+    YARN_OPT="${YARN_OPT} --num-executors ${SPARK_EXECUTOR_INSTANCES}"
+  fi
+  if [ ! -z "$SPARK_EXECUTOR_CORES" ]; then
+    YARN_OPT="${YARN_OPT} --executor-cores ${SPARK_EXECUTOR_CORES}"
+  fi
+  if [ ! -z "$SPARK_DRIVER_MEMORY" ]; then
+    YARN_OPT="${YARN_OPT} --driver-memory ${SPARK_DRIVER_MEMORY}"
+  fi
+fi
 
 
 function print_config(){

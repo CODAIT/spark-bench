@@ -17,7 +17,7 @@ JAR="${DIR}/target/LinearRegressionApp-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionDataGen"
 OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${INTERCEPTS} ${INOUT_SCHEME}${INPUT_HDFS}"
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 
 setup
 START_TIME=`timestamp`
