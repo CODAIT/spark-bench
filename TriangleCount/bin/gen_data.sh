@@ -11,7 +11,7 @@ echo "========== preparing ${APP} data =========="
 ${RM} -r ${INPUT_HDFS}
 
 # generate data
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 setup
 genOpt="small"
 if [ $genOpt = "large" ];then

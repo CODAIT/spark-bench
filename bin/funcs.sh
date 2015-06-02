@@ -63,7 +63,9 @@ function purge_data(){
 	done;
 	echo "date purged on ${mc_list}"
 }
-
+function get_start_ts() {
+  return `ssh ${masterhost} "date +%F-%T"`
+}
 function setup(){
   if [ "${MASTER}" = "spark" ]; then
     "${SPARK_HOME}/sbin/stop-all.sh"

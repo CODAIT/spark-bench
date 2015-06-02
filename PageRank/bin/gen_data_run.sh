@@ -25,7 +25,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TIME=`timestamp`
-	START_TS=`ssh ${master} "date +%F-%T"`
+	START_TS=get_start_ts
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} --conf spark.storage.memoryFraction=${memoryFraction} --conf spark.executor.memory=1g $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
 	END_TIME=`timestamp`
 	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}

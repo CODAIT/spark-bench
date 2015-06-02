@@ -18,9 +18,10 @@ JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 CLASS="LogisticRegression.src.main.java.LogisticRegressionDataGen"
 OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${INOUT_SCHEME}${INPUT_HDFS}"
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 setup
 START_TIME=`timestamp`
+echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LogisticRegression_gendata_${START_TS}.dat"
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LogisticRegression_gendata_${START_TS}.dat
 
 END_TIME=`timestamp`

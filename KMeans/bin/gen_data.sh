@@ -17,16 +17,17 @@ CLASS="kmeans_min.src.main.scala.KmeansDataGen"
 OPTION="${NUM_OF_POINTS} ${NUM_OF_CLUSTERS} ${DIMENSIONS} ${SCALING} ${NUM_OF_PARTITION} ${INOUT_SCHEME}${INPUT_HDFS}"
 
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 setup
 START_TIME=`timestamp`
+echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/TEMP_gendata_${START_TS}.dat"
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/TEMP_gendata_${START_TS}.dat
 
 END_TIME=`timestamp`
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-gen_report "${APP}-gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
-print_config ${BENCH_REPORT}
+#gen_report "${APP}-gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
+#print_config ${BENCH_REPORT}
 teardown
 
 exit 0

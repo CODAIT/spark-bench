@@ -11,51 +11,42 @@ if [ -f "${bin}/../conf/env.sh" ]; then
   set +a
 fi
 
-SPARK_VERSION=1.4.0-SNAPSHOT
-master=`hostname`
+export BENCH_VERSION="1.0"
 
+masterhost=`hostname`
 #A list of machines where the spark cluster is running
-MC_LIST="minli3 minli4 minli5 minli6 minli7 minli8 minli12 minli13 minli14 minli15"
 
-#SPARK_MASTER=local
-#SPARK_MASTER=local[K]
-#SPARK_MASTER=local[*]
-#SPARK_MASTER=spark://HOST:PORT
-##SPARK_MASTER=mesos://HOST:PORT
-##SPARK_MASTER=yarn-client
-##SPARK_MASTER=yarn-cluster
-SPARK_MASTER=spark://${master}:7077
 if [ ! -z `echo $SPARK_MASTER | grep "^spark://"` ]; then
+  MC_LIST="$masterhost"
   MASTER=spark
-  MC_LIST="$master"
 elif [ ! -z `echo $SPARK_MASTER | grep "^mesos://"` ]; then
   MASTER=mesos
 elif [ ! -z `echo $SPARK_MASTER | grep "^yarn"` ]; then
   MASTER=yarn
 else
+  MC_LIST="$masterhost"
   MASTER=local
-  MC_LIST="$master"
 fi
 
 # base dir for DataSet
-export DATASET_DIR=/home/`whoami`/SparkBench/dataset
+if [ -z "$DATASET_DIR" ]; then
+  export DATASET_DIR=/home/`whoami`/SparkBench/dataset
+fi
 
-# base dir HDFS
-#export DATA_HDFS=hdfs://SparkBench
-#export DATA_HDFS="hdfs://${master}:9000/SparkBench"
-export DATA_HDFS=/home/`whoami`/SparkBench
+# base dir for HDFS
+if [ -z "$DATA_HDFS" ]; then
+  export DATA_HDFS=/home/`whoami`/SparkBench
+fi
 
 if [ ! -z `echo $DATA_HDFS | grep "^hdfs://"` ]; then
   FILESYSTEM=hdfs
-  HDFS_URL="hdfs://${master}:9000"
+  HDFS_URL="hdfs://${masterhost}:9000"
 else
   FILESYSTEM=local
 fi
 if [ "$MASTER" = "spark" ] && [ "$FILESYSTEM" = "local" ]; then
   INOUT_SCHEME="file://"
 fi
-
-export BENCH_VERSION="1.0"
 
 ###################### Global Paths ##################
 if [ -z "$BENCH_HOME" ]; then
@@ -127,20 +118,6 @@ fi
 
 # local report
 export BENCH_REPORT=${BENCH_HOME}/bench-model-validation-march26-15.dat
-export EXECUTOR_GLOBAL_MEM=6g
-#export STORAGE_LEVEL=MEMORY_AND_DISK_SER
-export STORAGE_LEVEL=MEMORY_AND_DISK
-export executor_cores=6
-#export MEM_FRACTION_GLOBAL=0.6
-#export MEM_FRACTION_GLOBAL=0.005
-
-################# Compress Options #################
-# swith on/off compression: 0-off, 1-on
-export COMPRESS_GLOBAL=0
-export COMPRESS_CODEC_GLOBAL=org.apache.hadoop.io.compress.DefaultCodec
-#export COMPRESS_CODEC_GLOBAL=com.hadoop.compression.lzo.LzoCodec
-#export COMPRESS_CODEC_GLOBAL=org.apache.hadoop.io.compress.SnappyCodec
-
 
 #if [ -z "$MAHOUT_HOME" ]; then
 #    export MAHOUT_HOME=${BENCH_HOME}/common/mahout-distribution-0.7

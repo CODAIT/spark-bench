@@ -28,7 +28,7 @@ if [ "$genOpt" = "large" ]; then
 	OPTION="${tmp_dir} ${INPUT_HDFS} ${NUM_OF_PARTITIONS} "
 fi
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 
 setup
 START_TIME=`timestamp`

@@ -18,7 +18,7 @@ CLASS="src.main.scala.GraphDataGen"
 
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${numPar} ${mu} ${sigma}"
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 
 #${CPFROM} ${SPARK_HOME}/graphx/data/followers.txt ${INPUT_HDFS}
 #${CPFROM} ${SPARK_HOME}/graphx/data/users.txt ${INPUT_HDFS}

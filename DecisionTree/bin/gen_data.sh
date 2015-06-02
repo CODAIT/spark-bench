@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # configure
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
@@ -21,10 +20,10 @@ JAR="${MllibJar}"
 CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
 OPTION=" ${SPARK_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 
-START_TS=`ssh ${master} "date +%F-%T"`
+START_TS=get_start_ts
 setup
 START_TIME=`timestamp`
-exec ${SPARK_HOME}/bin/spark-submit --class $CLASS  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_gendata_${START_TS}.dat
+exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_gendata_${START_TS}.dat
 END_TIME=`timestamp`
 
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
