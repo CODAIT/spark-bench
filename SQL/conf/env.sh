@@ -3,6 +3,7 @@
 numB=14
 batch=500000
 numPar=1600
+
 # for running
 MAX_ITERATION=3
 TOLERANCE=0.001
