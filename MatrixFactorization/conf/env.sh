@@ -7,6 +7,7 @@ noise=false
 sigma=0.1
 test=false
 testSampFact=0.1
+
 ##### for running ####
 MAX_ITERATION=3 #90 # 3
 LAMBDA=0.01
@@ -14,6 +15,5 @@ NUM_RUN=1
 
 SPARK_STORAGE_MEMORYFRACTION=0.015
 
-SPARK_RDD_COMPRESS=true
-SPARK_IO_COMPRESSION_CODEC=lzf
-
+#SPARK_RDD_COMPRESS=true
+#SPARK_IO_COMPRESSION_CODEC=lzf
