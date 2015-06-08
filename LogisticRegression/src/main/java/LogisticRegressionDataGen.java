@@ -24,18 +24,18 @@ import org.apache.log4j.Level;
  */
 public class LogisticRegressionDataGen {
         public static void main(String[] args) {
-        if (args.length < 6) {
-            System.out.println("usage: <nExamples> <nFeatures> <eps> <nparts> <probone> <output>");
+        if (args.length < 5) {
+            System.out.println("usage: <output> <nExamples> <nFeatures> <eps> <probone> [numPar]");
             System.exit(0);
         }
 				Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
 				Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
-        int nExamples = Integer.parseInt(args[0]);
-        int nFeatures = Integer.parseInt(args[1]);
-        double eps = Double.parseDouble(args[2]);
-        int numPar = Integer.parseInt(args[3]);
-        double probOne = Double.parseDouble(args[4]);        
-        String output = args[5];
+        String output = args[0];
+        int nExamples = Integer.parseInt(args[1]);
+        int nFeatures = Integer.parseInt(args[2]);
+        double eps = Double.parseDouble(args[3]);
+        double probOne = Double.parseDouble(args[4]);
+        int numPar = (args.length > 5) ? Integer.parseInt(args[5]) : System.getProperty("spark.default.parallelism") != null ? Integer.parseInt(System.getProperty("spark.default.parallelism")) : 2;
         
         SparkConf conf = new SparkConf().setAppName("Logisitc Regression data generation");
         //JavaSparkContext sc = new JavaSparkContext(conf);

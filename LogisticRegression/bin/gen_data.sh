@@ -16,7 +16,7 @@ ${RM} -r ${INPUT_HDFS}
 # generate data
 JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 CLASS="LogisticRegression.src.main.java.LogisticRegressionDataGen"
-OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${INOUT_SCHEME}${INPUT_HDFS}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${ProbOne} ${NUM_OF_PARTITIONS}"
 
 START_TS=get_start_ts
 setup

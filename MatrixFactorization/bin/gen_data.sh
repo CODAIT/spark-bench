@@ -16,7 +16,7 @@ ${RM} -r ${INPUT_HDFS}
 #JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 JAR="${DIR}/target/MFApp-1.0.jar"
 CLASS="MatrixFactorization.src.main.scala.MFDataGenerator"
-OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${m} ${n}  ${rank} ${trainSampFact} ${noise} ${sigma} ${test} ${testSampFact}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${m} ${n}  ${rank} ${trainSampFact} ${noise} ${sigma} ${test} ${testSampFact} ${NUM_OF_PARTITIONS}"
 
 START_TS=get_start_ts
 

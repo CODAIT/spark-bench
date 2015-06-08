@@ -33,13 +33,14 @@ import java.io._
  *   sigma          (Double) Standard deviation of added gaussian noise.
  *   test           (Boolean) Whether to create testing RDD.
  *   testSampFact   (Double) Percentage of training data to use as test data.
+ *   numPar         (Int) Number of partitions of input data file
  */
 
 object MFDataGenerator {
   def main(args: Array[String]) {
     if (args.length < 1) {
       println("Usage: MFDataGenerator " +
-        "<outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact]")
+        "<outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact] [numPar]")
       System.exit(1)
     }
 
@@ -52,6 +53,8 @@ object MFDataGenerator {
     val sigma: Double = if (args.length > 6) args(6).toDouble else 0.1
     val test: Boolean = if (args.length > 7) args(7).toBoolean else false
     val testSampFact: Double = if (args.length > 8) args(8).toDouble else 0.1
+    val defPar = if (System.getProperty("spark.default.parallelism") == null) 2 else System.getProperty("spark.default.parallelism").toInt
+    val numPar: Int = if (args.length > 9) args(9).toInt else defPar
 
     val conf = new SparkConf().setAppName("MFDataGenerator")
     val sc = new SparkContext(conf)
@@ -89,7 +92,7 @@ object MFDataGenerator {
     //val ordered = omega.sortWith(_ < _).toArray
 
 /*    val my_rdd=sc.textFile("file://"+canonicalFilename,400) */
-    val my_rdd=sc.makeRDD(1 to mn)
+    val my_rdd=sc.makeRDD(1 to mn, numPar)
     my_rdd.persist(StorageLevel.MEMORY_AND_DISK)
     val trainData: RDD[(Int, Int, Double)] = my_rdd
         .map(x => (fullData.indexRows(x.toInt - 1), fullData.indexColumns(x.toInt - 1), fullData.get(x.toInt - 1)))

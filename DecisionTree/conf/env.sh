@@ -1,7 +1,7 @@
 # for gen_data.sh;  200M data size = 1 million points
 NUM_OF_EXAMPLES=5000 #00000
-NUM_OF_PARTITIONS=120 #0
 NUM_OF_FEATURES=6
+NUM_OF_PARTITIONS=120 #0
 
 # for run.sh
 NUM_OF_CLASS_C=10

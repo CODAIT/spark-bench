@@ -14,7 +14,7 @@ ${RM} -r ${INPUT_HDFS}
 #CLASS="kmeans_java.src.main.java.KmeansGenData"
 JAR="${DIR}/target/KMeansApp-1.0.jar"
 CLASS="kmeans_min.src.main.scala.KmeansDataGen"
-OPTION="${NUM_OF_POINTS} ${NUM_OF_CLUSTERS} ${DIMENSIONS} ${SCALING} ${NUM_OF_PARTITION} ${INOUT_SCHEME}${INPUT_HDFS}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_POINTS} ${NUM_OF_CLUSTERS} ${DIMENSIONS} ${SCALING} ${NUM_OF_PARTITIONS}"
 
 
 START_TS=get_start_ts

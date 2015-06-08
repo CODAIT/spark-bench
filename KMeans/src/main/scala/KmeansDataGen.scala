@@ -13,7 +13,7 @@ import org.apache.spark.{SparkContext,SparkConf}
 object KmeansDataGen {
   def main(args: Array[String]) {
     if (args.length < 5) {
-      println("usage: <numPoints> <numClusters> <dimenstion> <scaling factor> <partition> <output>")
+      println("usage: <output> <numPoints> <numClusters> <dimenstion> <scaling factor> [numpar]")
       System.exit(0)
     }
     val conf = new SparkConf
@@ -23,12 +23,13 @@ object KmeansDataGen {
     
     
     
-    val numPoint = args(0).toInt
-    val numCluster= args(1).toInt
-    val numDim=args(2).toInt
-    val scaling= args(3).toDouble
-    val numPar= args(4).toInt
-    val output = args(5)
+    val output = args(0)
+    val numPoint = args(1).toInt
+    val numCluster= args(2).toInt
+    val numDim=args(3).toInt
+    val scaling= args(4).toDouble
+    val defPar = if (System.getProperty("spark.default.parallelism") == null) 2 else System.getProperty("spark.default.parallelism").toInt
+    val numPar = if (args.length > 5) args(5).toInt else defPar
     
     
     val data= KMeansDataGenerator.generateKMeansRDD(sc,numPoint,numCluster,numDim,scaling,numPar)
