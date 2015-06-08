@@ -25,15 +25,15 @@ public class KmeansGenData {
 
     public static void main(String[] args) {
         if (args.length < 5) {
-            System.out.println("usage: <numPoints> <numClusters> <dimenstion> <scaling factor> <partition> <output>");
+            System.out.println("usage: <output> <numPoints> <numClusters> <dimenstion> <scaling factor> [numPar]");
             System.exit(0);
         }
-        int numPoint = Integer.parseInt(args[0]);
-        int numCluster = Integer.parseInt(args[1]);
-        int numDim = Integer.parseInt(args[2]);
-        double scaling = Double.parseDouble(args[3]);
-        int numPar = Integer.parseInt(args[4]);
-        String output = args[5];
+        String output = args[0];
+        int numPoint = Integer.parseInt(args[1]);
+        int numCluster = Integer.parseInt(args[2]);
+        int numDim = Integer.parseInt(args[3]);
+        double scaling = Double.parseDouble(args[4]);
+        int numPar = (args.length > 5) ? Integer.parseInt(args[5]) : System.getProperty("spark.default.parallelism") != null ? Integer.parseInt(System.getProperty("spark.default.parallelism")) : 2;
         
         SparkConf conf = new SparkConf().setAppName("Kmeans data generation");
         //JavaSparkContext sc = new JavaSparkContext(conf);

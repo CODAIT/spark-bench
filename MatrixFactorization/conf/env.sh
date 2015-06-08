@@ -7,6 +7,7 @@ noise=false
 sigma=0.1
 test=false
 testSampFact=0.1
+NUM_OF_PARTITIONS=120
 
 ##### for running ####
 MAX_ITERATION=3 #90 # 3
