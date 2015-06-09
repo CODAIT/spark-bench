@@ -24,7 +24,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Classification} ${NUM_OF_CLASS_C} ${impurityC} ${maxDepthC} ${maxBinsC} ${modeC}"
 	START_TS=get_start_ts
 	START_TIME=`timestamp`
-	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat
+	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat
 	END_TIME=`timestamp`
 	gen_report "DecisionTree-classification" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}	

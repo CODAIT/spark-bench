@@ -60,7 +60,22 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "MFConfig m $m n $n memoryfraction $memoryFraction core $ecore rank $rank \
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+	if [ "$MASTER" = "yarn" ]; then
+	  if [ ! -z "$SPARK_EXECUTOR_CORES" ]; then
+	    CONFIG="${CONFIG} exe_core ${SPARK_EXECUTOR_CORES}"
+	  fi
+	fi
+	if [ ! -z "$SPARK_EXECUTOR_MEMORY" ]; then
+	  CONFIG="${CONFIG} exe_mem ${SPARK_EXECUTOR_MEMORY}"
+	fi
+
+	echo "MFConfig \
+	m $m n $n rank $rank \
 	trainSampFact $trainSampFact noise $noise sigma $sigma test $test testSampFact $testSampFact \
-	RDDcomp ${rdd_compression} ${spark_ser} ${rddcodec}" >> ${output}
+	${CONFIG}" >> ${output}
 }

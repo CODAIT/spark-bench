@@ -58,5 +58,27 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "LinearRegressionConfig nexe $nexe drivermem $dmem exe_mem $emem exe_core $ecore nexample ${NUM_OF_EXAMPLES} nCluster ${NUM_OF_FEATURES} EPS ${EPS} npar ${NUM_OF_PARTITIONS} Intercepts ${INTERCEPTS} niter ${MAX_ITERATION} memoryFraction ${memoryFraction}" >> ${output}
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+	if [ "$MASTER" = "yarn" ]; then
+	  if [ ! -z "$SPARK_EXECUTOR_INSTANCES" ]; then
+	    CONFIG="${CONFIG} nmem ${SPARK_EXECUTOR_INSTANCES}"
+	  fi
+	  if [ ! -z "$SPARK_EXECUTOR_CORES" ]; then
+	    CONFIG="${CONFIG} exe_core ${SPARK_EXECUTOR_CORES}"
+	  fi
+	  if [ ! -z "$SPARK_DRIVER_MEMORY" ]; then
+	    CONFIG="${CONFIG} dmem ${SPARK_DRIVER_MEMORY}"
+	  fi
+	fi
+	if [ ! -z "$SPARK_EXECUTOR_MEMORY" ]; then
+	  CONFIG="${CONFIG} exe_mem ${SPARK_EXECUTOR_MEMORY}"
+	fi
+
+	echo "LinearRegressionConfig \
+	nexample ${NUM_OF_EXAMPLES} nCluster ${NUM_OF_FEATURES} EPS ${EPS} npar ${NUM_OF_PARTITIONS} Intercepts ${INTERCEPTS} niter ${MAX_ITERATION} \
+	${CONFIG}" >> ${output}
 }

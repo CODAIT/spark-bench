@@ -15,7 +15,7 @@ SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 #JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
 JAR="${DIR}/target/PageRankApp-1.0.jar"
 CLASS="src.main.scala.pagerankApp"
-OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${numPar} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB} ${STORAGE_LEVEL}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PARTITIONS} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB} ${STORAGE_LEVEL}"
 
 
 setup

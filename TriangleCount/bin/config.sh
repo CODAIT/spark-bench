@@ -57,6 +57,27 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "${APP}_config memoryFraction ${memoryFraction} core $executor_cores numV ${numV} numPar ${numPar} mu ${mu} sigma ${sigma} \
-	RDDcomp ${rdd_compression} ${spark_ser} ${rddcodec}" >> ${output}
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+	if [ "$MASTER" = "yarn" ]; then
+	  if [ ! -z "$SPARK_EXECUTOR_CORES" ]; then
+	    CONFIG="${CONFIG} exe_core ${SPARK_EXECUTOR_CORES}"
+	  fi
+	fi
+	if [ ! -z "$SPARK_RDD_COMPRESS" ]; then
+	  CONFIG="${CONFIG} RDDcomp ${SPARK_RDD_COMPRESS}"
+	fi
+	if [ ! -z "$SPARK_IO_COMPRESSION_CODEC" ]; then
+	  CONFIG="${CONFIG} ${SPARK_IO_COMPRESSION_CODEC}"
+	fi
+	if [ ! -z "$SPARK_DEFAULT_PARALLELISM" ]; then
+	  CONFIG="${CONFIG} ${SPARK_DEFAULT_PARALLELISM}"
+	fi
+
+	echo "${APP}_config \
+	numV ${numV} numPar ${NUM_OF_PARTITIONS} mu ${mu} sigma ${sigma} \
+	${CONFIG} " >> ${output}
 }

@@ -57,9 +57,9 @@ function purge_data(){
 	local mc_list="$1"	
 	cmd="echo 3 >/proc/sys/vm/drop_caches"; 
 	#echo ${mc_list}
-	for n in ${mc_list}; do 
-	#echo $n
-	ssh  -t $n "sudo sh -c \"$cmd\""; 
+	for nn in ${mc_list}; do 
+	#echo $nn
+	ssh  -t $nn "sudo sh -c \"$cmd\""; 
 	done;
 	echo "date purged on ${mc_list}"
 }

@@ -53,11 +53,18 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "DecisionTreeC-Config memoryFraction ${memoryFraction} \
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+
+	echo "DecisionTreeC-Config \
 	NUM_OF_EXAMPLES ${NUM_OF_EXAMPLES} \
 	NUM_OF_FEATURES ${NUM_OF_FEATURES} \
 	NUM_OF_PARTITIONS ${NUM_OF_PARTITIONS} \
-	class ${NUM_OF_CLASS_C} ${NUM_OF_CLASS_R} impurity ${impurityC}  ${impurityR} maxDepth ${maxDepthC} ${maxDepthR} maxbin ${maxBinsC} ${maxBinsR} mode ${modeC} ${modeR}" >> ${output}		
+	class ${NUM_OF_CLASS_C} ${NUM_OF_CLASS_R} impurity ${impurityC}  ${impurityR} maxDepth ${maxDepthC} ${maxDepthR} maxbin ${maxBinsC} ${maxBinsR} mode ${modeC} ${modeR} \
+        ${CONFIG}" >> ${output}
 }
 
 #### unused ####
