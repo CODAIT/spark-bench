@@ -59,6 +59,22 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "SVMConfig nexample ${NUM_OF_EXAMPLES} nCluster ${NUM_OF_FEATURES} numPartition ${NUM_OF_PARTITIONS} niter ${MAX_ITERATION} memoryFraction ${memoryFraction} RDDcomp ${rdd_compression} ${spark_ser} ${rddcodec}" >> ${output}
-	
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+	if [ ! -z "$SPARK_SERIALIZER" ]; then
+	  CONFIG="${CONFIG} ${SPARK_SERIALIZER}"
+	fi
+	if [ ! -z "$SPARK_RDD_COMPRESS" ]; then
+	  CONFIG="${CONFIG} RDDcomp ${SPARK_RDD_COMPRESS}"
+	fi
+	if [ ! -z "$SPARK_IO_COMPRESSION_CODEC" ]; then
+	  CONFIG="${CONFIG} ${SPARK_IO_COMPRESSION_CODEC}"
+	fi
+
+	echo "SVMConfig \
+	nexample ${NUM_OF_EXAMPLES} nCluster ${NUM_OF_FEATURES} numPartition ${NUM_OF_PARTITIONS} niter ${MAX_ITERATION} 
+	${CONFIG} " >> ${output}
 }

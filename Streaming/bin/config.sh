@@ -56,6 +56,13 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "${APP}_${subApp}_config memoryFraction ${memoryFraction}  " >> ${output}
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+
+	echo "${APP}_${subApp}_config \
+	${CONFIG} " >> ${output}
 }
 

@@ -56,7 +56,26 @@ fi
 
 function print_config(){
 	local output=$1
-	echo "${APP}_config memoryFraction ${memoryFraction} NUM_OF_POINTS ${NUM_OF_POINTS} NUM_OF_CLUSTERS ${NUM_OF_CLUSTERS} DIMENSIONS ${DIMENSIONS} SCALING \
-	${SCALING} NUM_OF_PARTITION ${NUM_OF_PARTITION}  \
-	RDDcomp ${rdd_compression} ${spark_ser} ${rddcodec} " >> ${output}
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+	if [ ! -z "$SPARK_SERIALIZER" ]; then
+	  CONFIG="${CONFIG} ${SPARK_SERIALIZER}"
+	fi
+	if [ ! -z "$SPARK_RDD_COMPRESS" ]; then
+	  CONFIG="${CONFIG} RDDcomp ${SPARK_RDD_COMPRESS}"
+	fi
+	if [ ! -z "$SPARK_IO_COMPRESSION_CODEC" ]; then
+	  CONFIG="${CONFIG} ${SPARK_IO_COMPRESSION_CODEC}"
+	fi
+	if [ ! -z "$SPARK_DEFAULT_PARALLELISM" ]; then
+	  CONFIG="${CONFIG} ${SPARK_DEFAULT_PARALLELISM}"
+	fi
+
+	echo "${APP}_config \
+        NUM_OF_POINTS ${NUM_OF_POINTS} NUM_OF_CLUSTERS ${NUM_OF_CLUSTERS} DIMENSIONS ${DIMENSIONS} SCALING ${SCALING} \
+	NUM_OF_PARTITIONS ${NUM_OF_PARTITIONS}  \
+	${CONFIG} " >> ${output}
 }

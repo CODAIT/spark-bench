@@ -58,8 +58,27 @@ fi
 #input benreport
 function print_config(){
 	local output=$1
-	echo "${APP}-Config nexample ${NUM_OF_EXAMPLES} nCluster ${NUM_OF_FEATURES} EPS ${EPS} \
-	npar ${NUM_OF_PARTITIONS} ProbOne ${ProbOne} numiter ${MAX_ITERATION} memoryFraction ${memoryFraction} \
-	RDDcomp ${rdd_compression} ${spark_ser} ${rddcodec}">> ${output}
+
+	CONFIG=
+	if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+	  CONFIG="${CONFIG} memoryFraction ${SPARK_STORAGE_MEMORYFRACTION}"
+	fi
+	if [ ! -z "$SPARK_SERIALIZER" ]; then
+	  CONFIG="${CONFIG} ${SPARK_SERIALIZER}"
+	fi
+	if [ ! -z "$SPARK_RDD_COMPRESS" ]; then
+	  CONFIG="${CONFIG} RDDcomp ${SPARK_RDD_COMPRESS}"
+	fi
+	if [ ! -z "$SPARK_IO_COMPRESSION_CODEC" ]; then
+	  CONFIG="${CONFIG} ${SPARK_IO_COMPRESSION_CODEC}"
+	fi
+	if [ ! -z "$SPARK_DEFAULT_PARALLELISM" ]; then
+	  CONFIG="${CONFIG} ${SPARK_DEFAULT_PARALLELISM}"
+	fi
+
+	echo "${APP}-Config \
+	example ${NUM_OF_EXAMPLES} nCluster ${NUM_OF_FEATURES} EPS ${EPS} \
+	npar ${NUM_OF_PARTITIONS} ProbOne ${ProbOne} numiter ${MAX_ITERATION} \
+        ${CONFIG} " >> ${output}
 }
 
