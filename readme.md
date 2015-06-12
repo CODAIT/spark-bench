@@ -8,6 +8,7 @@
 - Homepage: https://bitbucket.org/lm0926/sparkbench
 
 - Contents:
+
   1. Overview
   2. Getting Started
   3. Advanced Configuration
@@ -94,15 +95,18 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 	`<SparkBench_Root>/<Workload>/bin/gen_data.sh`
 	`<SparkBench_Root>/<Workload>/bin/run.sh`
 	
-	**note**
+	**Note**
 	
 	For SQL applications, by default it runs the RDDRelation workload.
 	To run Hive workload, execute `<SparkBench_Root>/SQL/bin/run.sh hive`;
 	
-	For Streaming applications such as TwitterTag,
+	For Streaming applications such as TwitterTag,StreamingLogisticRegression
 	First, execute `<SparkBench_Root>/SQL/bin/gen_data.sh` in one terminal;
 	Second, execute `<SparkBench_Root>/SQL/bin/run.sh` in another terminal;
 	
+	**Note**
+	StreamingLogisticRegression requires the gen_data.sh and run.sh scripts which
+	launches Spark applications can run simutaneously.
 4. View the result.
 
 	Goto `<SparkBench_Root>/report` to check for the final report.
@@ -116,11 +120,12 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 	You can also run each workload separately. In general, there are 3 different files under one workload folder.
 
-	<Workload>/bin/config.sh      change the workload specific configurations 
-	<Workload>/bin/gen_data.sh
-	<Workload>/bin/run.sh
+	`<Workload>/bin/config.sh`      change the workload specific configurations
+	`<Workload>/bin/gen_data.sh`
+	`<Workload>/bin/run.sh`
 
 2. Spark configuration.
+
 	spark.executors.memory                Executor memory, standalone or YARN mode
     spark.driver.memory                   Driver memory, standalone or YARN mode
 	spark.rdd.cache

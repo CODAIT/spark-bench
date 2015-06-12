@@ -25,7 +25,53 @@ JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-${SPARK_VERSION}-ha
 
 # NetworkWordCount StatefulNetworkWordCount CustomReceiver QueueStream RawNetworkGrep ActorWordCount
 # PageViewStream MQTTWordCount ZeroMQWordCount TwitterAlgebirdCMS TwitterAlgebirdHLL TwitterPopularTags
-if [ $subApp = "NetworkWordCount" ];then
+if [ $subApp = "StreamingLogisticRegression" ];then
+
+	${HADOOP_HOME}/bin/hdfs dfs -rm -r  ${INPUT_HDFS}
+	${HADOOP_HOME}/bin/hdfs dfs -mkdir  ${INPUT_HDFS}
+	${HADOOP_HOME}/bin/hdfs dfs -mkdir  ${trainingDir}
+	${HADOOP_HOME}/bin/hdfs dfs -mkdir  ${testDir}
+
+	JAR="${DIR}/../LogisticRegression/target/LogisticRegressionApp-1.0.jar"
+	CLASS="LogisticRegression.src.main.java.LogisticRegressionDataGen"
+	NUM_TRIALS=3
+	purge_data "${MC_LIST}"
+	for((i=0;i<${NUM_TRIALS};i++)); do
+		echo "========== generating data of ${APP}-${subApp} iteration ${i}  =========="
+
+
+		START_TIME=`timestamp`
+		START_TS=`ssh ${master} "date +%F-%T"`
+
+		${HADOOP_HOME}/bin/hdfs dfs -rm -r  ${trainingDir}/*
+		tmpdir=${INPUT_HDFS}/tmp-train
+		${HADOOP_HOME}/bin/hdfs dfs -rm -r  ${tmpdir}
+
+
+
+		OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${tmpdir}"
+		echo "gen train data opion $OPTION"
+		exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_${subApp}_genData_${START_TS}.dat;
+		${HADOOP_HOME}/bin/hdfs dfs -mv ${tmpdir}/* ${trainingDir}/;
+
+
+		${HADOOP_HOME}/bin/hdfs dfs -rm -r  ${testDir}/*
+		tmpdir=${INPUT_HDFS}/tmp-test
+		${HADOOP_HOME}/bin/hdfs dfs -rm -r  ${tmpdir}
+
+		OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${tmpdir}"
+		echo "gen test data op $OPTION"
+		exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_${subApp}_genData_${START_TS}.dat;
+		${HADOOP_HOME}/bin/hdfs dfs -mv ${tmpdir}/* ${testDir}/
+
+		END_TIME=`timestamp`
+		sleep 5
+		gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
+		print_config ${BENCH_REPORT}
+	done
+
+	exit 0
+elif [ $subApp = "NetworkWordCount" ];then
 	echo "no need"
 	exit 0
 	#subapp="nc -lk 9999"
@@ -83,12 +129,12 @@ fi
 
 #echo "opt ${OPTION}"
 
-echo "========== running ${APP}-${subApp} gen data =========="
+
 
 
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
-	
+	echo "========== Generating data for ${APP}-${subApp}  =========="	
 	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=get_start_ts

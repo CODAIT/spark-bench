@@ -1,11 +1,14 @@
 # for running
 # NetworkWordCount StatefulNetworkWordCount CustomReceiver QueueStream RawNetworkGrep ActorWordCount
-# PageViewStream MQTTWordCount ZeroMQWordCount TwitterAlgebirdCMS TwitterAlgebirdHLL TwitterPopularTags
+#  MQTTWordCount ZeroMQWordCount TwitterAlgebirdCMS TwitterAlgebirdHLL TwitterPopularTags
+# PageViewStream StreamingLogisticRegression
 subApp=PageViewStream
-#subApp=TwitterPopularTags
 optApp=80000000
 
+
 if [ 1 -eq 0 ];then
+	
+	
 	# for preparation 
 	numV=4000000
 	numPar=400
@@ -16,6 +19,16 @@ if [ 1 -eq 0 ];then
 	MAX_ITERATION=3
 	TOLERANCE=0.001
 	RESET_PROB=0.15
+	
+	# The parameter of StreamingLogisticRegression
+	trainingDir=${INPUT_HDFS}/trainingDir 
+	testDir=${INPUT_HDFS}/testDir 
+	batchDuration=30 
+	NUM_OF_EXAMPLES=25000
+	NUM_OF_FEATURES=20
+	NUM_OF_PARTITIONS=120
+	ProbOne=0.2
+	EPS=0.5
 fi
 
 SPARK_STORAGE_MEMORYFRACTION=0.6

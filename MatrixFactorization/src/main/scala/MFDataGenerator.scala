@@ -1,18 +1,18 @@
-package MatrixFactorization.src.main.scala;
 
+package src.main.scala;
+
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import scala.language.postfixOps
 import scala.util.Random
-
 import org.jblas.DoubleMatrix
-
 import org.apache.spark.storage.StorageLevel
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
+import org.apache.spark.{ SparkContext, SparkConf, Logging }
 import org.apache.spark.rdd.RDD
 import java.io._
 
 /**
- * :: DeveloperApi ::
+
  * Generate RDD(s) containing data for Matrix Factorization.
  *
  * This method samples training entries according to the oversampling factor
@@ -43,6 +43,8 @@ object MFDataGenerator {
         "<outputDir> [m] [n] [rank] [trainSampFact] [noise] [sigma] [test] [testSampFact] [numPar]")
       System.exit(1)
     }
+    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
+    Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
 
     val outputPath: String = args(0)
     val m: Int = if (args.length > 1) args(1).toInt else 100
@@ -58,7 +60,7 @@ object MFDataGenerator {
 
     val conf = new SparkConf().setAppName("MFDataGenerator")
     val sc = new SparkContext(conf)
-
+	 
     val A = DoubleMatrix.randn(m, rank)
     val B = DoubleMatrix.randn(rank, n)
     val z = 1 / scala.math.sqrt(scala.math.sqrt(rank))

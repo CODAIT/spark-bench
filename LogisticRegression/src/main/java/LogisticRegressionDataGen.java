@@ -28,8 +28,8 @@ public class LogisticRegressionDataGen {
             System.out.println("usage: <output> <nExamples> <nFeatures> <eps> <probone> [numPar]");
             System.exit(0);
         }
-				Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
-				Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+	Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+	Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
         String output = args[0];
         int nExamples = Integer.parseInt(args[1]);
         int nFeatures = Integer.parseInt(args[2]);
@@ -38,9 +38,7 @@ public class LogisticRegressionDataGen {
         int numPar = (args.length > 5) ? Integer.parseInt(args[5]) : System.getProperty("spark.default.parallelism") != null ? Integer.parseInt(System.getProperty("spark.default.parallelism")) : 2;
         
         SparkConf conf = new SparkConf().setAppName("Logisitc Regression data generation");
-        //JavaSparkContext sc = new JavaSparkContext(conf);
         SparkContext sc = new SparkContext(conf);
-        //RDD<double[]> data = KMeansDataGenerator.generateKMeansRDD(sc, numPoint, numCluster, numDim, scaling, numPar);
         RDD<LabeledPoint> data=LogisticRegressionDataGenerator.generateLogisticRDD(sc,nExamples,
                 nFeatures,eps,numPar,probOne);
         JavaRDD<LabeledPoint> tmpdata=data.toJavaRDD();

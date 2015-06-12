@@ -26,7 +26,14 @@ fi
 if [ $# -ge 1 ]; then
    subApp=$1
 fi
-if [ $subApp = "NetworkWordCount" ];then	
+
+if [ $subApp = "StreamingLogisticRegression" ];then
+	OPTION="$trainingDir $testDir $batchDuration $NUM_OF_FEATURES"
+	#CLASS="org.apache.spark.examples.mllib.${subApp}"
+	CLASS="src.main.scala.${subApp}"
+	echo "opt $OPTION"
+	JAR="${DIR}/target/scala-2.10/streamingapp_2.10-1.0.jar"
+elif [ $subApp = "NetworkWordCount" ];then
 	OPTION="minli1 9999"
 	CLASS="org.apache.spark.examples.streaming.${subapp}"
 elif [ $subApp = "StatefulNetworkWordCount" ];then	
