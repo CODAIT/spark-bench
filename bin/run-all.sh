@@ -5,16 +5,16 @@ DIR=`cd "${DIR}/.."; pwd`
 
 
 
-for workload in `cat $DIR/applications.lst`; do
+for workload in `cat $DIR/bin/applications.lst`; do
     if [[ $workload == \#* ]]; then
         continue
     fi
 
-    echo -e "${UYellow}${BYellow}Prepare ${Yellow}${UYellow}${workload} ${BYellow}...${Color_Off}"
+    #echo -e "${UYellow}${BYellow}Prepare ${Yellow}${UYellow} ${workload} ${BYellow}...${Color_Off}"
     
-    WORKLOAD=$DIR/workloads/${workload}
-    echo -e "${BCyan}Exec script: ${Cyan}${WORKLOAD}/prepare/prepare.sh${Color_Off}"
-    "${WORKLOAD}/bin/gen_data.sh"
+    WORKLOAD=${DIR}/${workload}
+    #echo -e "${BCyan}Exec script: ${Cyan}${WORKLOAD}/prepare/prepare.sh${Color_Off}"
+    ${WORKLOAD}/bin/gen_data.sh
 
     if [ $? -ne 0 ]
     then
