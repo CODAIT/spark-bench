@@ -49,7 +49,8 @@ public class KmeansApp {
         // Cluster the data into two classes using KMeans
         
         
-        final KMeansModel clusters = KMeans.train(parsedData.rdd(), numClusters, numIterations);
+        //final KMeansModel clusters = KMeans.train(parsedData.rdd(), numClusters, numIterations);
+        final KMeansModel clusters = new KMeans().setK(numClusters).setMaxIterations(numIterations).setInitializationMode(KMeans.K_MEANS_PARALLEL()).setSeed(127).run(parsedData.rdd());
         JavaRDD<String> vectorIndex = parsedData.map(
                 new Function<Vector, String>() {
                     public String call(Vector point) {
