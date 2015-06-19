@@ -52,6 +52,7 @@ public class SVMApp {
     
     //JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, input).toJavaRDD();
 
+    long start = System.currentTimeMillis();
             JavaRDD<String> tmpdata = sc.textFile(input);
         
         JavaRDD<LabeledPoint> data = tmpdata.map(
@@ -61,8 +62,8 @@ public class SVMApp {
                     }
                 }
         );
-    // Split initial RDD into two... [60% training data, 40% testing data].
-    JavaRDD<LabeledPoint> training = data.sample(false, 0.6, 11L);
+    // Split initial RDD into two... [90% training data, 10% testing data].
+    JavaRDD<LabeledPoint> training = data.sample(false, 0.9, 11L);
     
 	
 	if( storage_level.equals("MEMORY_AND_DISK_SER"))
@@ -74,6 +75,7 @@ public class SVMApp {
 	
 	System.out.println("test data " );
     JavaRDD<LabeledPoint> test = data.subtract(training);
+    double loadTime = (double)(System.currentTimeMillis() - start) / 1000.0;
 	
 	/*if( storage_level.equals("MEMORY_AND_DISK_SER"))
 			test.persist(StorageLevel.MEMORY_AND_DISK_SER());			
@@ -83,9 +85,12 @@ public class SVMApp {
 		}    */
     // Run training algorithm to build the model.
     System.out.println("Train model " );
+    start = System.currentTimeMillis();
     final SVMModel model = SVMWithSGD.train(training.rdd(), numIterations);
+    double trainingTime = (double)(System.currentTimeMillis() - start) / 1000.0;
     
     // Clear the default threshold.
+    start = System.currentTimeMillis();
     model.clearThreshold();
 	System.out.println("predict score and labels " );
     // Compute raw scores on the test set.
@@ -102,7 +107,10 @@ public class SVMApp {
     BinaryClassificationMetrics metrics = 
       new BinaryClassificationMetrics(JavaRDD.toRDD(scoreAndLabels));
     double auROC = metrics.areaUnderROC();
+    double testTime = (double)(System.currentTimeMillis() - start) / 1000.0;
     
+    System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f}\n", loadTime, trainingTime, testTime);
+    //System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f,\"saveTime\":%.3f}\n", loadTime, trainingTime, testTime, saveTime);
     System.out.println("Area under ROC = " + auROC);
    // System.out.println("training Weight = " + 
      //           Arrays.toString(model.weights().toArray()));

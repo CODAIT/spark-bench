@@ -41,7 +41,7 @@ public class MFApp {
         JavaSparkContext sc = new JavaSparkContext(conf);
         
     // Load and parse the data
-
+	long start = System.currentTimeMillis();
         JavaRDD<String> data = sc.textFile(input);
         JavaRDD<Rating> ratings = data.map(
                 new Function<String, Rating>() {
@@ -73,10 +73,15 @@ public class MFApp {
             parsed_data.cache();
 
         }
+	double loadTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
         // Build the recommendation model using ALS        
+	start = System.currentTimeMillis();
         MatrixFactorizationModel model = ALS.train(parsed_data, rank, numIterations, lambda);
+	double trainingTime = (double)(System.currentTimeMillis() - start) / 1000.0;
 
         // Evaluate the model on rating data
+	start = System.currentTimeMillis();
         JavaRDD<Tuple2<Object, Object>> userProducts = ratings.map(
                 new Function<Rating, Tuple2<Object, Object>>() {
                     public Tuple2<Object, Object> call(Rating r) {
@@ -122,6 +127,10 @@ public class MFApp {
                     }
                 }
         ).rdd()).mean();
+	double testTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
+        System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f}\n", loadTime, trainingTime, testTime);
+        //System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f,\"saveTime\":%.3f}\n", loadTime, trainingTime, testTime, saveTime);
         System.out.println("Mean Squared Error = " + MSE);
         sc.stop();
     }

@@ -50,6 +50,7 @@ public class DecisionTreeApp {
 
 // Load and parse the data file.
 // Cache the data since we will use it again to compute training error.
+	long start = System.currentTimeMillis();
         
       //  JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc.sc(), input).toJavaRDD().cache();
             JavaRDD<String> tmpdata = sc.textFile(input);
@@ -61,11 +62,13 @@ public class DecisionTreeApp {
                     }
                 }
         );
+	double loadTime = (double)(System.currentTimeMillis() - start) / 1000.0;
 // Set parameters.
 //  Empty categoricalFeaturesInfo indicates all features are continuous.
         
 
 // Train a DecisionTree model for classification.
+	start = System.currentTimeMillis();
         DecisionTreeModel tmpmodel;
         if(mode.equals("Classification")){
          tmpmodel = DecisionTree.trainClassifier(data, numClasses,
@@ -74,6 +77,9 @@ public class DecisionTreeApp {
          tmpmodel = DecisionTree.trainRegressor(data,
   categoricalFeaturesInfo, impurity, maxDepth, maxBins);
         }
+	double trainingTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
+	start = System.currentTimeMillis();
         final DecisionTreeModel model=tmpmodel;
 // Evaluate model on training instances and compute training error
         JavaPairRDD<Double, Double> predictionAndLabel =
@@ -92,7 +98,12 @@ public class DecisionTreeApp {
                 return !pl._1().equals(pl._2());
             }
         }).count() / data.count();
+	double testTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
+        System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f}\n", loadTime, trainingTime, testTime);
+        //System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f,\"saveTime\":%.3f}\n", loadTime, trainingTime, testTime, saveTime);
         System.out.println("Training error: " + trainErr);
         System.out.println("Learned classification tree model:\n" + model);
+        sc.stop();
     }
 }

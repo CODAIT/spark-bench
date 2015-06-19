@@ -33,6 +33,7 @@ public class KmeansApp {
 
         // Load and parse data
         
+        long start = System.currentTimeMillis();
         JavaRDD<String> data = sc.textFile(input);
         JavaRDD<Vector> parsedData = data.map(
                 new Function<String, Vector>() {
@@ -45,12 +46,22 @@ public class KmeansApp {
                         return Vectors.dense(values);
                     }
                 });
+        double loadTime = (double)(System.currentTimeMillis() - start) / 1000.0;
 
         // Cluster the data into two classes using KMeans
         
         
+        start = System.currentTimeMillis();
         //final KMeansModel clusters = KMeans.train(parsedData.rdd(), numClusters, numIterations);
         final KMeansModel clusters = new KMeans().setK(numClusters).setMaxIterations(numIterations).setInitializationMode(KMeans.K_MEANS_PARALLEL()).setSeed(127).run(parsedData.rdd());
+        double trainingTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
+        start = System.currentTimeMillis();
+        // Evaluate clustering by computing Within Set Sum of Squared Errors
+        double WSSSE = clusters.computeCost(parsedData.rdd());
+        double testTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
+        start = System.currentTimeMillis();
         JavaRDD<String> vectorIndex = parsedData.map(
                 new Function<Vector, String>() {
                     public String call(Vector point) {
@@ -58,9 +69,10 @@ public class KmeansApp {
                         return point.toString()+" "+Integer.toString(ind);
                     }
                 });
-        // Evaluate clustering by computing Within Set Sum of Squared Errors
-        double WSSSE = clusters.computeCost(parsedData.rdd());
         vectorIndex.saveAsTextFile(output);
+        double saveTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+        System.out.printf("loadTime:%.3f, trainingTime:%.3f, testTime:%.3f, saveTime:%.3f\n", loadTime, trainingTime, testTime, saveTime);
         System.out.println("Within Set Sum of Squared Errors = " + WSSSE);
+        sc.stop();
     }
 }

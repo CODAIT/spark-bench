@@ -44,7 +44,8 @@ public class LogisticRegressionApp {
 		conf.registerKryoClasses(new Class<?>[]{ LogisticRegressionApp.class});
 		
         // Load and parse data
-		System.out.println("text file input:"+input);
+	long start = System.currentTimeMillis();
+	//	System.out.println("text file input:"+input);
         JavaRDD<String> data = sc.textFile(input);
          //for small data set
         JavaRDD<LabeledPoint> parsedData = data.map(
@@ -75,12 +76,16 @@ public class LogisticRegressionApp {
 			else{
 				parsedRDD_Data.persist(StorageLevel.MEMORY_AND_DISK());
 			}
+	double loadTime = (double)(System.currentTimeMillis() - start) / 1000.0;
+
     // Building the model
-	
+	start = System.currentTimeMillis();
         final LogisticRegressionModel model
                 = LogisticRegressionWithSGD.train(parsedRDD_Data, numIterations);
+	double trainingTime = (double)(System.currentTimeMillis() - start) / 1000.0;
 
         // Evaluate model on training examples and compute training error
+	start = System.currentTimeMillis();
         JavaRDD<Tuple2<Double, Double>> valuesAndPreds = parsedData.map(
                 new Function<LabeledPoint, Tuple2<Double, Double>>() {
                     public Tuple2<Double, Double> call(LabeledPoint point) {
@@ -97,7 +102,10 @@ public class LogisticRegressionApp {
                     }
                 }
         ).rdd()).mean();
+	double testTime = (double)(System.currentTimeMillis() - start) / 1000.0;
 
+        System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f}\n", loadTime, trainingTime, testTime);
+        //System.out.printf("{\"loadTime\":%.3f,\"trainingTime\":%.3f,\"testTime\":%.3f,\"saveTime\":%.3f}\n", loadTime, trainingTime, testTime, saveTime);
         System.out.println("training Mean Squared Error = " + MSE);        
        // System.out.println("training Weight = " + 
         //        Arrays.toString(model.weights().toArray()));
