@@ -12,7 +12,7 @@ echo "========== running ${APP} benchmark =========="
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 JAR="${DIR}/target/TriangleCountApp-1.0.jar"
 CLASS="src.main.scala.triangleCountApp"
-OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${numPar} ${STORAGE_LEVEL}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PARTITIONS} ${STORAGE_LEVEL}"
 echo "opt ${OPTION}"
 
 setup
@@ -21,7 +21,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	purge_data "${MC_LIST}"	
 	START_TS=get_start_ts
 	START_TIME=`timestamp`
-	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
+	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
 	END_TIME=`timestamp`
 	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
 	print_config ${BENCH_REPORT}

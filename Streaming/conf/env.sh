@@ -11,7 +11,7 @@ if [ 1 -eq 0 ];then
 	
 	# for preparation 
 	numV=4000000
-	numPar=400
+	#NUM_OF_PARTITIONS=400
 	mu=4.0
 	sigma=1.3
 	

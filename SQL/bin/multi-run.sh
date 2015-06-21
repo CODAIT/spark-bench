@@ -53,7 +53,7 @@ elif [ $mode = "sercmp" ]; then
 	fi 
 	#totmem=5.2; 	memf=`awk 'BEGIN{printf("%.2f\n",('$i'+1)/'$totmem'/10)}' `			 
 	#sed -i '/memoryFraction=0/ c memoryFraction='$memf $file 		
-	#echo "echo $i G data: NUM_OF_EXAMPLE=$total partition $numpar; memfraction $memf"
+	#echo "echo $i G data: NUM_OF_EXAMPLE=$total partition $NUM_OF_PARTITIONS; memfraction $memf"
 	
 	if [ 1 -eq 1 ];then
 		sed -i '/memoryFraction=0/ c memoryFraction=0.01' $file 		

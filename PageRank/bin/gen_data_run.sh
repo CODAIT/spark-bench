@@ -15,7 +15,7 @@ SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
 CLASS="src.main.scala.pageRankDataGenRun"
-OPTION="${INPUT_HDFS} ${OUTPUT_HDFS}  ${numV} ${numPar} ${mu} ${sigma} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB}"
+OPTION="${INPUT_HDFS} ${OUTPUT_HDFS}  ${numV} ${NUM_OF_PARTITIONS} ${mu} ${sigma} ${MAX_ITERATION} ${TOLERANCE} ${RESET_PROB}"
 
 echo "opt ${OPTION}"
 
