@@ -2,7 +2,7 @@
 #numV=10000000
 numB=14
 batch=500000
-numPar=1600
+#NUM_OF_PARTITIONS=1600
 
 # for running
 MAX_ITERATION=3

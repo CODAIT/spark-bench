@@ -22,7 +22,7 @@ JAR="${DIR}/target/MFApp-1.0.jar"
 
 #CLASS="src.main.scala.MFMovieLens"
 #OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${DATASET_DIR}/ml-10M100K/personalRatings.txt"
-#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${DATASET_DIR}/BigDataGeneratorSuite/Graph_datagen/personalRatings.txt $numPar"
+#OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${DATASET_DIR}/BigDataGeneratorSuite/Graph_datagen/personalRatings.txt $NUM_OF_PARTITIONS"
 
 #JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 
@@ -35,7 +35,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	START_TS=get_start_ts
 	
 	START_TIME=`timestamp`
-	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
+	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
 	
 	END_TIME=`timestamp`
 	gen_report "MF" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}

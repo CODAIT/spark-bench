@@ -121,8 +121,8 @@ elif [ $mode = "inputsize" ]; then
 		memf=`awk 'BEGIN{printf("%.2f\n",('$i'+1)/'$totmem'/10)}' `					
 		sed -i '/memoryFraction=0/ c memoryFraction='$memf $file 
 		 
-		numpar=400;   if [ $i -le 20 ];then  numpar=200; fi
-		sed -i '/numPar=/ c numPar='$numpar $file
+		NUM_OF_PARTITIONS=400;   if [ $i -le 20 ];then  NUM_OF_PARTITIONS=200; fi
+		sed -i '/numPar=/ c numPar='$NUM_OF_PARTITIONS $file
 			
 		echo "echo $i G data: NUM_OF_EXAMPLE=$total partition $numpar; memfraction $memf"			
 		$DIR/bin/gen_data.sh;sleep 60;

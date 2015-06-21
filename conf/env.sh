@@ -11,6 +11,7 @@ SPARK_VERSION=1.4.0-SNAPSHOT
 ##SPARK_MASTER=yarn-cluster
 SPARK_MASTER=spark://`hostname`:7077
 MC_LIST="minli3 minli4 minli5 minli6 minli7 minli8 minli12 minli13 minli14 minli15"
+SPARK_HADOOP_FS_LOCAL_BLOCK_SIZE=536870912
 
 # base dir for DataSet
 DATASET_DIR=/home/`whoami`/SparkBench/dataset
@@ -51,5 +52,7 @@ SPARK_STORAGE_MEMORYFRACTION=0.5
 # - STORAGE_LEVEL, set MEMORY_AND_DISK or MEMORY_AND_DISK_SER
 STORAGE_LEVEL=MEMORY_AND_DISK
 
+# for preparation
+NUM_OF_PARTITIONS=10
 # for running
 NUM_TRIALS=1
