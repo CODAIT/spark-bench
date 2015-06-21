@@ -35,7 +35,7 @@ object KmeansApp {
     val clusters: KMeansModel = KMeans.train(parsedData, K, maxIterations,runs, KMeans.K_MEANS_PARALLEL, seed=127L)
     val trainingTime = (System.currentTimeMillis() - start).toDouble / 1000.0
     println("cluster centers: " + clusters.clusterCenters.mkString(","))
-    m
+
     start = System.currentTimeMillis();
     val vectorsAndClusterIdx = parsedData.map{ point =>
       val prediction = clusters.predict(point)
