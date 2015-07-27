@@ -28,6 +28,8 @@ else
   MASTER=local
 fi
 
+# whether restart spark cluster at every workload run; value: "TRUE" or "FALSE"
+RESTART="FALSE"
 # base dir for DataSet
 if [ -z "$DATASET_DIR" ]; then
   export DATASET_DIR=/home/`whoami`/SparkBench/dataset

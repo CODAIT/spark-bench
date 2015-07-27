@@ -67,13 +67,13 @@ function get_start_ts() {
   return `ssh ${masterhost} "date +%F-%T"`
 }
 function setup(){
-  if [ "${MASTER}" = "spark" ]; then
+  if [ "${MASTER}" = "spark" ] && [ "${RESTART}" = "TRUE" ] ; then
     "${SPARK_HOME}/sbin/stop-all.sh"
     "${SPARK_HOME}/sbin/start-all.sh"
   fi
 }
 function teardown(){
-  if [ "${MASTER}" = "spark" ]; then
+  if [ "${MASTER}" = "spark" ] && [ "${RESTART}" = "TRUE" ] ; then
     "${SPARK_HOME}/sbin/stop-all.sh"
   fi
 }
