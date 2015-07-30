@@ -130,6 +130,14 @@
 	</build>
 
 	<modules>
+		
+
+		<module>SVM</module>
+
+	</modules>
+
+	<!--modules>   
+		<module>LogisticRegression</module>
 		<module>LogisticRegression</module>
 		<module>KMeans</module> 
 		<module>LinearRegression</module>
@@ -146,14 +154,10 @@
 		<module>ConnectedComponent</module>
 		<module>PregelOperation</module>
 		<module>SQL</module>
-		<module>Streaming</module>
-	</modules>
-
-	<!--modules>   
-		   
+		<module>Streaming</module>		   
 		 
 		   
-		 </modules -->
+	</modules -->
 	<profiles>
 		<profile>
 			<id>spark1.2</id>

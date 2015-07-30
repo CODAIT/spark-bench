@@ -8,8 +8,10 @@ DIR=`cd $bin/../; pwd`
 
 echo "========== preparing ${APP} data =========="
 
-JAR="${MllibJar}"
-CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
+#JAR="${MllibJar}"
+JAR="${DIR}/target/SVMApp-1.0.jar"
+#CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
+CLASS="src.main.scala.SVMDataGen"
 OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 ${RM} -r ${INPUT_HDFS}
 
