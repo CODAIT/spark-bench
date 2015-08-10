@@ -15,12 +15,16 @@
  * limitations under the License.
  */
 
+ /**
+ * This file is modified from  com.github.ehiggs.spark.terasort.*
+ */
+ 
 package src.main.scala
 
 import org.apache.spark.SparkContext._
 import org.apache.spark.{SparkConf, SparkContext}
 
-object TeraGen {
+object terasortDataGen {
   def main(args: Array[String]) {
 
     if (args.length < 2) {

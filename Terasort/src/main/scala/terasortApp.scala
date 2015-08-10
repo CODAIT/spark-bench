@@ -23,11 +23,9 @@ import org.apache.spark._
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
- * This is a great example program to stress test Spark's shuffle mechanism.
- *
- * See http://sortbenchmark.org/
+ * This file is modified from  com.github.ehiggs.spark.terasort.*
  */
-object TeraSort {
+object terasortApp {
 
   implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
 
