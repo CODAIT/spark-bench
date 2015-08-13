@@ -4,8 +4,6 @@
 
 - Current version: 2.0
 - Release date: 2015-5-10
-- Contact: [Min Li](mailto:minli@us.ibm.com)
-- Homepage: https://bitbucket.org/lm0926/sparkbench
 
 - Contents:
 
