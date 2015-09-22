@@ -129,15 +129,14 @@
 		</plugins>
 	</build>
 
-	<modules>
+	<!--modules>
 		
 
 		<module>SVM</module>
 
-	</modules>
+	</modules-->
 
-	<!--modules>   
-		<module>LogisticRegression</module>
+	<modules>   
 		<module>LogisticRegression</module>
 		<module>KMeans</module> 
 		<module>LinearRegression</module>
@@ -157,7 +156,7 @@
 		<module>Streaming</module>		   
 		 
 		   
-	</modules -->
+	</modules>
 	<profiles>
 		<profile>
 			<id>spark1.2</id>
