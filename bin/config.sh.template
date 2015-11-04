@@ -72,7 +72,7 @@ if [ ! -d ${BENCH_NUM} ]; then
 fi 
 
 # local report
-export BENCH_REPORT=${BENCH_HOME}/bench-model-validation-march26-15.dat
+export BENCH_REPORT=${BENCH_HOME}/bench-report.dat
 export EXECUTOR_GLOBAL_MEM=6g
 #export STORAGE_LEVEL=MEMORY_AND_DISK_SER
 export STORAGE_LEVEL=MEMORY_AND_DISK
