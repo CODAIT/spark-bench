@@ -32,11 +32,4 @@ teardown
 exit 0
 
 
-# ===unused ==compress check 
-if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
-    COMPRESS_OPT="-compress true \
-        -compressCodec $COMPRESS_CODEC \
-        -compressType BLOCK "
-else
-    COMPRESS_OPT="-compress false"
-fi
+
