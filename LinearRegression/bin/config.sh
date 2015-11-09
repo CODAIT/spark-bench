@@ -13,10 +13,6 @@ fi
 APP=LinearRegression
 INPUT_HDFS=${DATA_HDFS}/${APP}/Input
 OUTPUT_HDFS=${DATA_HDFS}/${APP}/Output
-if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
-    INPUT_HDFS=${INPUT_HDFS}-comp
-    OUTPUT_HDFS=${OUTPUT_HDFS}-comp
-fi
 
 # Either stand alone or yarn cluster
 APP_MASTER=${SPARK_MASTER}

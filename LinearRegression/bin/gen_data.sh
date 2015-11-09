@@ -3,13 +3,13 @@
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 
-echo "========== preparing ${APP} data =========="
 
 DIR=`cd $bin/../; pwd`
 . "${DIR}/../bin/config.sh"
 . "${DIR}/bin/config.sh"
 
 
+echo "========== preparing ${APP} data =========="
 
 ${RM} -r ${INPUT_HDFS}
 
