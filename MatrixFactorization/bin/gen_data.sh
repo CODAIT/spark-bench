@@ -18,7 +18,7 @@ JAR="${DIR}/target/MFApp-1.0.jar"
 CLASS="src.main.scala.MFDataGenerator"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${m} ${n}  ${rank} ${trainSampFact} ${noise} ${sigma} ${test} ${testSampFact} ${NUM_OF_PARTITIONS}"
 
-START_TS=get_start_ts
+START_TS=`get_start_ts`;
 
 setup
 START_TIME=`timestamp`

@@ -30,7 +30,7 @@ if [ "$genOpt" = "large" ]; then
 	OPTION="${tmp_dir} ${INPUT_HDFS} ${NUM_OF_PARTITIONS} "
 fi
 
-START_TS=get_start_ts
+START_TS=`get_start_ts`;
 
 setup
 START_TIME=`timestamp`

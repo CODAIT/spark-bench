@@ -18,7 +18,7 @@ CLASS="src.main.scala.GraphDataGen"
 
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${NUM_OF_PARTITIONS} ${mu} ${sigma}"
 
-START_TS=get_start_ts
+START_TS=`get_start_ts`;
 
 #${CPFROM} ${SPARK_HOME}/graphx/data/followers.txt ${INPUT_HDFS}
 #${CPFROM} ${SPARK_HOME}/graphx/data/users.txt ${INPUT_HDFS}

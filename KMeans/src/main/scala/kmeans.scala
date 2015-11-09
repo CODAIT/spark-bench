@@ -1,3 +1,5 @@
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.mllib.clustering.{KMeansModel, KMeans}
 import org.apache.spark.{SparkContext,SparkConf}
 import org.apache.spark.SparkContext._

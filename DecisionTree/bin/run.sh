@@ -22,7 +22,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	${RM} -r ${OUTPUT_HDFS_Classification}
 	purge_data "${MC_LIST}"	
 	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Classification} ${NUM_OF_CLASS_C} ${impurityC} ${maxDepthC} ${maxBinsC} ${modeC}"
-	START_TS=get_start_ts
+START_TS=`get_start_ts`;
 	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat
 	END_TIME=`timestamp`
@@ -41,7 +41,7 @@ if [ 1 -eq 0 ]; then
 	purge_data "${MC_LIST}"	
 	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Regression} ${NUM_OF_CLASS_R} ${impurityR} ${maxDepthR} ${maxBinsR} ${modeR} "
 	START_TIME=`timestamp`
-	START_TS=get_start_ts
+START_TS=`get_start_ts`;
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${SPARK_MASTER} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/DecisionTree_run_${START_TS}.dat
 	END_TIME=`timestamp`
 	gen_report "DecisionTree-regression" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}

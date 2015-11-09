@@ -11,7 +11,7 @@ echo "========== preparing ${APP} data =========="
 ${RM} -r ${INPUT_HDFS}
 
 # generate data
-START_TS=get_start_ts
+START_TS=`get_start_ts`;
 
 setup
 genOpt="small"

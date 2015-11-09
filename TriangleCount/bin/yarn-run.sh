@@ -31,7 +31,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	
 	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
-	START_TS=get_start_ts
+START_TS=`get_start_ts`;
 	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master yarn-cluster ${YARN_OPT} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LinearRegression_run_${START_TS}.dat
 	END_TIME=`timestamp`

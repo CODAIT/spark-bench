@@ -18,7 +18,7 @@ JAR="${DIR}/target/LogisticRegressionApp-1.0.jar"
 CLASS="LogisticRegression.src.main.java.LogisticRegressionDataGen"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${ProbOne} ${NUM_OF_PARTITIONS}"
 
-START_TS=get_start_ts
+START_TS=`get_start_ts`;
 setup
 START_TIME=`timestamp`
 echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LogisticRegression_gendata_${START_TS}.dat"

@@ -17,7 +17,7 @@ CLASS="kmeans_min.src.main.scala.KmeansDataGen"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_POINTS} ${NUM_OF_CLUSTERS} ${DIMENSIONS} ${SCALING} ${NUM_OF_PARTITIONS}"
 
 
-START_TS=get_start_ts
+START_TS=`get_start_ts`;
 setup
 START_TIME=`timestamp`
 echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/TEMP_gendata_${START_TS}.dat"
