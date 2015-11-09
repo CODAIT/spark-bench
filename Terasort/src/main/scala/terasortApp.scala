@@ -16,6 +16,8 @@
  */
 
 package src.main.scala
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 
 import com.google.common.primitives.UnsignedBytes
 import org.apache.spark.SparkContext._
@@ -30,6 +32,8 @@ object terasortApp {
   implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
 
   def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
 
     if (args.length < 2) {
       println("Usage:[input-file] [output-file]")      

@@ -5,12 +5,16 @@
  */
 
 package PCA.src.main.scala
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.mllib.util.LinearDataGenerator
 import org.apache.spark.{SparkContext,SparkConf}
 
 
 object PCADataGen {
   def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
     if (args.length < 3) {
       println("usage: <output> <numExamples> <numFeatures> [numpar]")
       System.exit(0)

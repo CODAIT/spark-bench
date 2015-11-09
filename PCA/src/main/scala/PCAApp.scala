@@ -9,6 +9,8 @@ import org.json4s.jackson.JsonMethods._
 
 object PCAApp {
   def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
     if (args.length < 2) {
       println("usage: <input> <dimensions>")
       System.exit(0)

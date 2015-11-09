@@ -1,4 +1,6 @@
 package src.main.scala
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.{SparkContext,SparkConf, Logging}
 import org.apache.spark.SparkContext._
 import org.apache.spark.graphx._
@@ -12,6 +14,8 @@ import org.apache.spark.graphx.impl.{EdgePartitionBuilder, GraphImpl}
 object pageRankDataGenRun extends Logging{
   
   def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
     if (args.length < 5) {
       println("usage: <input> <output>; datagen:  <numVertices> <numPartitions> <mu> <sigma> ; run: <maxIterations> <tolerance> <resetProb> ")
       System.exit(0)

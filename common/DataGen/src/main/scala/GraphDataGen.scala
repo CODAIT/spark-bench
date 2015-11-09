@@ -1,4 +1,6 @@
 package src.main.scala
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.{SparkContext,SparkConf}
 import org.apache.spark.SparkContext._
 import org.apache.spark.graphx._
@@ -8,6 +10,8 @@ import org.apache.spark.rdd._
 
 object GraphDataGen {
   def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
     if (args.length < 5) {
       println("usage:  <output> <numVertices> <numPartitions> <mu> <sigma>")
       System.exit(0)

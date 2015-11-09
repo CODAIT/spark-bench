@@ -9,6 +9,8 @@
  * @author minli
  */
 package LogisticRegression.src.main.java;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import java.util.Arrays;
 import scala.Tuple2;
 import org.apache.spark.api.java.*;

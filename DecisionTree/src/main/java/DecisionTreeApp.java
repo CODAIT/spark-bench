@@ -9,6 +9,8 @@
  * @author minli
  */
 package DecisionTree.src.main.java;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import java.util.HashMap;
 import scala.Tuple2;
 import org.apache.spark.api.java.function.Function2;
@@ -26,6 +28,8 @@ import org.apache.spark.SparkConf;
 public class DecisionTreeApp {
 
     public static void main(String[] args) {
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
         if (args.length < 3) {
             System.out.println("usage: <input> <output> <numClass>"
                     + " <impurity> <maxDepth> <maxBins> <mode:regression/Classification>");
