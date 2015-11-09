@@ -27,9 +27,10 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	START_TIME=`timestamp`
 START_TS=`get_start_ts`;
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} --conf spark.storage.memoryFraction=${memoryFraction} --conf spark.executor.memory=1g $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
+res=$?;
 	END_TIME=`timestamp`
 	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
-	print_config ${BENCH_REPORT}
+print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 done
 exit 0
 

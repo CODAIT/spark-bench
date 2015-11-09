@@ -52,3 +52,19 @@ function print_config(){
 	numV ${numV} numPar ${NUM_OF_PARTITIONS} mu ${mu} sigma ${sigma} iter ${NUM_ITERATION} \
 	${CONFIG} " >> ${output}
 }
+function print_config_t(){
+                   get_config_values $1 $2 $3 $4 $5 $6
+}
+
+function get_config_fields(){
+       local report_field=$(get_report_field_name)  
+           echo -n "#${report_field},AppType,nExe,driverMem,exeMem,exeCore,nExample,nFeature,EPS,nPar,Intercepts,nIter,memoryFraction,STEP_SIZE,noise,lambda,miniBatch,sparseness,convergenceTol" 
+                echo -en "\n"
+                                    
+}
+function get_config_values(){
+          gen_report $1 $2 $3 $4 $5 $6
+                echo -n ",${APP}-MLlibConfig,$nexe,$dmem,$emem,$ecore,${NUM_OF_EXAMPLES},${NUM_OF_FEATURES},${EPS},${NUM_OF_PARTITIONS},${INTERCEPTS},${MAX_ITERATION},${memoryFraction},${STEP_SIZE},$noise,${lambda},${miniBatch},${sparseness},${convergenceTol}" 
+                       echo -en "\n"
+                              return 0
+}
