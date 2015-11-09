@@ -14,7 +14,6 @@ INPUT_HDFS=${DATA_HDFS}/${APP}/Input
 OUTPUT_HDFS=${DATA_HDFS}/${APP}/Output
 
 
-# either stand alone or yarn cluster
 APP_MASTER=${SPARK_MASTER}
 
 set_gendata_opt
