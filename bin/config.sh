@@ -2,8 +2,14 @@
 
 this=$( cd -P "$( dirname "${BASH_SOURCE[0]}" )/" && pwd -P )
 
-export BENCH_VERSION="2.0"
+if [ -f "${this}/../conf/env.sh" ] ; then
+    . ${this}/../conf/env.sh
+else
+    echo "env.sh is missing"
+    exit 1
+fi
 
+export BENCH_VERSION="2.0"
 [ -z "$BENCH_HOME" ] &&    export BENCH_HOME="${this}/../"
 [ -z "$BENCH_CONF" ]  &&    export BENCH_CONF="${this}/../conf/"
 [ -f "${BENCH_HOME}/bin/funcs.sh" ] &&    . "${BENCH_HOME}/bin/funcs.sh"
@@ -27,5 +33,4 @@ fi
 RM="hdfs dfs -rm"
 DU="hdfs dfs -du"
 HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-$HADOOP_HOME/conf}"
-[ -f "${this}/../conf/env.sh" ] && . ${this}/../conf/env.sh
 

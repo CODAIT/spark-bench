@@ -202,8 +202,8 @@
             <id>spark1.5</id>
             <properties>
                 <env>spark1.5</env>
-                <spark.version>1.5.0</spark.version>
-                <spark.bin.version>1.5</spark.bin.version>
+                <spark.version>1.5.1</spark.version>
+                <spark.bin.version>1.5.1</spark.bin.version>
             </properties>
             <activation>
                 <property>

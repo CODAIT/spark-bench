@@ -35,7 +35,7 @@ fi
 
 END_TIME=`timestamp`
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
-gen_report "${APP}_gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
+get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown
 exit 0

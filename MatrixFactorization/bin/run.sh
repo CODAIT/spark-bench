@@ -39,7 +39,7 @@ START_TS=`get_start_ts`;
 res=$?;
 	
 	END_TIME=`timestamp`
-	gen_report "MF" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
+get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 done
 teardown
