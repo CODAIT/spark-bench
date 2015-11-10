@@ -29,28 +29,28 @@ import org.apache.spark.{SparkConf, SparkContext}
  */
 object terasortApp {
 
-  implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
+    implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
 
-  def main(args: Array[String]) {
-Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
-Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+        def main(args: Array[String]) {
+            Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+            Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
 
-    if (args.length < 2) {
-      println("Usage:[input-file] [output-file]")      
-      System.exit(0)
-    }
+            if (args.length < 2) {
+                println("Usage:[input-file] [output-file]")      
+                    System.exit(0)
+            }
 
-    // Process command line arguments
-    val inputFile = args(0)
-    val outputFile = args(1)
+            // Process command line arguments
+            val inputFile = args(0)
+                val outputFile = args(1)
 
-    val conf = new SparkConf()
-      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .setAppName(s"TeraSort")
-    val sc = new SparkContext(conf)
+                val conf = new SparkConf()
+                .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+                .setAppName(s"TeraSort")
+                val sc = new SparkContext(conf)
 
-    val dataset = sc.newAPIHadoopFile[Array[Byte], Array[Byte], TeraInputFormat](inputFile)
-    val sorted = dataset.partitionBy(new TeraSortPartitioner(dataset.partitions.size)).sortByKey()
-    sorted.saveAsNewAPIHadoopFile[TeraOutputFormat](outputFile)
-  }
+                val dataset = sc.newAPIHadoopFile[Array[Byte], Array[Byte], TeraInputFormat](inputFile)
+                val sorted = dataset.partitionBy(new TeraSortPartitioner(dataset.partitions.size)).sortByKey()
+                sorted.saveAsNewAPIHadoopFile[TeraOutputFormat](outputFile)
+        }
 }

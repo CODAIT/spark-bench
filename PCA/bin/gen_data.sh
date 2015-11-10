@@ -26,17 +26,9 @@ END_TIME=`timestamp`
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 get_config_fields >> ${BENCH_REPORT}
-print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
+print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown
 
 exit 0
 
 
-# compress check
-if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
-    COMPRESS_OPT="-compress true \
-        -compressCodec $COMPRESS_CODEC \
-        -compressType BLOCK "
-else
-    COMPRESS_OPT="-compress false"
-fi

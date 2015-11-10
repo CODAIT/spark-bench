@@ -2,41 +2,35 @@
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
 
-echo "========== running ${APP} bench =========="
 DIR=`cd $bin/../; pwd`
 . "${DIR}/../bin/config.sh"
 . "${DIR}/bin/config.sh"
 
+echo "========== running ${APP} bench =========="
 
 # pre-running
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 JAR="${DIR}/target/PCAApp-1.0.jar"
-CLASS="PCAApp"
+CLASS="PCA.src.main.scala.PCAApp"
 OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${DIMENSIONS}"
 
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
-	purge_data "${MC_LIST}"	
-START_TS=`get_start_ts`;
-	START_TIME=`timestamp`
+    purge_data "${MC_LIST}"	
+    START_TS=`get_start_ts`;
+    START_TIME=`timestamp`
 
-		echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat"
-		exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
-res=$?;
-		
-	END_TIME=`timestamp`
-get_config_fields >> ${BENCH_REPORT}
-print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
+    echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat"
+    exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
+    res=$?;
+
+    END_TIME=`timestamp`
+    get_config_fields >> ${BENCH_REPORT}
+    print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 done
 teardown
 
 exit 0
 
 
-if [ $COMPRESS -eq 1 ]; then
-    COMPRESS_OPT="-Dmapred.output.compress=true
-    -Dmapred.output.compression.codec=$COMPRESS_CODEC"
-else
-    COMPRESS_OPT="-Dmapred.output.compress=false"
-fi

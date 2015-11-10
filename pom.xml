@@ -139,6 +139,8 @@
 
     <modules>   
         <module>common</module>
+        <module>Terasort</module>
+        <module>PCA</module>
         <module>LogisticRegression</module>
         <module>KMeans</module> 
         <module>LinearRegression</module>

@@ -31,12 +31,12 @@ Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
 	val input = args(0) 
     val output = args(1)
 	val numVertices = args(2).toInt
-    
+    val numPar=args(3).toInt 
 	
     val n=numVertices
     val clique1 = for (u <- 0L until n; v <- 0L until n) yield Edge(u, v, 1)
     val clique2 = for (u <- 0L to n; v <- 0L to n) yield Edge(u + n, v + n, 1)
-    val twoCliques = sc.parallelize(clique1 ++ clique2 :+ Edge(0L, n, 1))
+    val twoCliques = sc.parallelize(clique1 ++ clique2 :+ Edge(0L, n, 1),numPar)
     val graph = Graph.fromEdges(twoCliques, 1)
       // Run label propagation
     val labels = LabelPropagation.run(graph, 20).cache()

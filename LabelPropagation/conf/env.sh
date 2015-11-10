@@ -1,4 +1,5 @@
 # Application parameters
 numV=200
 
+NUM_OF_PARTITIONS=10
 SPARK_STORAGE_MEMORYFRACTION=0.5

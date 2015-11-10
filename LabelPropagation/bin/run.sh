@@ -12,10 +12,10 @@ echo "========== running ${APP} benchmark =========="
 # path check
 
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
-
+[ -z $SIZE ] && SIZE=0
 JAR="${DIR}/target/LabelPropagationApp-1.0.jar"
 CLASS="src.main.scala.LabelPropagationApp"
-OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${numV}"
+OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${numV} ${NUM_OF_PARTITIONS}"
 
 echo "opt ${OPTION}"
 
