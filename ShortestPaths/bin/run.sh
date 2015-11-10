@@ -37,9 +37,3 @@ teardown
 exit 0
 
 
-#if [ $COMPRESS -eq 1 ]; then
-#    COMPRESS_OPT="-Dmapred.output.compress=true
-#    -Dmapred.output.compression.codec=$COMPRESS_CODEC"
-#else
-#    COMPRESS_OPT="-Dmapred.output.compress=false"
-#fi

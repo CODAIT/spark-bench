@@ -1,55 +1,55 @@
-<project>
-  <groupId>com.ibm</groupId>
-  <artifactId>PageRank-project</artifactId>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <name>PageRank Project</name>
+  
+  <parent>
+     <groupId>com.ibm.sparkbench</groupId>
+	<artifactId>sparkbench</artifactId>  		
+	<version>2.0</version>
+   </parent>
+   
+  <groupId>com.ibm</groupId>
+  <artifactId>Common</artifactId>  
+  <name>Common</name>
   <packaging>jar</packaging>
   <version>1.0</version>
+
+  
   <dependencies>
-    <dependency> <!-- Spark dependency -->
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
-    </dependency>
-	<dependency>
-		<groupId>org.apache.spark</groupId>
-		<artifactId>spark-mllib_2.10</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>org.apache.spark</groupId>
-		<artifactId>spark-graphx_2.10</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
-	</dependency>
 	<dependency>
 		<groupId>org.apache.hadoop</groupId>
 		<artifactId>hadoop-client</artifactId>
-		<version>2.4.0</version>
+		<version>${hadoop.mr2.version}</version>
 	</dependency>
+    <dependency> <!-- Spark dependency -->
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_${scala.binary.version}</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-mllib_${scala.binary.version}</artifactId>
+		<version>${spark.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-graphx_${scala.binary.version}</artifactId>
+		<version>${spark.version}</version>
+        </dependency>
         <dependency>
-         <groupId>org.scala-lang</groupId>
-         <artifactId>scala-library</artifactId>
-         <version>2.10.4</version>
-   </dependency>                                                  
-  </dependencies>
-     <!--build>
-        <plugins>
-            <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-               </plugin>
-        </plugins>
-        </build--> 
-        
-        <build>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>1.1</version>
+    </dependency>
+	<dependency>
+       <groupId>edu.jhu.nlp</groupId>
+        <artifactId>wikixmlj</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies> 
+  <build>
+      <sourceDirectory>${project.basedir}/DataGen/src/main/</sourceDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -94,5 +94,5 @@
 
 		</plugins>
 	</build>
-
 </project>
+
