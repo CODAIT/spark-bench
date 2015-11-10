@@ -11,8 +11,8 @@ echo "========== preparing ${APP} data =========="
 ${RM} -r ${INPUT_HDFS}
 
 
-JAR="${DIR}/../common/DataGen/target/scala-2.10/datagen_2.10-1.0.jar"
-CLASS="src.main.scala.GraphDataGen"
+JAR="${DIR}/../common/target/Common-1.0.jar"
+CLASS="DataGen.src.main.scala.GraphDataGen"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${NUM_OF_PARTITIONS} ${mu} ${sigma}"
 
 START_TS=`get_start_ts`;
@@ -28,16 +28,8 @@ END_TIME=`timestamp`
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
 get_config_fields >> ${BENCH_REPORT}
-print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
+print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown
 exit 0
 
 
-# ===unused ==compress check 
-if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
-    COMPRESS_OPT="-compress true \
-        -compressCodec $COMPRESS_CODEC \
-        -compressType BLOCK "
-else
-    COMPRESS_OPT="-compress false"
-fi

@@ -1,13 +1,13 @@
 # for prepare #200M=1million points
-m=500 
-n=200
+m=50 
+n=20
 rank=10
 trainSampFact=0.9
 noise=false
 sigma=0.1
 test=false
 testSampFact=0.1
-#NUM_OF_PARTITIONS=120
+NUM_OF_PARTITIONS=10
 
 ##### for running ####
 MAX_ITERATION=3 #90 # 3

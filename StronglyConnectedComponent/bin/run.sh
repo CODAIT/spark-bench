@@ -13,7 +13,7 @@ echo "========== running ${APP} benchmark =========="
 
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 
-JAR="${DIR}/target/scala-2.10/stronglyconnectedcomponentapp_2.10-1.0.jar"
+JAR="${DIR}/target/StronglyConnectedComponentApp-1.0.jar"
 CLASS="src.main.scala.StronglyConnectedComponentApp"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PARTITIONS}"
 
@@ -37,10 +37,3 @@ teardown
 
 exit 0
 
-
-#if [ $COMPRESS -eq 1 ]; then
-#    COMPRESS_OPT="-Dmapred.output.compress=true
-#    -Dmapred.output.compression.codec=$COMPRESS_CODEC"
-#else
-#    COMPRESS_OPT="-Dmapred.output.compress=false"
-#fi

@@ -13,7 +13,6 @@ echo "========== preparing MF data =========="
 ${RM} -r ${INPUT_HDFS}
 #JAR="${MllibJar}"
 #CLASS="org.apache.spark.mllib.util.MFDataGenerator"
-#JAR="${DIR}/target/scala-2.10/mfapp_2.10-1.0.jar"
 JAR="${DIR}/target/MFApp-1.0.jar"
 CLASS="src.main.scala.MFDataGenerator"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${m} ${n}  ${rank} ${trainSampFact} ${noise} ${sigma} ${test} ${testSampFact} ${NUM_OF_PARTITIONS}"
@@ -30,7 +29,7 @@ res=$?;
 END_TIME=`timestamp`
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 get_config_fields >> ${BENCH_REPORT}
-print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
+print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown
 
 exit 0
