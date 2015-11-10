@@ -16,6 +16,8 @@
  */
 
 package src.main.scala
+import src.main.java.Unsigned16
+import src.main.java.Random16
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
 
