@@ -50,9 +50,3 @@ get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 fi
 
-#if [ $COMPRESS -eq 1 ]; then
-#    COMPRESS_OPT="-Dmapred.output.compress=true
-#    -Dmapred.output.compression.codec=$COMPRESS_CODEC"
-#else
-#    COMPRESS_OPT="-Dmapred.output.compress=false"
-#fi

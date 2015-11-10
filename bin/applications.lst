@@ -12,5 +12,6 @@ KMeans
 #ConnectedComponent
 #StronglyConnectedComponent
 #PregelOperation
+#PCA
 #SQL
 #Streaming

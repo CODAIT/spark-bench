@@ -16,8 +16,10 @@ ${RM} -r ${INPUT_HDFS}
 # "Usage: SVMGenerator <master> <output_dir> [num_examples] [num_features] [num_partitions]"
 
 
-JAR="${MllibJar}"
-CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
+JAR="${DIR}/../SVM/target/SVMApp-1.0.jar"
+CLASS="SVM.src.main.scala.SVMDataGen"
+#JAR="${MllibJar}"
+#CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
 OPTION=" ${SPARK_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 
 START_TS=`get_start_ts`;
@@ -29,16 +31,8 @@ END_TIME=`timestamp`
 
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
 get_config_fields >> ${BENCH_REPORT}
-print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
+print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown
 exit 0
 
 
-# ===unused ==compress check 
-if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
-    COMPRESS_OPT="-compress true \
-        -compressCodec $COMPRESS_CODEC \
-        -compressType BLOCK "
-else
-    COMPRESS_OPT="-compress false"
-fi
