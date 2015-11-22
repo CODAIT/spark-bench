@@ -138,7 +138,6 @@
     </modules-->
 
     <modules>   
-        <module>common</module>
         <module>Terasort</module>
         <module>PCA</module>
         <module>LogisticRegression</module>
@@ -157,10 +156,9 @@
         <module>ConnectedComponent</module>
         <module>PregelOperation</module>
         <module>SQL</module>
-        <module>Streaming</module>		   
-
-
+        <module>Streaming</module>
     </modules>
+    
     <profiles>
         <profile>
             <id>spark1.2</id>
