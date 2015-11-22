@@ -64,8 +64,7 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 **Supported Spark releases:**
  
-  - Spark1.2
-  - Spark1.3
+  - Spark1.2,1.3,1.4,1.5
  
 ---
 ### Getting Started ###
@@ -74,8 +73,11 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 	Setup JDK, Hadoop-YARN, Spark runtime environment properly.
 	
-	Download/checkout SparkBench benchmark suite
+	Download  wikixmlj package:
+	git  clonehttps://github.com/synhershko/wikixmlj.git; mvn package install;
 	
+	Download/checkout SparkBench benchmark suite
+
 	Run `<SparkBench_Root>/bin/build-all.sh` to build SparkBench.
 	
 2. SparkBench Configurations.
