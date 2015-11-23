@@ -60,11 +60,11 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 **Other Workloads:**
 
-- KMeans,LinearRegression,DecisionTree,ShortestPaths, LabelPropagation, ConnectedComponent, StronglyConnectedComponent,PregelOperation
+- KMeans, LinearRegression, DecisionTree, ShortestPaths, LabelPropagation, ConnectedComponent, StronglyConnectedComponent, PregelOperation
 
 **Supported Spark releases:**
  
-  - Spark1.2,1.3,1.4,1.5
+  - Spark 1.2, 1.3, 1.4, 1.5
  
 ---
 ### Getting Started ###
@@ -84,15 +84,15 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 	
 	Make sure below variables has been set:
 	
-	SPARK_HOME    The Spark installation location
-	HADOOP_HOME   The HADOOP installation location
-	SPARK_MASTER  Spark master
-	HDFS_MASTER	  HDFS master
+	SPARK_HOME    The Spark installation location  
+	HADOOP_HOME   The HADOOP installation location  
+	SPARK_MASTER  Spark master  
+	HDFS_MASTER	  HDFS master  
 
 
 3. Execute.
 
-	`<SparkBench_Root>/<Workload>/bin/gen_data.sh`
+	`<SparkBench_Root>/<Workload>/bin/gen_data.sh`  
 	`<SparkBench_Root>/<Workload>/bin/run.sh`
 	
 	**Note**
@@ -120,9 +120,9 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 	You can also run each workload separately. In general, there are 3 different files under one workload folder.
 
-	`<Workload>/bin/config.sh`      change the workload specific configurations
-	`<Workload>/bin/gen_data.sh`
-	`<Workload>/bin/run.sh`
+	`<Workload>/bin/config.sh`      change the workload specific configurations  
+	`<Workload>/bin/gen_data.sh`  
+	`<Workload>/bin/run.sh`  
 
 2. Spark configuration.
 
