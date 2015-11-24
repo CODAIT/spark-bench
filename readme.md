@@ -74,7 +74,10 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 	Setup JDK, Hadoop-YARN, Spark runtime environment properly.
 	
 	Download  wikixmlj package:
-	git  clonehttps://github.com/synhershko/wikixmlj.git; mvn package install;
+	cd to a directory for download and type the next commands
+		git clone https://github.com/synhershko/wikixmlj.git
+		cd wikixmlj
+		mvn package install
 	
 	Download/checkout SparkBench benchmark suite
 
