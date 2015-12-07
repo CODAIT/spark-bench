@@ -8,6 +8,8 @@
  * @author limin
  */
 package MatrixFactorization.src.main.java;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import scala.Tuple2;
 import org.apache.spark.api.java.*;
 import org.apache.spark.api.java.function.Function;

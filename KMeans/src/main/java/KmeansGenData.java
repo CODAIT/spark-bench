@@ -5,6 +5,8 @@
  */
 
 package kmeans_java.src.main.java;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 import org.apache.spark.mllib.util.KMeansDataGenerator;
 
@@ -24,6 +26,8 @@ import org.apache.spark.rdd.RDD;
 public class KmeansGenData {
 
     public static void main(String[] args) {
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
         if (args.length < 5) {
             System.out.println("usage: <output> <numPoints> <numClusters> <dimenstion> <scaling factor> [numPar]");
             System.exit(0);

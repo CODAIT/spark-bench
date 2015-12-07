@@ -5,6 +5,8 @@
 
 
 package kmeans_java.src.main.java;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 import org.apache.spark.api.java.*;
 import org.apache.spark.api.java.function.Function;
@@ -17,6 +19,8 @@ import org.apache.spark.SparkConf;
 public class KmeansApp {
 
     public static void main(String[] args) {
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
         if (args.length < 5) {
             System.out.println("usage: <input> <output> <numClusters> <maxIterations> <runs> - optional");
             System.exit(0);

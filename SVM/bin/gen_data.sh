@@ -8,10 +8,8 @@ DIR=`cd $bin/../; pwd`
 
 echo "========== preparing ${APP} data =========="
 
-#JAR="${MllibJar}"
 JAR="${DIR}/target/SVMApp-1.0.jar"
-#CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
-CLASS="src.main.scala.SVMDataGen"
+CLASS="SVM.src.main.scala.SVMDataGen"
 OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
 ${RM} -r ${INPUT_HDFS}
 
@@ -30,18 +28,16 @@ if [ "$genOpt" = "large" ]; then
 	OPTION="${tmp_dir} ${INPUT_HDFS} ${NUM_OF_PARTITIONS} "
 fi
 
-START_TS=get_start_ts
-
 setup
+START_TS=`get_start_ts`;
 START_TIME=`timestamp`
 echo "${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/SVM_gendata_${START_TS}.dat"
 exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/SVM_gendata_${START_TS}.dat
-
+res=$?;
 END_TIME=`timestamp`
-
 SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
-gen_report "SVM-gendata" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS}>> ${BENCH_REPORT}
-print_config ${BENCH_REPORT}
+get_config_fields >> ${BENCH_REPORT}
+print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown
 exit 0
 

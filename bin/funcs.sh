@@ -21,6 +21,9 @@ function timestamp(){
     msec=`expr $nanosec / 1000000 `
     echo `expr $tmp + $msec`
 }
+function get_report_field_name(){
+        echo -n "Apptype,start_ts,duration,size,throughput,resStatus"
+}
 
 function gen_report() {
     local type=$1
@@ -28,6 +31,7 @@ function gen_report() {
     local end=$3
     local size=$4
 	local start_ts=$5
+    local res=$6
     which bc > /dev/null 2>&1
     if [ $? -eq 1 ]; then
         echo "\"bc\" utility missing. Please install it to generate proper report."
@@ -36,9 +40,8 @@ function gen_report() {
     local size=`echo "scale=6;$size/1024/1024"|bc`
 	local duration=`echo "scale=6;($end-$start)/1000"|bc`
     local tput=`echo "scale=6;$size/$duration"|bc`
+    echo -n "$type,${start_ts},$duration,$size,$tput,$res"
 
-	echo "$type ${start_ts} $duration $size $tput"
-    #echo "$type `date +%F-%T` <$start,$end> $size $duration $tput"
 }
 
 function check_dir() {
@@ -64,7 +67,8 @@ function purge_data(){
 	echo "date purged on ${mc_list}"
 }
 function get_start_ts() {
-  return `ssh ${masterhost} "date +%F-%T"`
+   ts=`ssh ${master} "date +%F-%T"`
+   echo $ts
 }
 function setup(){
   if [ "${MASTER}" = "spark" ] && [ "${RESTART}" = "TRUE" ] ; then

@@ -26,17 +26,19 @@ dmem=4g
 emem=2g
 ecore=1
 YARN_OPT="--num-executors $nexe --driver-memory $dmem --exectuor-memory $emem --executor-cores $ecore"
+res=$?;
 
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
 	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
-	START_TS=get_start_ts
+START_TS=`get_start_ts`;
 	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master yarn-cluster ${YARN_OPT} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_run_${START_TS}.dat
+res=$?;
 	END_TIME=`timestamp`
-	gen_report "LinearRegression" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
-	print_config ${BENCH_REPORT}
+get_config_fields >> ${BENCH_REPORT}
+print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 done
 exit 0
 

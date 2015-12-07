@@ -10,10 +10,10 @@ for workload in `cat $DIR/bin/applications.lst`; do
         continue
     fi
 
-    #echo -e "${UYellow}${BYellow}Prepare ${Yellow}${UYellow} ${workload} ${BYellow}...${Color_Off}"
+    echo -e "$Prepare  ${workload} ..."
     
     WORKLOAD=${DIR}/${workload}
-    #echo -e "${BCyan}Exec script: ${Cyan}${WORKLOAD}/prepare/prepare.sh${Color_Off}"
+    echo -e "Exec script: prepare/prepare.sh"
     ${WORKLOAD}/bin/gen_data.sh
 
     if [ $? -ne 0 ]
@@ -23,14 +23,14 @@ for workload in `cat $DIR/bin/applications.lst`; do
     fi
 
     
-	echo -e "${UYellow}${BYellow}Run ${Yellow}${UYellow}${workload}/${target}${Color_Off}"
-	echo -e "${BCyan}Exec script: ${Cyan}$WORKLOAD/${target}/bin/run.sh${Color_Off}"
+	echo -e "Run ${workload}"
+	echo -e "Exec script: $WORKLOAD/bin/run.sh"
 	$WORKLOAD/bin/run.sh
 
 	result=$?
 	if [ $result -ne 0 ]
 	then
-	    echo -e "${On_IRed}ERROR: ${workload}/${target} failed to run successfully.${Color_Off}" 
+	    echo -e "ERROR: ${workload} failed to run successfully."
             exit $result
 	fi
     

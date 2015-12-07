@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
 import java.util.Vector;
+import java.util.HashSet;
 public class WikiParser {
     long pagenum=0;
     long bigPageNum=0;
@@ -81,8 +82,10 @@ public class WikiParser {
                            String pageText=page.getText().replace("\r", " ").replace("\n", " ");
                            if(pageText.length()<100){return;}
                            wikip.bigPageNum++;
-                           Vector<String> cate=page.getCategories();
-                           String category=cate.size()!=0? cate.firstElement():"";
+                           HashSet<String> cate=page.getCategories();
+                           //String category=cate.size()!=0? cate.firstElement():"";
+                          String category="";
+                          for(String s: cate){ category+=":"+s;}
                            
                            String doc=category
                                    +" :::: "+page.getTitle().replace("\r", " ").replace("\n", " ")

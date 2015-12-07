@@ -6,6 +6,8 @@
  */
 
 package src.main.scala
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.{SparkContext,SparkConf, Logging}
 import org.apache.spark.SparkContext._
 import org.apache.spark.graphx._
@@ -16,6 +18,8 @@ import org.apache.spark.rdd._
 object LabelPropagationApp {
 
     def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
     if (args.length < 3) {
       println("usage: <input> <output>; datagen: <numVertices>;")
       System.exit(0)
@@ -27,12 +31,12 @@ object LabelPropagationApp {
 	val input = args(0) 
     val output = args(1)
 	val numVertices = args(2).toInt
-    
+    val numPar=args(3).toInt 
 	
     val n=numVertices
     val clique1 = for (u <- 0L until n; v <- 0L until n) yield Edge(u, v, 1)
     val clique2 = for (u <- 0L to n; v <- 0L to n) yield Edge(u + n, v + n, 1)
-    val twoCliques = sc.parallelize(clique1 ++ clique2 :+ Edge(0L, n, 1))
+    val twoCliques = sc.parallelize(clique1 ++ clique2 :+ Edge(0L, n, 1),numPar)
     val graph = Graph.fromEdges(twoCliques, 1)
       // Run label propagation
     val labels = LabelPropagation.run(graph, 20).cache()

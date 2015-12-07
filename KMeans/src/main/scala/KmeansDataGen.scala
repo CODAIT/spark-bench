@@ -5,6 +5,8 @@
  */
 
 package kmeans_min.src.main.scala
+import org.apache.log4j.Logger
+import org.apache.log4j.Level
 import org.apache.spark.mllib.clustering.{KMeansModel,KMeans}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.{SparkContext,SparkConf}
@@ -12,6 +14,8 @@ import org.apache.spark.{SparkContext,SparkConf}
 
 object KmeansDataGen {
   def main(args: Array[String]) {
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
     if (args.length < 5) {
       println("usage: <output> <numPoints> <numClusters> <dimenstion> <scaling factor> [numpar]")
       System.exit(0)

@@ -52,6 +52,7 @@ if [ $subApp = "StreamingLogisticRegression" ];then
 		OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${tmpdir}"
 		echo "gen train data opion $OPTION"
 		exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_${subApp}_genData_${START_TS}.dat;
+res=$?;
 		${HADOOP_HOME}/bin/hdfs dfs -mv ${tmpdir}/* ${trainingDir}/;
 
 
@@ -62,12 +63,13 @@ if [ $subApp = "StreamingLogisticRegression" ];then
 		OPTION="${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES} ${EPS} ${NUM_OF_PARTITIONS} ${ProbOne} ${tmpdir}"
 		echo "gen test data op $OPTION"
 		exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_${subApp}_genData_${START_TS}.dat;
+res=$?;
 		${HADOOP_HOME}/bin/hdfs dfs -mv ${tmpdir}/* ${testDir}/
 
 		END_TIME=`timestamp`
 		sleep 5
-		gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
-		print_config ${BENCH_REPORT}
+get_config_fields >> ${BENCH_REPORT}
+print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 	done
 
 	exit 0
@@ -137,12 +139,13 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	echo "========== Generating data for ${APP}-${subApp}  =========="	
 	${RM} -r ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
-	START_TS=get_start_ts
+START_TS=`get_start_ts`;
 	START_TIME=`timestamp`
 	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_${subApp}_genData_${START_TS}.dat
+res=$?;
 	END_TIME=`timestamp`
-	gen_report "${APP}" ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} >> ${BENCH_REPORT}
-	print_config ${BENCH_REPORT}
+get_config_fields >> ${BENCH_REPORT}
+print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 done
 teardown
 exit 0

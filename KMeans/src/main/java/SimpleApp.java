@@ -5,6 +5,8 @@
  */
 
 package kmeans_java;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import org.apache.spark.api.java.*;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.Function;
@@ -15,6 +17,8 @@ import org.apache.spark.api.java.function.Function;
 public class SimpleApp {
 
     public static void main(String[] args) {
+Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
 
         String logFile = "hdfs:///README.md"; // Should be some file on your system
         SparkConf conf = new SparkConf().setAppName("Simple Application");
