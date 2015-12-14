@@ -30,7 +30,7 @@ if [ -z "$MllibJar" ]; then
 	export MllibJar=~/.m2/repository/org/apache/spark/spark-mllib_2.10/${SPARK_VERSION}/spark-mllib_2.10-${SPARK_VERSION}.jar
 fi
 
-RM="hdfs dfs -rm"
+RM="hdfs dfs -rm -f"
 DU="hdfs dfs -du"
 HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-$HADOOP_HOME/conf}"
 
