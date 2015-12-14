@@ -14,14 +14,22 @@
 # limitations under the License.
 
 ############### common functions ################
-function timestamp(){
+function timestamp() {
     sec=`date +%s`
     nanosec=`date +%N`
+    
+    # %N is not supported in OSX. Use gdate from `coreutils` suite instead.
+    unamestr=`uname`
+    if [ "${unamestr}" = "Darwin" ]; then
+        nanosec=`gdate  +%N`
+    fi
+    
     tmp=`expr $sec \* 1000 `
     msec=`expr $nanosec / 1000000 `
     echo `expr $tmp + $msec`
 }
-function get_report_field_name(){
+
+function get_report_field_name() {
         echo -n "Apptype,start_ts,duration,size,throughput,resStatus"
 }
 
@@ -55,8 +63,9 @@ function check_dir() {
         exit 1
     fi
 }
+
 #usage purge_date "${MC_LIST}"
-function purge_data(){
+function purge_data() {
 	local mc_list="$1"	
 	cmd="echo 3 >/proc/sys/vm/drop_caches"; 
 	#echo ${mc_list}
@@ -66,22 +75,26 @@ function purge_data(){
 	done;
 	echo "date purged on ${mc_list}"
 }
+
 function get_start_ts() {
    ts=`ssh ${master} "date +%F-%T"`
    echo $ts
 }
-function setup(){
+
+function setup() {
   if [ "${MASTER}" = "spark" ] && [ "${RESTART}" = "TRUE" ] ; then
     "${SPARK_HOME}/sbin/stop-all.sh"
     "${SPARK_HOME}/sbin/start-all.sh"
   fi
 }
-function teardown(){
+
+function teardown() {
   if [ "${MASTER}" = "spark" ] && [ "${RESTART}" = "TRUE" ] ; then
     "${SPARK_HOME}/sbin/stop-all.sh"
   fi
 }
-function set_gendata_opt(){
+
+function set_gendata_opt() {
   SPARK_OPT=
   if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
     SPARK_OPT="${SPARK_OPT} --conf spark.storage.memoryFraction=${SPARK_STORAGE_MEMORYFRACTION}"
@@ -115,7 +128,8 @@ function set_gendata_opt(){
     fi
   fi
 }
-function set_run_opt(){
+
+function set_run_opt() {
   if [ ! -z "$SPARK_HADOOP_FS_LOCAL_BLOCK_SIZE" ] && [ "$FILESYSTEM" != "hdfs" ]; then
     export SPARK_SUBMIT_OPTS="${SPARK_SUBMIT_OPTS} -Dspark.hadoop.fs.local.block.size=${SPARK_HADOOP_FS_LOCAL_BLOCK_SIZE}"
   fi
