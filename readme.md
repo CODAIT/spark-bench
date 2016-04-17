@@ -95,6 +95,11 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 	SPARK_MASTER  Spark master  
 	HDFS_MASTER	  HDFS master  
 
+    Local mode:         
+            `DATA_HDFS="file:///home/`whoami`/SparkBench"`
+            `SPARK_MASTER=local[2]`
+            `MC_List=""`
+
 
 3. Execute.
 

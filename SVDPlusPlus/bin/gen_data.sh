@@ -8,7 +8,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== preparing ${APP} data =========="
 
 # paths check
-${RM} -r ${INPUT_HDFS}
+RM ${INPUT_HDFS}
 
 # generate data
 
@@ -20,8 +20,8 @@ OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${numV} ${NUM_OF_PARTITIONS} ${mu} ${sigma}
 
 START_TS=`get_start_ts`;
 
-#${CPFROM} ${SPARK_HOME}/graphx/data/followers.txt ${INPUT_HDFS}
-#${CPFROM} ${SPARK_HOME}/graphx/data/users.txt ${INPUT_HDFS}
+#CPFROM ${SPARK_HOME}/graphx/data/followers.txt ${INPUT_HDFS}
+#CPFROM ${SPARK_HOME}/graphx/data/users.txt ${INPUT_HDFS}
 
 setup
 START_TIME=`timestamp`
@@ -31,7 +31,7 @@ res=$?;
 
 END_TIME=`timestamp`
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};

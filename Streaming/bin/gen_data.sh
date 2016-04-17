@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 
 # path check
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
 #JAR="${SPARK_HOME}/streaming/target/spark-streaming_2.10-1.2.0.jar"
@@ -137,7 +137,7 @@ fi
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	echo "========== Generating data for ${APP}-${subApp}  =========="	
-	${RM} -r ${OUTPUT_HDFS}
+	RM ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 START_TS=`get_start_ts`;
 	START_TIME=`timestamp`

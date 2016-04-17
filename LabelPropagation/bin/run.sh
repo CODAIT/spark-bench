@@ -11,7 +11,7 @@ echo "========== running ${APP} benchmark =========="
 
 # path check
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 [ -z $SIZE ] && SIZE=0
 JAR="${DIR}/target/LabelPropagationApp-1.0.jar"
 CLASS="src.main.scala.LabelPropagationApp"
@@ -23,7 +23,7 @@ echo "opt ${OPTION}"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
-	${RM} -r ${OUTPUT_HDFS}
+	RM ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 START_TS=`get_start_ts`;
 	START_TIME=`timestamp`

@@ -19,16 +19,16 @@ DIR=`cd $bin/../; pwd`
 
 # paths check
 #tmp_dir=${APP_DIR}/tmp
-${RM} -r ${INPUT_HDFS}
-${MKDIR} ${APP_DIR}
-${MKDIR} ${INPUT_HDFS}
-#${RM} -r $tmp_dir
+RM ${INPUT_HDFS}
+MKDIR ${APP_DIR}
+MKDIR ${INPUT_HDFS}
+#RM $tmp_dir
 
-#${MKDIR} $tmp_dir
+#MKDIR $tmp_dir
 #srcf=${DATASET_DIR}/tmp-10k
 srcf=${DATASET_DIR}/BigDataGeneratorSuite/Table_datagen/e-com/output
 
-${CPFROM} $srcf/* ${INPUT_HDFS}
+CPFROM $srcf/* ${INPUT_HDFS}
 
 JAR="${DIR}/target/scala-2.10/svmapp_2.10-1.0.jar"
 CLASS="src.main.scala.DocToTFIDF"
@@ -43,7 +43,7 @@ res=$?;
 
 END_TIME=`timestamp`
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown

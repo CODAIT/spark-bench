@@ -10,7 +10,7 @@ echo "========== running ${APP} workload =========="
 
 # path check
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 JAR="${DIR}/target/LinearRegressionApp-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionApp"
@@ -19,7 +19,7 @@ OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${MAX_ITERAT
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	
-	${RM} -r ${OUTPUT_HDFS}
+	RM  ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 	START_TS=`get_start_ts`
 	START_TIME=`timestamp`

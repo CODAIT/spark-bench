@@ -10,7 +10,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== preparing MF data =========="
 
 
-${RM} -r ${INPUT_HDFS}
+RM ${INPUT_HDFS}
 #JAR="${MllibJar}"
 #CLASS="org.apache.spark.mllib.util.MFDataGenerator"
 JAR="${DIR}/target/MFApp-1.0.jar"
@@ -27,7 +27,7 @@ echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --jars ~/.m2/repository/org/
 res=$?;
 
 END_TIME=`timestamp`
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown

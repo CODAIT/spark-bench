@@ -8,7 +8,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== preparing ${APP} data =========="
 
 # paths check
-${RM} -r ${INPUT_HDFS}
+RM ${INPUT_HDFS}
 
 
 JAR="${DIR}/../common/target/Common-1.0.jar"
@@ -25,7 +25,7 @@ res=$?;
 
 END_TIME=`timestamp`
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};

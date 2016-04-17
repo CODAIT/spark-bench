@@ -8,19 +8,19 @@ DIR=`cd $bin/../; pwd`
 echo "========== preparing ${APP} data =========="
 
 # paths check
-${RM} -r ${INPUT_HDFS}
+RM ${INPUT_HDFS}
 
 # generate data
 START_TS=`get_start_ts`;
 setup
 genOpt="small"
 if [ $genOpt = "large" ];then
-	${MKDIR} ${APP_DIR}
-	${MKDIR} ${INPUT_HDFS}
+	MKDIR ${APP_DIR}
+	MKDIR ${INPUT_HDFS}
 	#srcf=${DATASET_DIR}/web-Google.txt
 	srcf=${DATASET_DIR}/BigDataGeneratorSuite/Graph_datagen/AMR_gen_edge_24.txt
 	START_TIME=`timestamp`
-	${CPFROM} $srcf ${INPUT_HDFS}	
+	CPFROM $srcf ${INPUT_HDFS}	
 elif [ $genOpt = "small" ];then
 	JAR="${DIR}/../common/target/Common-1.0.jar"
 	CLASS="DataGen.src.main.scala.GraphDataGen"
@@ -34,7 +34,7 @@ else
 fi
 
 END_TIME=`timestamp`
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP}-gen ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown

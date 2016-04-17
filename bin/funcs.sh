@@ -67,6 +67,9 @@ function check_dir() {
 #usage purge_date "${MC_LIST}"
 function purge_data() {
 	local mc_list="$1"	
+    if [ -z "${mc_list}" ];then
+        return 1
+    fi
 	cmd="echo 3 >/proc/sys/vm/drop_caches"; 
 	#echo ${mc_list}
 	for nn in ${mc_list}; do 
@@ -136,3 +139,65 @@ function set_run_opt() {
 }
 
 function echo_and_run() { echo "$@" ; "$@" ; }
+
+
+
+function  RM() { 
+    tmpdir=$1;
+    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
+        return 1;
+    fi
+    if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
+       /bin/rm -r ${tmpdir:7}; 
+    else
+      ${HADOOP_HOME}/bin/hdfs dfs -rmr $tmpdir
+    fi
+}
+function MKDIR() {  
+    tmpdir=$1;
+    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
+        return 1;
+    fi
+    if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
+       /bin/mkdir -p ${tmpdir:7};
+    else
+      ${HADOOP_HOME}/bin/hdfs dfs -mkdir -p $tmpdir
+    fi
+}
+function DU() {  
+   tmpdir=$1;
+    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
+        return 1;
+    fi
+    if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
+        /usr/bin/du -b "${tmpdir:7}";
+    else
+      ${HADOOP_HOME}/bin/hdfs dfs -du -s $tmpdir
+    fi
+
+}
+  
+function CPFROM() { 
+    if [ $# -lt 2 ]; then return 1; fi
+    src=$1; dst=$2;
+    if [ -z "$src" ] || [ ! -d "$src" ]; then
+        return 1;
+    fi
+    if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
+        /bin/cp -r $src $dst
+    else
+      ${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal  $src $dst
+    fi
+}
+function  CPTO() { 
+    if [ $# -lt 2 ]; then return 1; fi
+    src=$1; dst=$2;
+    if [ -z "$src" ] || [ ! -d "$src" ]; then
+        return 1;
+    fi
+    if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
+        /bin/cp -r $src $dst
+    else
+      ${HADOOP_HOME}/bin/hdfs dfs -copyToLocal  $src $dst
+    fi
+}

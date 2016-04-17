@@ -10,7 +10,7 @@ echo "========== running ${APP} benchmark =========="
 
 
 # path check
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 JAR="${DIR}/target/TerasortApp-1.0-jar-with-dependencies.jar"
 CLASS="src.main.scala.terasortApp"
@@ -21,7 +21,7 @@ Addition_jar="--jars ${DIR}/target/jars/guava-19.0-rc2.jar"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
     echo "${APP} opt ${OPTION}"
-    ${RM} -r ${OUTPUT_HDFS}
+    RM ${OUTPUT_HDFS}
     purge_data "${MC_LIST}"	
     START_TS=`get_start_ts`;
     START_TIME=`timestamp`

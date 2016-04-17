@@ -11,7 +11,7 @@ DIR=`cd $bin/../; pwd`
 
 
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 JAR="${DIR}/target/DecisionTreeApp-1.0.jar"
 CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 
@@ -19,7 +19,7 @@ CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
 	# classification
-	${RM} -r ${OUTPUT_HDFS_Classification}
+	RM ${OUTPUT_HDFS_Classification}
 	purge_data "${MC_LIST}"	
 	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Classification} ${NUM_OF_CLASS_C} ${impurityC} ${maxDepthC} ${maxBinsC} ${modeC}"
 START_TS=`get_start_ts`;
@@ -38,7 +38,7 @@ exit 0
 ######################## unused ########################
 if [ 1 -eq 0 ]; then
 # Regression
-	${RM} -r ${OUTPUT_HDFS_Regression}
+	RM ${OUTPUT_HDFS_Regression}
 	purge_data "${MC_LIST}"	
 	OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS_Regression} ${NUM_OF_CLASS_R} ${impurityR} ${maxDepthR} ${maxBinsR} ${modeR} "
 	START_TIME=`timestamp`

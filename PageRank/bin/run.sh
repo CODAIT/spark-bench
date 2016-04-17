@@ -10,7 +10,7 @@ echo "========== running ${APP} benchmark =========="
 
 
 # path check
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 #JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
 JAR="${DIR}/target/PageRankApp-1.0.jar"
@@ -21,7 +21,7 @@ OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PART
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 	echo "${APP} opt ${OPTION}"
-	${RM} -r ${OUTPUT_HDFS}
+	RM ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 START_TS=`get_start_ts`;
 	START_TIME=`timestamp`

@@ -7,7 +7,7 @@ DIR=`cd $bin/../; pwd`
 
 # =============== path check ===============
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
 APP=sql_rddRelation
@@ -29,7 +29,7 @@ echo "========== running ${APP} benchmark =========="
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
 
-	${RM} -r ${OUTPUT_HDFS}
+	RM ${OUTPUT_HDFS}
 	purge_data "${MC_LIST}"	
 START_TS=`get_start_ts`;
 	export logf=${BENCH_NUM}/${APP}_run_${START_TS}.dat

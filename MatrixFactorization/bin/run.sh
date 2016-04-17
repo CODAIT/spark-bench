@@ -7,7 +7,7 @@ DIR=`cd $bin/../; pwd`
 . "${DIR}/bin/config.sh"
 echo "========== running MF benchmark =========="
 
-SIZE=`${DU} -s ${INPUT_HDFS} | awk '{ print $1 }'`
+SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
 
 
 CLASS="MatrixFactorization.src.main.java.MFApp"
@@ -21,7 +21,7 @@ JAR="${DIR}/target/MFApp-1.0.jar"
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do		
     # path check
-    ${RM} -r ${OUTPUT_HDFS}
+    RM ${OUTPUT_HDFS}
     purge_data "${MC_LIST}"	
     START_TS=`get_start_ts`;
 
