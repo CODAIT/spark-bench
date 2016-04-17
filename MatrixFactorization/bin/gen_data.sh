@@ -21,9 +21,9 @@ START_TS=`get_start_ts`;
 
 setup
 START_TIME=`timestamp`
-#exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat
+#echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat"
 res=$?;
-exec ${SPARK_HOME}/bin/spark-submit --jars ~/.m2/repository/org/jblas/jblas/1.2.4/jblas-1.2.4.jar --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat
+echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --jars ~/.m2/repository/org/jblas/jblas/1.2.4/jblas-1.2.4.jar --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat"
 res=$?;
 
 END_TIME=`timestamp`

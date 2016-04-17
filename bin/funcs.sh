@@ -133,4 +133,6 @@ function set_run_opt() {
   if [ ! -z "$SPARK_HADOOP_FS_LOCAL_BLOCK_SIZE" ] && [ "$FILESYSTEM" != "hdfs" ]; then
     export SPARK_SUBMIT_OPTS="${SPARK_SUBMIT_OPTS} -Dspark.hadoop.fs.local.block.size=${SPARK_HADOOP_FS_LOCAL_BLOCK_SIZE}"
   fi
-} 
+}
+
+function echo_and_run() { echo "$@" ; "$@" ; }

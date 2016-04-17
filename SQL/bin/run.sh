@@ -34,7 +34,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 START_TS=`get_start_ts`;
 	export logf=${BENCH_NUM}/${APP}_run_${START_TS}.dat
 	START_TIME=`timestamp`
-	exec ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee $logf
+	echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${SPARK_RUN_OPT} $JAR ${OPTION} 2>&1|tee $logf"
 res=$?;
 	END_TIME=`timestamp`
 get_config_fields >> ${BENCH_REPORT}
