@@ -194,7 +194,7 @@ function CPFROM() {
     fi
     if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
        if [ ! -d "${src:7}" ]; then return 1;    fi
-        /bin/cp -r ${src:7} ${dst}
+        /bin/cp -r ${src:7} ${dst:7}
     else
        if [ ! -d "${src}" ]; then return 1;    fi
       ${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal  $src $dst

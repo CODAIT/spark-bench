@@ -25,8 +25,7 @@ MKDIR ${INPUT_HDFS}
 #RM $tmp_dir
 
 #MKDIR $tmp_dir
-#srcf=${DATASET_DIR}/tmp-10k
-srcf=${DATASET_DIR}/BigDataGeneratorSuite/Table_datagen/e-com/output
+srcf=file://${DIR}/../src/resources/sample_data_set
 
 CPFROM $srcf/* ${INPUT_HDFS}
 
@@ -38,7 +37,7 @@ START_TS=`get_start_ts`;
 
 setup
 START_TIME=`timestamp`
-#echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/SVM_gendata_${START_TS}.dat"
+#echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat"
 res=$?;
 
 END_TIME=`timestamp`
