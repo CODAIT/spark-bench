@@ -143,20 +143,23 @@ function echo_and_run() { echo "$@" ; "$@" ; }
 
 
 
-function  RM() { 
+function RM() { 
     tmpdir=$1;
-    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
+    if [ $# -lt 1 ] || [ -z "$tmpdir" ]; then
         return 1;
     fi
     if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
+       if [ ! -d "${tmpdir:7}" ]; then return 1;    fi
        /bin/rm -r ${tmpdir:7}; 
     else
+       ${HADOOP_HOME}/bin/hdfs dfs -test -d $tmpdir;
+       if [ $? == 1 ]; then  return 1; fi
       ${HADOOP_HOME}/bin/hdfs dfs -rmr $tmpdir
     fi
 }
 function MKDIR() {  
     tmpdir=$1;
-    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
+    if [ $# -lt 1 ] || [ -z "$tmpdir" ]; then
         return 1;
     fi
     if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
@@ -175,7 +178,8 @@ function DU() {
        if [ ! -d "${tmpdir:7}" ]; then return 1;    fi
        local myresult=`/usr/bin/du -b "${tmpdir:7}"|awk '{print $1}'`;
     else
-       if [ ! -d "${tmpdir}" ]; then return 1;    fi
+       ${HADOOP_HOME}/bin/hdfs dfs -test -d $tmpdir;
+       if [ $? == 1 ]; then  return 1; fi
        local myresult=`${HADOOP_HOME}/bin/hdfs dfs -du -s $tmpdir|awk '{print $1}'`;
     fi
     eval $__resultvar="'$myresult'"
@@ -185,24 +189,28 @@ function DU() {
 function CPFROM() { 
     if [ $# -lt 2 ]; then return 1; fi
     src=$1; dst=$2;
-    if [ -z "$src" ] || [ ! -d "$src" ]; then
+    if [ -z "$src" ]; then
         return 1;
     fi
     if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
-        /bin/cp -r $src $dst
+       if [ ! -d "${src:7}" ]; then return 1;    fi
+        /bin/cp -r ${src:7} ${dst}
     else
+       if [ ! -d "${src}" ]; then return 1;    fi
       ${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal  $src $dst
     fi
 }
 function  CPTO() { 
     if [ $# -lt 2 ]; then return 1; fi
     src=$1; dst=$2;
-    if [ -z "$src" ] || [ ! -d "$src" ]; then
+    if [ -z "$src" ]; then
         return 1;
     fi
     if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
         /bin/cp -r $src $dst
     else
+       ${HADOOP_HOME}/bin/hdfs dfs -test -d $src;
+       if [ $? == 1 ]; then  return 1; fi
       ${HADOOP_HOME}/bin/hdfs dfs -copyToLocal  $src $dst
     fi
 }

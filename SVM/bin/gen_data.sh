@@ -14,19 +14,6 @@ OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_
 RM ${INPUT_HDFS}
 
 # paths check
-if [ "$genOpt" = "large" ]; then
-	tmp_dir=${APP_DIR}/tmp	
-	RM $tmp_dir
-	MKDIR ${APP_DIR}
-	MKDIR $tmp_dir
-	#srcf=${DATASET_DIR}/tmp-10k
-	srcf=${DATASET_DIR}/enwiki-doc
-	CPFROM $srcf $tmp_dir
-
-	JAR="${DIR}/target/scala-2.10/svmapp_2.10-1.0.jar"
-	CLASS="src.main.scala.DocToTFIDF"
-	OPTION="${tmp_dir} ${INPUT_HDFS} ${NUM_OF_PARTITIONS} "
-fi
 
 setup
 START_TS=`get_start_ts`;
