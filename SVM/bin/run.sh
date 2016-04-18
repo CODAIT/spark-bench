@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 
 echo "========== Running ${APP} Workload =========="
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 CLASS="SVM.src.main.java.SVMApp"
 OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${MAX_ITERATION} ${STORAGE_LEVEL}"
 JAR="${DIR}/target/SVMApp-1.0.jar"

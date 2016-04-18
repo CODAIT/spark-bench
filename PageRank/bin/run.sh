@@ -10,7 +10,7 @@ echo "========== running ${APP} benchmark =========="
 
 
 # path check
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 #JAR="${DIR}/target/scala-2.10/pagerankapp_2.10-1.0.jar"
 JAR="${DIR}/target/PageRankApp-1.0.jar"

@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== running ${APP} bench =========="
 
 # pre-running
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 JAR="${DIR}/target/PCAApp-1.0.jar"
 CLASS="PCA.src.main.scala.PCAApp"

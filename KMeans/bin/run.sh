@@ -9,7 +9,7 @@ echo "========== running ${APP} bench =========="
 
 
 # pre-running
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 JAR="${DIR}/target/KMeansApp-1.0.jar"
 CLASS="KmeansApp"

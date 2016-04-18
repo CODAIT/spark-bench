@@ -7,7 +7,7 @@ DIR=`cd $bin/../; pwd`
 
 # =============== path check ===============
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 
 APP=sql_rddRelation

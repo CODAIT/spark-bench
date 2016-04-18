@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 
 # path check
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 
 #JAR="${SPARK_HOME}/streaming/target/spark-streaming_2.10-1.2.0.jar"

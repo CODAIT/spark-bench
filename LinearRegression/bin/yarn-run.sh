@@ -13,7 +13,7 @@ DIR=`cd $bin/../; pwd`
 
 # path check
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 #JAR="${DIR}/target/scala-2.10/LinearRegression-app_2.10-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionApp"

@@ -7,7 +7,7 @@ DIR=`cd $bin/../; pwd`
 . "${DIR}/bin/config.sh"
 echo "========== running MF benchmark =========="
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 
 CLASS="MatrixFactorization.src.main.java.MFApp"

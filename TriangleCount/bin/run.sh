@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== running ${APP} benchmark =========="
 
 # path check
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 JAR="${DIR}/target/TriangleCountApp-1.0.jar"
 CLASS="src.main.scala.triangleCountApp"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PARTITIONS} ${STORAGE_LEVEL}"

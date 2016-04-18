@@ -10,7 +10,7 @@ echo "========== running ${APP} workload =========="
 
 # path check
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 JAR="${DIR}/target/LinearRegressionApp-1.0.jar"
 CLASS="LinearRegression.src.main.java.LinearRegressionApp"

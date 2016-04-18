@@ -25,7 +25,7 @@ echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${AP
 res=$?
 END_TIME=`timestamp`
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP}-gendata ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT}

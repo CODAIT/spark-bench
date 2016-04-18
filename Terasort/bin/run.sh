@@ -10,7 +10,7 @@ echo "========== running ${APP} benchmark =========="
 
 
 # path check
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 
 JAR="${DIR}/target/TerasortApp-1.0-jar-with-dependencies.jar"
 CLASS="src.main.scala.terasortApp"

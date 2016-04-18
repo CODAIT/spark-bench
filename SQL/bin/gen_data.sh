@@ -43,7 +43,7 @@ res=$?;
 
 END_TIME=`timestamp`
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
 teardown

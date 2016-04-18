@@ -11,7 +11,7 @@ DIR=`cd $bin/../; pwd`
 
 
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 JAR="${DIR}/target/DecisionTreeApp-1.0.jar"
 CLASS="DecisionTree.src.main.java.DecisionTreeApp"
 

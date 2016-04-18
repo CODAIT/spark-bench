@@ -9,7 +9,7 @@ DIR=`cd $bin/../; pwd`
 echo "========== running ${APP} workload =========="
 
 
-SIZE=`DU ${INPUT_HDFS} | awk '{ print $1 }'`
+DU ${INPUT_HDFS} SIZE 
 CLASS="LogisticRegression.src.main.java.LogisticRegressionApp"
 OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS}  ${MAX_ITERATION} ${STORAGE_LEVEL} "
 
