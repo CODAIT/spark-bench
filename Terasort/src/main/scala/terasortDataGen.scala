@@ -33,32 +33,31 @@ object terasortDataGen {
         Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
         Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
 
-        if (args.length < 2) {
-            println("Usage:[output-size] [output-directory]")
 
-                System.exit(0)
+        if (args.length < 3) {
+            System.out.println("usage: <numberOfRecords> <output> <numPar>");
+            System.exit(0);
         }
 
-        // Process command line arguments
-        val outputSizeInBytes = sizeStrToBytes(args(0))
+
+           // Process command line arguments
+            val outputSizeInBytes = sizeStrToBytes(args(0))
             val outputFile = args(1)
 
             val size = sizeToSizeStr(outputSizeInBytes)
 
-            val conf = new SparkConf()
-            .setAppName(s"TeraGen ($size)")
+            val conf = new SparkConf().setAppName(s"TeraGen ($size)")
             val sc = new SparkContext(conf)
 
-            val parts = sc.defaultMinPartitions
-            val recordsPerPartition = outputSizeInBytes / 100 / parts.toLong
-            val numRecords = recordsPerPartition * parts.toLong
-
+            val parts = args(2).toInt
+            val recordsPerPartition = outputSizeInBytes / 100 / parts
+            //val numRecords= outputSizeInBytes * parts
             println("===========================================================================")
             println("===========================================================================")
             println(s"Input size: $size")
-            println(s"Total number of records: $numRecords")
+            println(s"Total number of records: "+ args(0))
             println(s"Number of output partitions: $parts")
-            println("Number of records/output partition: " + (numRecords / parts))
+            println(s"Number of records/ partition:   $recordsPerPartition")
             println("===========================================================================")
             println("===========================================================================")
 
@@ -99,16 +98,16 @@ object terasortDataGen {
     def sizeStrToBytes(str: String): Long = {
         val lower = str.toLowerCase
             if (lower.endsWith("k")) {
-                lower.substring(0, lower.length - 1).toLong * 1000
+                lower.substring(0, lower.length - 1).toLong * 1000 * 100
             } else if (lower.endsWith("m")) {
-                lower.substring(0, lower.length - 1).toLong * 1000 * 1000
+                lower.substring(0, lower.length - 1).toLong * 1000 * 1000 * 100
             } else if (lower.endsWith("g")) {
-                lower.substring(0, lower.length - 1).toLong * 1000 * 1000 * 1000
+                lower.substring(0, lower.length - 1).toLong * 1000 * 1000 * 1000 * 100
             } else if (lower.endsWith("t")) {
-                lower.substring(0, lower.length - 1).toLong * 1000 * 1000 * 1000 * 1000
+                lower.substring(0, lower.length - 1).toLong * 1000 * 1000 * 1000 * 1000 * 100
             } else {
                 // no suffix, so it's just a number in bytes
-                lower.toLong
+                lower.toLong * 100
             }
     }
 

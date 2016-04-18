@@ -20,8 +20,8 @@ import org.apache.spark.rdd.RDD;
  */
 public class LinearRegressionDataGen {
         public static void main(String[] args) {
-Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
-Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+        Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+        Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
         if (args.length < 5) {
             System.out.println("usage: <output> <nExamples> <nFeatures> <eps> <intercept> <numPar>");
             System.exit(0);

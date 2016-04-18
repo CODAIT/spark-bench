@@ -34,6 +34,7 @@ function get_report_field_name() {
 }
 
 function gen_report() {
+    if [ $# -lt 6 ];then echo "error: gen_report input variables less than 6"; return 1; fi
     local type=$1
     local start=$2
     local end=$3
@@ -164,19 +165,23 @@ function MKDIR() {
       ${HADOOP_HOME}/bin/hdfs dfs -mkdir -p $tmpdir
     fi
 }
-function DU() {  
-   tmpdir=$1;
-    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
+function DU() { 
+    local tmpdir=$1;
+    if [ -z "$tmpdir" ] || [ $# -lt 2 ]; then
         return 1;
     fi
+    local  __resultvar=$2
     if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
-        /usr/bin/du -b "${tmpdir:7}";
+       if [ ! -d "${tmpdir:7}" ]; then return 1;    fi
+       local myresult=`/usr/bin/du -b "${tmpdir:7}"|awk '{print $1}'`;
     else
-      ${HADOOP_HOME}/bin/hdfs dfs -du -s $tmpdir
+       if [ ! -d "${tmpdir}" ]; then return 1;    fi
+       local myresult=`${HADOOP_HOME}/bin/hdfs dfs -du -s $tmpdir|awk '{print $1}'`;
     fi
+    eval $__resultvar="'$myresult'"
 
 }
-  
+ 
 function CPFROM() { 
     if [ $# -lt 2 ]; then return 1; fi
     src=$1; dst=$2;

@@ -32,26 +32,4 @@ fi
 
 HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-$HADOOP_HOME/conf}"
 
-  MKDIR="${HADOOP_HOME}/bin/hdfs dfs -mkdir -p"
-  RM="${HADOOP_HOME}/bin/hdfs dfs -rm"
-  CPFROM="${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal"
-  CPTO="${HADOOP_HOME}/bin/hdfs dfs -copyToLocal"
-  DU="${HADOOP_HOME}/bin/hdfs dfs -du"
 
-function  RM() { 
-    tmpdir=$1;
-    if [ -z "$tmpdir" ] || [ ! -d "$tmpdir" ]; then
-        return 1;
-    fi
-    if [ ! -z `echo $DATA_HDFS | grep "^file://"` ]; then
-       /bin/rm ${tmpdir:7}; 
-    else
-      ${HADOOP_HOME}/bin/hdfs dfs -rm $tmpdir
-    fi
-}
-function MKDIR() { tmpdir=$1; /bin/mkdir -p ${tmpdir:7}; }
-function DU() { 
-   tmpdir=$1; /usr/bin/du -b "${tmpdir:7}";
-}
-  CPFROM="/bin/cp -r"
-  CPTO="/bin/cp -r"
