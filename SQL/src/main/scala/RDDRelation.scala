@@ -62,14 +62,15 @@ object RDDRelation {
 	
 
 	val orderRdd = sc.textFile(inputPath+"/OS_ORDER.txt",numpar).map{line => 
-		val data=line.split("\\s+")
+		//val data=line.split("\\s+")
+		val data=line.split("\\|")
 		Order(data(0).toInt,data(1).toInt,data(2))
 	}    
 	orderRdd.toDF.registerTempTable("orderTab")
 	orderRdd.persist(sl)
 
     val oitemRdd = sc.textFile(inputPath+"/OS_ORDER_ITEM.txt",numpar).map{line => 
-		val data=line.split("\\s+")
+		val data=line.split("\\|")
 		OItem(data(0).toInt,data(1).toDouble.toInt,data(2).toInt,data(3).toDouble,data(4).toDouble,data(5).toDouble)
 	}
     oitemRdd.toDF.registerTempTable("oitemTab")	

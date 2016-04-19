@@ -11,13 +11,13 @@ DU ${INPUT_HDFS} SIZE
 
 
 APP=sql_rddRelation
-JAR="${DIR}/target/SQLApp_2.10-1.0.jar"
+JAR="${DIR}/target/SQLApp-1.0.jar"
 CLASS="src.main.scala.RDDRelation"
 OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PARTITIONS}  "
 if  [ $# -ge 1 ] && [ $1 = "hive" ]; then	
 	
 	APP=sql_hive
-	JAR="${DIR}/target/scala-2.10/sqlapp_2.10-1.0.jar"
+    JAR="${DIR}/target/SQLApp-1.0.jar"
 	CLASS="src.main.scala.HiveFromSpark"
 	OPTION="${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_PARTITIONS} "
 fi

@@ -9,14 +9,6 @@ DIR=`cd $bin/../; pwd`
 . "${DIR}/bin/config.sh"
 
 
-
-# "Usage: SVMGenerator <master> <output_dir> [num_examples] [num_features] [num_partitions]"
-
-
-#JAR="${MllibJar}"
-#CLASS="org.apache.spark.mllib.util.SVMDataGenerator"
-#OPTION=" ${APP_MASTER} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_EXAMPLES} ${NUM_OF_FEATURES}  ${NUM_OF_PARTITIONS} "
-
 # paths check
 #tmp_dir=${APP_DIR}/tmp
 RM ${INPUT_HDFS}
@@ -24,36 +16,21 @@ MKDIR ${APP_DIR}
 MKDIR ${INPUT_HDFS}
 #RM $tmp_dir
 
-#MKDIR $tmp_dir
-srcf=file://${DIR}/../src/resources/sample_data_set
-
-CPFROM $srcf/* ${INPUT_HDFS}
-
-JAR="${DIR}/target/scala-2.10/svmapp_2.10-1.0.jar"
-CLASS="src.main.scala.DocToTFIDF"
-OPTION="${tmp_dir} ${INPUT_HDFS} ${num_task} "
-
 START_TS=`get_start_ts`;
+#MKDIR $tmp_dir
+srcf=file:///${DIR}/src/resources/sample_data_set
 
-setup
 START_TIME=`timestamp`
-#echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT}  $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat"
-res=$?;
 
+CPFROM $srcf ${INPUT_HDFS}
+
+res=$?;
 END_TIME=`timestamp`
 
 DU ${INPUT_HDFS} SIZE 
 get_config_fields >> ${BENCH_REPORT}
 print_config  ${APP} ${START_TIME} ${END_TIME} ${SIZE} ${START_TS} ${res}>> ${BENCH_REPORT};
-teardown
 exit 0
 
 
-# ===unused ==compress check 
-if [ ${COMPRESS_GLOBAL} -eq 1 ]; then
-    COMPRESS_OPT="-compress true \
-        -compressCodec $COMPRESS_CODEC \
-        -compressType BLOCK "
-else
-    COMPRESS_OPT="-compress false"
-fi
+
