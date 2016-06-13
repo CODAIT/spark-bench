@@ -64,7 +64,7 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 **Supported Spark releases:**
  
-  - Spark 1.2, 1.3, 1.4, 1.5
+  - Spark 1.2, 1.3, 1.4, 1.5,1.6
  
 ---
 ### Getting Started ###
