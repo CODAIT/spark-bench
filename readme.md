@@ -62,7 +62,7 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 
 **Supported Apache Spark releases:**
  
-  - Spark 1.2, 1.3, 1.4, 1.5,1.6
+  - Spark 1.2, 1.3, 1.4, 1.5 and 1.6
  
 ---
 ### Getting Started ###
@@ -82,7 +82,7 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 
 	Run `<SPARK_BENCH_HOME>/bin/build-all.sh` to build Spark-Bench.
 	
-	Rename `<SPARK_BENCH_HOME>/conf/enc.sh.template` to `env.sh` and set it according to your cluster.
+	Copy `<SparkBench_Root>/conf/env.sh.template` to `<SparkBench_Root>/conf/env.sh`, and set it according to your cluster.
 	
 2. Spark-Bench Configurations.
 	
@@ -101,22 +101,28 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 
 3. Execute.
 
+    **Scala version:**
+    
 	`<SPARK_BENCH_HOME>/<Workload>/bin/gen_data.sh`  
 	`<SPARK_BENCH_HOME>/<Workload>/bin/run.sh`
 	
-	**Note**
+    **Java version:**
+    
+	`<SparkBench_Root>/<Workload>/bin/gen_data_java.sh`  
+	`<SparkBench_Root>/<Workload>/bin/run_java.sh`	
+	
+	**Note for SQL applications**
 	
 	For SQL applications, by default it runs the RDDRelation workload.
 	To run Hive workload, execute `<SPARK_BENCH_HOME>/SQL/bin/run.sh hive`;
 	
+	**Note for streaming applications**
 	For Streaming applications such as TwitterTag,StreamingLogisticRegression
 	First, execute `<SPARK_BENCH_HOME>/SQL/bin/gen_data.sh` in one terminal;
 	Second, execute `<SPARK_BENCH_HOME>/SQL/bin/run.sh` in another terminal;
 	
-	**Note**
-	StreamingLogisticRegression requires the gen_data.sh and run.sh scripts which
-	launches Apache Spark applications can run simutaneously.
-	
+    In addition, StreamingLogisticRegression requires the `gen_data.sh` and `run.sh` scripts which
+	launches Apache Spark applications can run simultaneously.
 4. View the result.
 
 	Goto `<SPARK_BENCH_HOME>/report` to check for the final report.
