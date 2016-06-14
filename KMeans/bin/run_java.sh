@@ -19,7 +19,8 @@ OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_CLU
 setup
 for((i=0;i<${NUM_TRIALS};i++)); do
     RM ${OUTPUT_HDFS}
-    purge_data "${MC_LIST}"	
+    # (Optional procedure): free page cache, dentries and inodes.
+    # purge_data "${MC_LIST}"
     START_TS=`get_start_ts`;
     START_TIME=`timestamp`
 
