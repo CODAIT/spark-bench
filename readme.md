@@ -1,6 +1,4 @@
-# SparkBench Suite #
-## The Spark-specific benchmark suite ##
-
+# Benchmark Suite for Apache Spark #
 
 - Current version: 2.0
 - Release date: 2015-5-10
@@ -17,8 +15,8 @@
 
 **What's SparkBench?**
 
-SparkBench is a Spark specific benchmarking suite.
-It comprises a representative and comprehensive set of workloads belonging to four different application types that currently supported by Spark, including machine learning, graph processing, streaming and SQL queries.
+SparkBench is a benchmarking suite spacific for Apache Spark.
+It comprises a representative and comprehensive set of workloads belonging to four different application types that currently supported by Apache Spark, including machine learning, graph processing, streaming and SQL queries.
 
 The chosen workloads exhibit different workload characteristics and exercise different system bottlenecks; currently we cover CPU, memory, and shuffle and IO intensive workloads.
 
@@ -26,15 +24,15 @@ It also includes a data generator that allows users to generate arbitrary size o
 
 **Why SparkBench?**
 
-While Spark has been evolving rapidly, the community lacks a comprehensive benchmarking suite specifically tailored for Spark. The purpose of such a suite is to help users to understand the trade-off between different system designs, guide the configuration optimization and cluster provisioning for Spark deployments. In particular, there are four main use cases of SparkBench.
+While Apache Spark has been evolving rapidly, the community lacks a comprehensive benchmarking suite specifically tailored for Apache Spark. The purpose of such a suite is to help users to understand the trade-off between different system designs, guide the configuration optimization and cluster provisioning for Apache Spark deployments. In particular, there are four main use cases of SparkBench.
 	
-Usecase 1. It enables quantitative comparison for Spark system optimizations such as caching policy and memory management optimization, scheduling policy optimization. Researchers and developers can use SparkBench to comprehensively evaluate and compare the performance of their optimization and the vanilla Spark. 
+Usecase 1. It enables quantitative comparison for Apache Spark system optimizations such as caching policy and memory management optimization, scheduling policy optimization. Researchers and developers can use SparkBench to comprehensively evaluate and compare the performance of their optimization and the vanilla Apache Spark. 
 	
 Usecase 2. It provides quantitative comparison for different platforms and hardware cluster setups such as Google cloud and Amazon cloud. 
 	
 Usecase 3. It offers insights and guidance for cluster sizing and provision. It also helps to identify the bottleneck resources and minimize the impact of resource contention.
 	
-Usecase 4. It allows in-depth study of performance implication of Spark system in various aspects including workload characterization, the study of parameter impact, scalability and fault tolerance behavior of Spark system.
+Usecase 4. It allows in-depth study of performance implication of Apache Spark system in various aspects including workload characterization, the study of parameter impact, scalability and fault tolerance behavior of Apache Spark system.
 	
 **Machine Learning Workloads:**
 
@@ -62,7 +60,7 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 - KMeans, LinearRegression, DecisionTree, ShortestPaths, LabelPropagation, ConnectedComponent, StronglyConnectedComponent, PregelOperation
 
-**Supported Spark releases:**
+**Supported Apache Spark releases:**
  
   - Spark 1.2, 1.3, 1.4, 1.5,1.6
  
@@ -71,7 +69,7 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 
 1. System setup and compilation.
 
-	Setup JDK, Hadoop-YARN, Spark runtime environment properly.
+	Setup JDK, Apache Hadoop-YARN, Apache Spark runtime environment properly.
 	
 	Download  wikixmlj package:
 	cd to a directory for download and type the next commands
@@ -117,7 +115,8 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 	
 	**Note**
 	StreamingLogisticRegression requires the gen_data.sh and run.sh scripts which
-	launches Spark applications can run simutaneously.
+	launches Apache Spark applications can run simutaneously.
+	
 4. View the result.
 
 	Goto `<SparkBench_Root>/report` to check for the final report.
@@ -125,7 +124,7 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 ---
 ### Advanced Configurations ###
 
-1. Configures for running workloads.
+1. Configuration for running workloads.
 
 	The `<SparkBench_Root>/bin/applications.lst` file defines the workloads to run when you execute the bin/run-all.sh script under the package folder. Each line in the list file specifies one workload. You can use # at the beginning of each line to skip the corresponding bench if necessary.
 
@@ -135,9 +134,9 @@ Usecase 4. It allows in-depth study of performance implication of Spark system i
 	`<Workload>/bin/gen_data.sh`  
 	`<Workload>/bin/run.sh`  
 
-2. Spark configuration.
+2. Apache Spark configuration.
 
 	spark.executors.memory                Executor memory, standalone or YARN mode
-    spark.driver.memory                   Driver memory, standalone or YARN mode
+    	spark.driver.memory                   Driver memory, standalone or YARN mode
 	spark.rdd.cache
 
