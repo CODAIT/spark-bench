@@ -13,20 +13,20 @@
 ---
 ### OVERVIEW ###
 
-**What's SparkBench?**
+**What's Benchmark Suite for Apache Spark ?**
 
-SparkBench is a benchmarking suite spacific for Apache Spark.
+Spark-Bench is a benchmarking suite spacific for Apache Spark.
 It comprises a representative and comprehensive set of workloads belonging to four different application types that currently supported by Apache Spark, including machine learning, graph processing, streaming and SQL queries.
 
 The chosen workloads exhibit different workload characteristics and exercise different system bottlenecks; currently we cover CPU, memory, and shuffle and IO intensive workloads.
 
 It also includes a data generator that allows users to generate arbitrary size of input data.
 
-**Why SparkBench?**
+**Why the Benchmark Suite for Apache Spark ?**
 
-While Apache Spark has been evolving rapidly, the community lacks a comprehensive benchmarking suite specifically tailored for Apache Spark. The purpose of such a suite is to help users to understand the trade-off between different system designs, guide the configuration optimization and cluster provisioning for Apache Spark deployments. In particular, there are four main use cases of SparkBench.
+While Apache Spark has been evolving rapidly, the community lacks a comprehensive benchmarking suite specifically tailored for Apache Spark. The purpose of such a suite is to help users to understand the trade-off between different system designs, guide the configuration optimization and cluster provisioning for Apache Spark deployments. In particular, there are four main use cases of Spark-Bench.
 	
-Usecase 1. It enables quantitative comparison for Apache Spark system optimizations such as caching policy and memory management optimization, scheduling policy optimization. Researchers and developers can use SparkBench to comprehensively evaluate and compare the performance of their optimization and the vanilla Apache Spark. 
+Usecase 1. It enables quantitative comparison for Apache Spark system optimizations such as caching policy and memory management optimization, scheduling policy optimization. Researchers and developers can use Spark-Bench to comprehensively evaluate and compare the performance of their optimization and the vanilla Apache Spark. 
 	
 Usecase 2. It provides quantitative comparison for different platforms and hardware cluster setups such as Google cloud and Amazon cloud. 
 	
@@ -78,13 +78,13 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 		cd wikixmlj
 		mvn package install
 	```
-	Download/checkout SparkBench benchmark suite
+	Download/checkout Spark-Bench benchmark suite
 
-	Run `<SparkBench_Root>/bin/build-all.sh` to build SparkBench.
+	Run `<SPARK_BENCH_HOME>/bin/build-all.sh` to build Spark-Bench.
 	
-	Rename `<SparkBench_Root>/conf/enc.sh.template` to `env.sh` and set it according to your cluster.
+	Rename `<SPARK_BENCH_HOME>/conf/enc.sh.template` to `env.sh` and set it according to your cluster.
 	
-2. SparkBench Configurations.
+2. Spark-Bench Configurations.
 	
 	Make sure below variables has been set:
 	
@@ -101,17 +101,17 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 
 3. Execute.
 
-	`<SparkBench_Root>/<Workload>/bin/gen_data.sh`  
-	`<SparkBench_Root>/<Workload>/bin/run.sh`
+	`<SPARK_BENCH_HOME>/<Workload>/bin/gen_data.sh`  
+	`<SPARK_BENCH_HOME>/<Workload>/bin/run.sh`
 	
 	**Note**
 	
 	For SQL applications, by default it runs the RDDRelation workload.
-	To run Hive workload, execute `<SparkBench_Root>/SQL/bin/run.sh hive`;
+	To run Hive workload, execute `<SPARK_BENCH_HOME>/SQL/bin/run.sh hive`;
 	
 	For Streaming applications such as TwitterTag,StreamingLogisticRegression
-	First, execute `<SparkBench_Root>/SQL/bin/gen_data.sh` in one terminal;
-	Second, execute `<SparkBench_Root>/SQL/bin/run.sh` in another terminal;
+	First, execute `<SPARK_BENCH_HOME>/SQL/bin/gen_data.sh` in one terminal;
+	Second, execute `<SPARK_BENCH_HOME>/SQL/bin/run.sh` in another terminal;
 	
 	**Note**
 	StreamingLogisticRegression requires the gen_data.sh and run.sh scripts which
@@ -119,14 +119,14 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 	
 4. View the result.
 
-	Goto `<SparkBench_Root>/report` to check for the final report.
+	Goto `<SPARK_BENCH_HOME>/report` to check for the final report.
 
 ---
 ### Advanced Configurations ###
 
 1. Configuration for running workloads.
 
-	The `<SparkBench_Root>/bin/applications.lst` file defines the workloads to run when you execute the bin/run-all.sh script under the package folder. Each line in the list file specifies one workload. You can use # at the beginning of each line to skip the corresponding bench if necessary.
+	The `<SPARK_BENCH_HOME>/bin/applications.lst` file defines the workloads to run when you execute the bin/run-all.sh script under the package folder. Each line in the list file specifies one workload. You can use # at the beginning of each line to skip the corresponding bench if necessary.
 
 	You can also run each workload separately. In general, there are 3 different files under one workload folder.
 
