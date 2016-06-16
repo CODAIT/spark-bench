@@ -12,7 +12,7 @@ echo "========== running ${APP} bench =========="
 DU ${INPUT_HDFS} SIZE 
 
 JAR="${DIR}/target/KMeansApp-1.0.jar"
-CLASS="KmeansApp"
+CLASS="KmeansAppJava"
 OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_CLUSTERS} ${MAX_ITERATION} ${NUM_RUN}"
 
 
