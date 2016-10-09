@@ -15,7 +15,7 @@
 
 **What's Benchmark Suite for Apache Spark ?**
 
-Spark-Bench is a benchmarking suite spacific for Apache Spark.
+Spark-Bench is a benchmarking suite specific for Apache Spark.
 It comprises a representative and comprehensive set of workloads belonging to four different application types that currently supported by Apache Spark, including machine learning, graph processing, streaming and SQL queries.
 
 The chosen workloads exhibit different workload characteristics and exercise different system bottlenecks; currently we cover CPU, memory, and shuffle and IO intensive workloads.
