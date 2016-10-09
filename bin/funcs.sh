@@ -196,8 +196,8 @@ function CPFROM() {
         if [ ! -d "${src:7}" ]; then echo "src dir should start with file:///";return 1;    fi
         /bin/cp  ${src:7}/* ${dst:7}
     else
-       if [ ! -d "${src}" ]; then return 1;    fi
-      ${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal  $src/* $dst
+       if [ ! -d "${src:8}" ]; then return 1;    fi
+      ${HADOOP_HOME}/bin/hdfs dfs -copyFromLocal  ${src:8}/* $dst
     fi
 }
 function  CPTO() { 
