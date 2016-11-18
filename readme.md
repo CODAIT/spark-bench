@@ -118,8 +118,15 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 	
 	**Note for streaming applications**
 	For Streaming applications such as TwitterTag,StreamingLogisticRegression
-	First, execute `<SPARK_BENCH_HOME>/SQL/bin/gen_data.sh` in one terminal;
-	Second, execute `<SPARK_BENCH_HOME>/SQL/bin/run.sh` in another terminal;
+	First, execute `<SPARK_BENCH_HOME>/Streaming/bin/gen_data.sh` in one terminal;
+	Second, execute `<SPARK_BENCH_HOME>/Streaming/bin/run.sh` in another terminal;
+
+        In order run a particular streaming app (default: PageViewStream):
+            You need to pass a subApp parameter to the gen_data.sh or run.sh like this:
+                  <SPARK_BENCH_HOME>/Streaming/bin/run.sh TwitterPopularTags
+            *Note: some subApps do not need the data_gen step. In those you will get a "no need" string in the output.
+
+        You can make a certain subApp default by changing Streaming/conf/env.sh and changing the subApp= line with your choice of the streaming application.
 	
     In addition, StreamingLogisticRegression requires the `gen_data.sh` and `run.sh` scripts which
 	launches Apache Spark applications can run simultaneously.

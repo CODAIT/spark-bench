@@ -23,8 +23,9 @@ fi
 
 # NetworkWordCount StatefulNetworkWordCount CustomReceiver QueueStream RawNetworkGrep ActorWordCount
 # clickstream.PageViewStream MQTTWordCount ZeroMQWordCount TwitterAlgebirdCMS TwitterAlgebirdHLL TwitterPopularTags
-if [ $# -ge 1 ]; then
-   subApp=$1
+opt=$1
+if [ ! -z "$opt" ]; then
+  subApp=$opt
 fi
 
 if [ $subApp = "StreamingLogisticRegression" ];then

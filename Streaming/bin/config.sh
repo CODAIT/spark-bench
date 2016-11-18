@@ -7,7 +7,7 @@ if [ -f "${bin}/../conf/env.sh" ]; then
   . "${bin}/../conf/env.sh"
   set +a
 fi
-
+COMPRESS_GLOBAL=0
 APP=streaming
 INPUT_HDFS=${DATA_HDFS}/LinearRegression/Input
 OUTPUT_HDFS=${DATA_HDFS}/${APP}/Output

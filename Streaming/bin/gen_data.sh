@@ -21,7 +21,10 @@ JAR="${SPARK_HOME}/examples/target/scala-2.10/spark-examples-${SPARK_VERSION}-ha
 #OPTION="minli1 9999"
 
 
-#opt=$subApp
+opt=$1
+if [ ! -z "$opt" ]; then
+  subApp=$opt
+fi
 
 # NetworkWordCount StatefulNetworkWordCount CustomReceiver QueueStream RawNetworkGrep ActorWordCount
 # PageViewStream MQTTWordCount ZeroMQWordCount TwitterAlgebirdCMS TwitterAlgebirdHLL TwitterPopularTags
