@@ -17,9 +17,9 @@
 
 package src.main.scala
 
-import org.apache.spark.SparkContext._
+//import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.StreamingContext._
+//import org.apache.spark.streaming.StreamingContext._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
@@ -47,7 +47,7 @@ object PageViewStream {
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
     Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
     
-	StreamingExamples.setStreamingLogLevels()
+	//StreamingExamples.setStreamingLogLevels()
 	val metric = args(0)
     val host = args(1)
     val port = args(2).toInt
@@ -55,14 +55,13 @@ object PageViewStream {
 	val sparkConf = new SparkConf().setAppName("PageViewStream")
     // Create the context
 	val ssc = new StreamingContext(sparkConf, Seconds(1))	
-    //val ssc = new StreamingContext("local[2]", "PageViewStream", Seconds(1),
-    //  System.getenv("SPARK_HOME"), StreamingContext.jarOfClass(this.getClass).toSeq)
+//    val ssc = new StreamingContext("local[2]", "PageViewStream", Seconds(1),
+  //    System.getenv("SPARK_HOME"), StreamingContext.jarOfClass(this.getClass).toSeq)
 
     // Create a ReceiverInputDStream on target host:port and convert each line to a PageView
     val pageViews = ssc.socketTextStream(host, port)
                        .flatMap(_.split("\n"))
                        .map(PageView.fromString(_))
-
     // Return a count of views per URL seen in each batch
     val pageCounts = pageViews.map(view => view.url).countByValue()
 
@@ -77,7 +76,7 @@ object PageViewStream {
                                       .groupByKey()
     val errorRatePerZipCode = statusesPerZipCode.map{
       case(zip, statuses) =>
-        val normalCount = statuses.filter(_ == 200).size
+        val normalCount = statuses.count(_ == 200)
         val errorCount = statuses.size - normalCount
         val errorRatio = errorCount.toFloat / statuses.size
         if (errorRatio > 0.05) {
@@ -114,5 +113,6 @@ object PageViewStream {
     }
 
     ssc.start()
+    ssc.awaitTermination()
   }
 }

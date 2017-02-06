@@ -21,7 +21,7 @@ CLASS="src.main.scala.terasortDataGen"
 OPTION=" ${NUM_OF_RECORDS} ${INOUT_SCHEME}${INPUT_HDFS} ${NUM_OF_PARTITIONS}"
 START_TIME=`timestamp`
 Addition_jar="--jars ${DIR}/target/jars/guava-19.0-rc2.jar"
-#echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${Addition_jar} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat"
+echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master ${APP_MASTER} ${YARN_OPT} ${SPARK_OPT} ${Addition_jar} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/${APP}_gendata_${START_TS}.dat"
 sleep 1 
 res=$?;
 

@@ -19,13 +19,13 @@ DU ${INPUT_HDFS} SIZE
 CLASS="LinearRegression.src.main.java.LinearRegressionApp"
 OPTION=" ${INPUT_HDFS} ${OUTPUT_HDFS} ${MAX_ITERATION} "
 
-JAR="${DIR}/target/LinearRegression-project-1.0.jar"
+JAR="${DIR}/target/TriangleCountApp-1.0.jar"
 
 nexe=3
-dmem=4g
-emem=2g
+dmem=2g
+emem=6g
 ecore=1
-YARN_OPT="--num-executors $nexe --driver-memory $dmem --exectuor-memory $emem --executor-cores $ecore"
+YARN_OPT="--num-executors $nexe --driver-memory $dmem --executor-memory $emem --executor-cores $ecore"
 res=$?;
 
 for((i=0;i<${NUM_TRIALS};i++)); do
@@ -34,7 +34,7 @@ for((i=0;i<${NUM_TRIALS};i++)); do
 	purge_data "${MC_LIST}"	
 START_TS=`get_start_ts`;
 	START_TIME=`timestamp`
-	echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master yarn-cluster ${YARN_OPT} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LinearRegression_run_${START_TS}.dat"
+	echo_and_run sh -c " ${SPARK_HOME}/bin/spark-submit --class $CLASS --master yarn ${YARN_OPT} --conf spark.storage.memoryFraction=${memoryFraction} $JAR ${OPTION} 2>&1|tee ${BENCH_NUM}/LinearRegression_run_${START_TS}.dat"
 res=$?;
 	END_TIME=`timestamp`
 get_config_fields >> ${BENCH_REPORT}

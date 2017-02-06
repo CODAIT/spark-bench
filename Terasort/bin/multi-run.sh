@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "========== running ${APP} benchmark =========="
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
