@@ -2,7 +2,7 @@ package src.main.scala
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkContext,SparkConf, Logging}
+import org.apache.spark.{SparkContext,SparkConf}
 import org.apache.spark.mllib.feature.HashingTF
 import org.apache.spark.mllib.feature.IDF
 import org.apache.spark.mllib.linalg.Vector

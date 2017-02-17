@@ -77,7 +77,7 @@ function purge_data() {
 	#echo $nn
 	ssh  -t $nn "sudo sh -c \"$cmd\""; 
 	done;
-	echo "date purged on ${mc_list}"
+	echo "data purged on ${mc_list}"
 }
 
 function get_start_ts() {
@@ -86,6 +86,7 @@ function get_start_ts() {
 }
 
 function setup() {
+  echo "Master:$MASTER"
   if [ "${MASTER}" = "spark" ] && [ "${RESTART}" = "TRUE" ] ; then
     "${SPARK_HOME}/sbin/stop-all.sh"
     "${SPARK_HOME}/sbin/start-all.sh"
@@ -100,9 +101,13 @@ function teardown() {
 
 function set_gendata_opt() {
   SPARK_OPT=
-  if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
-    SPARK_OPT="${SPARK_OPT} --conf spark.storage.memoryFraction=${SPARK_STORAGE_MEMORYFRACTION}"
+  if [ ! -z "$SPARK_RPC_ASKTIMEOUT" ]; then
+    SPARK_OPT="${SPARK_OPT} --conf spark.rpc.askTimeout=${SPARK_RPC_ASKTIMEOUT}"
   fi
+#memory fraction is deprecated in spark 2.0.1
+#  if [ ! -z "$SPARK_STORAGE_MEMORYFRACTION" ]; then
+#    SPARK_OPT="${SPARK_OPT} --conf spark.storage.memoryFraction=${SPARK_STORAGE_MEMORYFRACTION}"
+#  fi
   if [ ! -z "$SPARK_EXECUTOR_MEMORY" ]; then
     SPARK_OPT="${SPARK_OPT} --conf spark.executor.memory=${SPARK_EXECUTOR_MEMORY}"
   fi
@@ -118,7 +123,6 @@ function set_gendata_opt() {
   if [ ! -z "$SPARK_DEFAULT_PARALLELISM" ]; then
     SPARK_OPT="${SPARK_OPT} --conf spark.default.parallelism=${SPARK_DEFAULT_PARALLELISM}"
   fi
-
   YARN_OPT=
   if [ "$MASTER" = "yarn" ]; then
     if [ ! -z "$SPARK_EXECUTOR_INSTANCES" ]; then
@@ -130,6 +134,11 @@ function set_gendata_opt() {
     if [ ! -z "$SPARK_DRIVER_MEMORY" ]; then
       YARN_OPT="${YARN_OPT} --driver-memory ${SPARK_DRIVER_MEMORY}"
     fi
+
+    if [ ! -z "$YARN_DEPLOY_MODE" ]; then
+      YARN_OPT="${YARN_OPT} --deploy-mode ${YARN_DEPLOY_MODE}"
+    fi
+#echo "YARN_OPTS $YARN_OPT"
   fi
 }
 

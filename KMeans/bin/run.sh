@@ -17,6 +17,7 @@ OPTION=" ${INOUT_SCHEME}${INPUT_HDFS} ${INOUT_SCHEME}${OUTPUT_HDFS} ${NUM_OF_CLU
 
 
 setup
+set_gendata_opt
 for((i=0;i<${NUM_TRIALS};i++)); do
     RM ${OUTPUT_HDFS}
     # (Optional procedure): free page cache, dentries and inodes.

@@ -24,7 +24,7 @@ import scala.language.postfixOps
 import scala.util.Random
 import org.jblas.DoubleMatrix
 import org.apache.spark.storage.StorageLevel
-import org.apache.spark.{ SparkContext, SparkConf, Logging }
+import org.apache.spark.{ SparkContext, SparkConf}
 import org.apache.spark.rdd.RDD
 import java.io._
 

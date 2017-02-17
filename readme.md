@@ -62,7 +62,7 @@ Usecase 4. It allows in-depth study of performance implication of Apache Spark s
 
 **Supported Apache Spark releases:**
  
-  - Spark 1.2, 1.3, 1.4, 1.5 and 1.6
+  - Spark 2.0.1, this code is branched for release 2.0.1, note that these versions need a later version of scala and as such there are changes to pom files. 
  
 ---
 ### Getting Started ###
