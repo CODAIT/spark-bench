@@ -4,10 +4,21 @@ import org.rogach.scallop.{ScallopConf, Subcommand}
 
 class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
-  // Data Generation
+  /*
+   * ***********************
+   * * DATAGENERATION ARGS *
+   * ***********************
+   */
   val datagen = new Subcommand("generate-data") {
 
   }
 
-  val workload = new Subcommand("workload")
+  /*
+   * *****************
+   * * WORKLOAD ARGS *
+   * *****************
+   */
+  val workload = new Subcommand("workload") {
+
+  }
 }
