@@ -1,0 +1,6 @@
+package com.ibm.sparktc.sparkbench
+
+case class DataGenerationConf (
+                                numRows: Int,
+                                outputDir: String
+                              )

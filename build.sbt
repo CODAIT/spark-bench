@@ -1,6 +1,19 @@
 name := "sparkbench"
 organization := "com.ibm.sparktc"
+scalaVersion := "2.11.8"
+sbtVersion := "0.13"
 
-lazy val core = project
 lazy val workloads = project
-lazy val cli = project.dependsOn(core)
+lazy val datageneration = project
+lazy val cli = project.dependsOn(workloads, datageneration)
+
+//val scalacheckVersion = "1.12.5"
+//val junitVersion = "4.12"
+//val scalatestVersion = "3.0.1"
+//
+//libraryDependencies ++= Seq(
+//  "junit"                       % "junit"                  % junitVersion            % "test",
+//  "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
+//  "org.scalactic"               %% "scalactic"             % scalatestVersion        % "test",
+//  "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test"
+//)
