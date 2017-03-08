@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench
+package com.ibm.sparktc.sparkbench.workload
 
 case class WorkloadConfig (
   workload: String,

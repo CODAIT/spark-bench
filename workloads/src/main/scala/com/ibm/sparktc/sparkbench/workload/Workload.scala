@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench
+package com.ibm.sparktc.sparkbench.workload
 
 abstract class Workload(conf: WorkloadConfig) {
   println(s"I'm doing a workload: $conf")

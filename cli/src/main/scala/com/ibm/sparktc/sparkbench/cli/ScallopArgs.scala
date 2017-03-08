@@ -1,6 +1,6 @@
-package com.ibm.sparktc.sparkbench
+package com.ibm.sparktc.sparkbench.cli
 
-import org.rogach.scallop.{ScallopConf, Subcommand}
+import org.rogach.scallop._
 
 class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
@@ -10,8 +10,11 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
    * ***********************
    */
   val datagen = new Subcommand("generate-data") {
-
+    val numRows = opt[Int]()
+    val outputDir = opt[String]()
   }
+
+  addSubcommand(datagen)
 
   /*
    * *****************
@@ -19,6 +22,13 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
    * *****************
    */
   val workload = new Subcommand("workload") {
-
+    val workload = opt[String]()
+    val inputDir = opt[String]()
+    val outputFormat = opt[String]()
+    val outputDir = opt[String]()
   }
+
+  addSubcommand(workload)
+
+  verify()
 }

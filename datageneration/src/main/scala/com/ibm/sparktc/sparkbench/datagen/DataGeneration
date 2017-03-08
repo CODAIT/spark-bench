@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench
+package com.ibm.sparktc.sparkbench.datagen
 
 abstract class DataGeneration(conf: DataGenerationConf) {
 
