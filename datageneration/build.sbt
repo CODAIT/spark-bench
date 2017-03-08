@@ -4,6 +4,9 @@ val scalatestVersion = "3.0.1"
 
 libraryDependencies ++= Seq(
   "org.rogach"                  %% "scallop"               % "2.1.1",
+  "org.apache.spark" %% "spark-core" % "2.1.0",
+  "org.apache.spark" %% "spark-mllib" % "2.1.0",
+  "org.jblas" % "jblas" % "1.2.4",
   "junit"                       % "junit"                  % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalactic"               %% "scalactic"             % scalatestVersion        % "test",
