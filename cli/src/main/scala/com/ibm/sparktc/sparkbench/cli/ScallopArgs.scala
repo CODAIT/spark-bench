@@ -10,8 +10,11 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
    * ***********************
    */
   val datagen = new Subcommand("generate-data") {
-    val numRows = opt[Int]()
-    val outputDir = opt[String]()
+    val numRows = opt[Int](short = 'r')
+    val outputDir = opt[String](short = 'o')
+    val kmeans = new Subcommand("kmeans")
+    addSubcommand(kmeans)
+
   }
 
   addSubcommand(datagen)

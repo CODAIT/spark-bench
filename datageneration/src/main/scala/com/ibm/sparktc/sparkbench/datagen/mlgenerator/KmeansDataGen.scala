@@ -19,17 +19,16 @@ package com.ibm.sparktc.sparkbench.datagen.mlgenerator
 import com.ibm.sparktc.sparkbench.datagen.{DataGenerationConf, DataGenerator}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 
 class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
 
-  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", "2").asInstanceOf[Int]
-  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", "2").asInstanceOf[Int]
-  val scaling = conf.generatorSpecific.getOrElse("scaling", "2").asInstanceOf[Int]
-  val numPar = conf.generatorSpecific.getOrElse("partitions", "2").asInstanceOf[Int]
+  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", "2").asInstanceOf[String].toInt
+  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", "2").asInstanceOf[String].toInt
+  val scaling = conf.generatorSpecific.getOrElse("scaling", "2").asInstanceOf[String].toInt
+  val numPar = conf.generatorSpecific.getOrElse("partitions", "2").asInstanceOf[String].toInt
 
   override def generateDataSet(spark: SparkSession): DataFrame = {
-    import spark.implicits._
 
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
       spark.sparkContext,
@@ -39,6 +38,10 @@ class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
       scaling,
       numPar
     )
-    data.toDF()
+
+    import spark.implicits._
+
+    val temp: RDD[Row] = data.map(arr => Row(arr:_*))
+
   }
 }
