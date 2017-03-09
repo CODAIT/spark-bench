@@ -9,8 +9,11 @@ object ArgsParser {
 		//TODO [DATAGEN] Replace this stub with actual validation and parsing of ScallopArgs to case class
 
 		DataGenerationConf(
+			generatorName = "kmeans",
 			numRows = 10,
-			outputDir = "/tmp/spark-bench/"
+			outputFormat = "csv",
+			outputDir = "/tmp/spark-bench/",
+			generatorSpecific = Map.empty
 		)
   }
 

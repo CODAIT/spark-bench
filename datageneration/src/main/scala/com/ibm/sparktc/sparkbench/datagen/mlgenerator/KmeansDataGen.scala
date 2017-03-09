@@ -16,34 +16,29 @@
 
 package com.ibm.sparktc.sparkbench.datagen.mlgenerator
 
-import org.apache.log4j.{Level, Logger}
+import com.ibm.sparktc.sparkbench.datagen.{DataGenerationConf, DataGenerator}
 import org.apache.spark.mllib.util.KMeansDataGenerator
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
-object KmeansDataGen {
-  def main(args: Array[String]) {
-    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
-    Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
-    if (args.length < 5) {
-      println("usage: <output> <numPoints> <numClusters> <dimenstion> <scaling factor> [numpar]")
-      System.exit(0)
-    }
-    val conf = new SparkConf
-    conf.setAppName("Spark KMeans DataGen")
-    val sc = new SparkContext(conf)
+class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
 
-    val output = args(0)
-    val numPoint = args(1).toInt
-    val numCluster = args(2).toInt
-    val numDim = args(3).toInt
-    val scaling = args(4).toDouble
-    val defPar = if (System.getProperty("spark.default.parallelism") == null) 2 else System.getProperty("spark.default.parallelism").toInt
-    val numPar = if (args.length > 5) args(5).toInt else defPar
+  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", "2").asInstanceOf[Int]
+  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", "2").asInstanceOf[Int]
+  val scaling = conf.generatorSpecific.getOrElse("scaling", "2").asInstanceOf[Int]
+  val numPar = conf.generatorSpecific.getOrElse("partitions", "2").asInstanceOf[Int]
 
-    val data = KMeansDataGenerator.generateKMeansRDD(sc, numPoint, numCluster, numDim, scaling, numPar)
-    data.map(_.mkString(" ")).saveAsTextFile(output)
+  override def generateDataSet(spark: SparkSession): DataFrame = {
+    import spark.implicits._
 
-    sc.stop()
+    val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
+      spark.sparkContext,
+      conf.numRows,
+      numCluster,
+      numDim,
+      scaling,
+      numPar
+    )
+    data.toDF()
   }
-
 }

@@ -1,5 +1,0 @@
-package com.ibm.sparktc.sparkbench.datagen
-
-abstract class DataGeneration(conf: DataGenerationConf) {
-
-}

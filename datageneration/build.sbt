@@ -1,3 +1,6 @@
+scalaVersion := "2.11.8"
+
+
 val scalacheckVersion = "1.12.5"
 val junitVersion = "4.12"
 val scalatestVersion = "3.0.1"
