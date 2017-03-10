@@ -12,7 +12,7 @@ abstract class DataGenerator(conf: DataGenerationConf) {
       .getOrCreate()
   }
 
-  def generateDataSet(spark: SparkSession): DataFrame
+  def generateData(spark: SparkSession): DataFrame
 
   def saveAsCSV(data: DataFrame): Unit = {
   }
@@ -26,7 +26,7 @@ abstract class DataGenerator(conf: DataGenerationConf) {
 
   def run(): Unit = {
     val spark = createSparkContext()
-    val data = generateDataSet(spark)
+    val data = generateData(spark)
     writeToDisk(data)
   }
 }

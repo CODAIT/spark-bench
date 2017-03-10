@@ -19,7 +19,10 @@ package com.ibm.sparktc.sparkbench.datagen.mlgenerator
 import com.ibm.sparktc.sparkbench.datagen.{DataGenerationConf, DataGenerator}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.sql.types.{StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import org.apache.spark.sql.types._
+
 
 class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
 
@@ -28,7 +31,7 @@ class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
   val scaling = conf.generatorSpecific.getOrElse("scaling", "2").asInstanceOf[String].toInt
   val numPar = conf.generatorSpecific.getOrElse("partitions", "2").asInstanceOf[String].toInt
 
-  override def generateDataSet(spark: SparkSession): DataFrame = {
+  override def generateData(spark: SparkSession): DataFrame = {
 
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
       spark.sparkContext,
@@ -39,9 +42,12 @@ class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
       numPar
     )
 
-    import spark.implicits._
+    val schemaString = data.first().indices.map(_.toString).mkString(" ")
+    val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, DoubleType, nullable = false))
+    val schema = StructType(fields)
 
-    val temp: RDD[Row] = data.map(arr => Row(arr:_*))
+    val rowRDD = data.map(arr => Row(arr:_*))
 
+    spark.createDataFrame(rowRDD, schema)
   }
 }
