@@ -1,3 +1,10 @@
+package com.ibm.sparktc.sparkbench.workload
+
+import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.{SparkConf, SparkContext}
+import org.slf4j.event.Level
+
 /*
  * (C) Copyright IBM Corp. 2015 
  *
@@ -14,17 +21,9 @@
  * limitations under the License.
  */
 
-import org.apache.log4j.{Level, Logger}
-import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.{SparkConf, SparkContext}
-import org.json4s.JsonDSL._
-import org.json4s.jackson.JsonMethods._
-
 object KmeansApp {
   def main(args: Array[String]) {
-    Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
-    Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF);
+
     if (args.length < 4) {
       println("usage: <input> <output> <numClusters> <maxIterations> <runs> - optional")
       System.exit(0)
@@ -65,7 +64,7 @@ object KmeansApp {
     val WSSSE = clusters.computeCost(parsedData)
     val testTime = (System.currentTimeMillis() - start).toDouble / 1000.0
 
-    println(compact(render(Map("loadTime" -> loadTime, "trainingTime" -> trainingTime, "testTime" -> testTime, "saveTime" -> saveTime))))
+//    println(compact(render(Map("loadTime" -> loadTime, "trainingTime" -> trainingTime, "testTime" -> testTime, "saveTime" -> saveTime))))
     println("Within Set Sum of Squared Errors = " + WSSSE)
     sc.stop()
   }
