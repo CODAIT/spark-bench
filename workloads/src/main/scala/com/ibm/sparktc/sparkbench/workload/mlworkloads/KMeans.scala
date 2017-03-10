@@ -1,9 +1,9 @@
-package com.ibm.sparktc.sparkbench.workload
+package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{SparkConf, SparkContext}
-import org.slf4j.event.Level
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -21,7 +21,12 @@ import org.slf4j.event.Level
  * limitations under the License.
  */
 
-object KmeansApp {
+class KMeans(conf: WorkloadConfig) extends Workload(conf){
+
+
+
+
+
   def main(args: Array[String]) {
 
     if (args.length < 4) {
@@ -39,7 +44,6 @@ object KmeansApp {
     val runs = calculateRuns(args)
 
     // Load and parse the data
-    // val parsedData = sc.textFile(input)
     var start = System.currentTimeMillis();
     val data = sc.textFile(input)
     val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()

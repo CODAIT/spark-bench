@@ -7,8 +7,7 @@ abstract class DataGenerator(conf: DataGenerationConf) {
   def createSparkContext(): SparkSession = {
     SparkSession
       .builder()
-      .appName("Spark SQL basic example")
-      .config("spark.some.config.option", "some-value")
+      .appName("spark-bench generate-data")
       .getOrCreate()
   }
 

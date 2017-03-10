@@ -24,8 +24,9 @@ object ArgsParser {
     WorkloadConfig(
 			workload = "KMeans",
 			inputDir = "/tmp/spark-bench/input",
-			outputFormat = "csv",
-			outputDir = "/tmp/spark-bench/output"
+			inputFormat = "csv",
+			outputDir = "/tmp/spark-bench/output",
+			outputFormat = "csv"
 		)
 	}
 }
