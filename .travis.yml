@@ -1,0 +1,15 @@
+language: scala
+#cache:
+#  directories:
+#    - $HOME/.ivy2
+#    - $HOME/spark
+#    - $HOME/.sbt/launchers
+scala:
+   - 2.11.8
+sudo: false
+after_success:
+  - codecov
+notifications:
+  email:
+    recipients:
+      - ecurtin@us.ibm.com
