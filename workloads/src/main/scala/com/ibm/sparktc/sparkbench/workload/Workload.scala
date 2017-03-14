@@ -34,4 +34,11 @@ abstract class Workload(conf: WorkloadConfig) {
     val res = doWorkload(df, spark)
     writeToDisk(res)
   }
+
+  def time[R](block: => R): (Long, R) = {
+    val t0 = System.nanoTime()
+    val result = block    // call-by-name
+    val t1 = System.nanoTime()
+    (t1 - t0, result)
+  }
 }

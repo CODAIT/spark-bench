@@ -2,9 +2,9 @@ package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
+import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.{SparkConf, SparkContext}
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -24,61 +24,52 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 class KMeansWorkload(conf: WorkloadConfig) extends Workload(conf){
 
-  override def doWorkload(df: DataFrame, sparkSession: SparkSession) = {
-    //TODO FIXME
-    import sparkSession.implicits._
-    sparkSession.sparkContext.parallelize(1 to 10).toDF
+  /*
+      *****************************************************************************************
+      LET'S CONSIDER:
+      - Does timing the load, save, and testing really get us anything? Are these valuable?
+      - Better to let users write their own workloads and it's on them to time the right stuff?
+      *****************************************************************************************
+   */
+
+  override def doWorkload(df: DataFrame, spark: SparkSession) = {
+    val (loadtime, data) = load(df, spark) // necessary to time this?
+    val (trainTime, model) = train(data, spark)
+    val (testTime) = test(model, data, spark) // necessary?
+    val (saveTime) = save(data, spark) // necessary?
   }
 
-
-  def main(args: Array[String]) {
-
-    if (args.length < 4) {
-      println("usage: <input> <output> <numClusters> <maxIterations> <runs> - optional")
-      System.exit(0)
+  def load(df: DataFrame, spark: SparkSession): (Long, Dataset[Vector]) = {
+    time {
+      val baseRDD: Dataset[Vector] = df.map(row => {
+        Vectors.dense(row.toSeq.toArray.map({
+          case s: String => s.toDouble
+          case l: Long => l.toDouble
+          case _ => 0.0
+        }))
+      })
+      baseRDD.cache()
     }
-    val conf = new SparkConf
-    conf.setAppName("Spark KMeans Example")
-    val sc = new SparkContext(conf)
+    //    val loadTime = (System.currentTimeMillis() - start).toDouble / 1000.0
+  }
 
-    val input = args(0)
-    val output = args(1)
-    val K = args(2).toInt
-    val maxIterations = args(3).toInt
-    val runs = calculateRuns(args)
-
-    // Load and parse the data
-    var start = System.currentTimeMillis();
-    val data = sc.textFile(input)
-    val parsedData = data.map(s => Vectors.dense(s.split(' ').map(_.toDouble))).cache()
-    val loadTime = (System.currentTimeMillis() - start).toDouble / 1000.0
-
-    // Cluster the data into two classes using KMeans
-    start = System.currentTimeMillis();
-    val clusters: KMeansModel = KMeans.train(parsedData, K, maxIterations, runs, KMeans.K_MEANS_PARALLEL, seed = 127L)
-    val trainingTime = (System.currentTimeMillis() - start).toDouble / 1000.0
-    println("cluster centers: " + clusters.clusterCenters.mkString(","))
-
-    start = System.currentTimeMillis();
-    val vectorsAndClusterIdx = parsedData.map { point =>
-      val prediction = clusters.predict(point)
-      (point.toString, prediction)
+  def train(df: Dataset[Vector], spark: SparkSession): (Long, KMeansModel) = {
+    time {
+      KMeans.train(
+        data = df.rdd,
+        k = conf.workloadSpecific.get("K").asInstanceOf[Int],
+        maxIterations = conf.workloadSpecific.get("maxIterations").asInstanceOf[Int],
+        initializationMode = KMeans.K_MEANS_PARALLEL,
+        seed = conf.workloadSpecific.getOrElse("seed", "127").toString.toLong) //TODO ugly haxx
     }
-    vectorsAndClusterIdx.saveAsTextFile(output)
-    val saveTime = (System.currentTimeMillis() - start).toDouble / 1000.0
-
-    // Evaluate clustering by computing Within Set Sum of Squared Errors
-    start = System.currentTimeMillis();
-    val WSSSE = clusters.computeCost(parsedData)
-    val testTime = (System.currentTimeMillis() - start).toDouble / 1000.0
-
-//    println(compact(render(Map("loadTime" -> loadTime, "trainingTime" -> trainingTime, "testTime" -> testTime, "saveTime" -> saveTime))))
-    println("Within Set Sum of Squared Errors = " + WSSSE)
-    sc.stop()
   }
 
-  def calculateRuns(args: Array[String]): Int = {
-    if (args.length > 4) args(4).toInt
-    else 1
+  //Within Sum of Squared Errors
+  def test(model: KMeansModel, df: Dataset[Vector], spark: SparkSession): Unit = {
+    time{ model.computeCost(df.rdd) }
+
   }
+
+  def save(df: Dataset[Vector], spark: SparkSession): Unit = ???
+
 }
