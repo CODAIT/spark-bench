@@ -1,5 +1,7 @@
 # Benchmark Suite for Apache Spark #
 
+[![Build Status](https://travis-ci.org/ecurtin/spark-bench.svg?branch=master)](https://travis-ci.org/ecurtin/spark-bench)
+
 - Current version: 2.0
 - Release date: 2015-5-10
 
