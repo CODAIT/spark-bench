@@ -7,6 +7,7 @@ abstract class DataGenerator(conf: DataGenerationConf) {
   def createSparkContext(): SparkSession = {
     SparkSession
       .builder()
+      .master("local[2]") //TODO this is a temp bandange, make this configurable along with all the other Spark stuff that needs to be configurable
       .appName("spark-bench generate-data")
       .getOrCreate()
   }

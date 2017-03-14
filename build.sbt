@@ -11,9 +11,10 @@ lazy val cli = project.dependsOn(workloads, datageneration)
 //val junitVersion = "4.12"
 //val scalatestVersion = "3.0.1"
 //
-//libraryDependencies ++= Seq(
+libraryDependencies ++= Seq(
+  "com.typesafe" % "config" % "1.3.1"
 //  "junit"                       % "junit"                  % junitVersion            % "test",
 //  "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
 //  "org.scalactic"               %% "scalactic"             % scalatestVersion        % "test",
 //  "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test"
-//)
+)
