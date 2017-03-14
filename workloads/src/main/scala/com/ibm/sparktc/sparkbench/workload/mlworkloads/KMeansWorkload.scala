@@ -3,6 +3,7 @@ package com.ibm.sparktc.sparkbench.workload.mlworkloads
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
 
 /*
@@ -21,10 +22,13 @@ import org.apache.spark.{SparkConf, SparkContext}
  * limitations under the License.
  */
 
-class KMeans(conf: WorkloadConfig) extends Workload(conf){
+class KMeansWorkload(conf: WorkloadConfig) extends Workload(conf){
 
-
-
+  override def doWorkload(df: DataFrame, sparkSession: SparkSession) = {
+    //TODO FIXME
+    import sparkSession.implicits._
+    sparkSession.sparkContext.parallelize(1 to 10).toDF
+  }
 
 
   def main(args: Array[String]) {
