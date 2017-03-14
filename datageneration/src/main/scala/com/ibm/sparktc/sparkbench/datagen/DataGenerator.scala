@@ -7,8 +7,8 @@ abstract class DataGenerator(conf: DataGenerationConf) {
   def createSparkContext(): SparkSession = {
     SparkSession
       .builder()
+      .master("local[2]") //TODO this is a temp bandange, make this configurable along with all the other Spark stuff that needs to be configurable
       .appName("Spark SQL basic example")
-      .config("spark.some.config.option", "some-value")
       .getOrCreate()
   }
 

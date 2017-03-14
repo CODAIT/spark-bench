@@ -7,8 +7,6 @@ language: scala
 scala:
    - 2.11.8
 sudo: false
-after_success:
-  - codecov
 notifications:
   email:
     recipients:
