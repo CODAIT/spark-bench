@@ -1,6 +1,5 @@
 package com.ibm.sparktc.sparkbench
 import java.io.File
-import java.util
 
 import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGen
