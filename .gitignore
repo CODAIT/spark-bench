@@ -13,3 +13,5 @@
 num/old
 
 target/
+metastore_db
+derby.log

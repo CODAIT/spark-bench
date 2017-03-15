@@ -20,8 +20,8 @@ abstract class Workload(conf: WorkloadConfig) {
 
   def doWorkload(df: DataFrame, sparkSession: SparkSession): DataFrame
 
-  def writeToDisk(data: DataFrame): Unit = {
-    conf.outputFormat match {
+  def writeToDisk(data: DataFrame, outputDir: String, outputFormat: String): Unit = {
+    outputFormat match {
       case "parquet" => data.write.parquet(conf.outputDir)
       case "csv" => data.write.csv(conf.outputDir)
       case _ => new Exception("unrecognized save format")
@@ -32,7 +32,7 @@ abstract class Workload(conf: WorkloadConfig) {
     val spark = createSparkContext()
     val df = load(spark)
     val res = doWorkload(df, spark)
-    writeToDisk(res)
+    writeToDisk(res, conf.outputDir, conf.outputFormat)
   }
 
   def time[R](block: => R): (Long, R) = {

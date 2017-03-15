@@ -4,7 +4,9 @@ case class WorkloadConfig (
   workload: String,
   inputDir: String,
   inputFormat: String,
-  outputFormat: String,
+  workloadResultsOutputFormat: String,
+  workloadResultsOutputDir: String,
   outputDir: String,
+  outputFormat: String,
   workloadSpecific: Map[String, Any]
 )

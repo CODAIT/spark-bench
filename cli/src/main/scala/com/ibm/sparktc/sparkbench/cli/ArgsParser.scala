@@ -25,8 +25,11 @@ object ArgsParser {
 			workload = "KMeans",
 			inputDir = "/tmp/spark-bench/input",
 			inputFormat = "csv",
+			workloadResultsOutputDir = "/tmp/spark-bench/workloadoutput",
+			workloadResultsOutputFormat = "csv",
 			outputDir = "/tmp/spark-bench/output",
-			outputFormat = "csv"
+			outputFormat = "csv",
+			workloadSpecific = Map.empty
 		)
 	}
 }

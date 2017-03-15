@@ -2,9 +2,11 @@ package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
-import org.apache.spark.sql.{DataFrame, Dataset, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.types._
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -32,31 +34,47 @@ class KMeansWorkload(conf: WorkloadConfig) extends Workload(conf){
       *****************************************************************************************
    */
 
-  override def doWorkload(df: DataFrame, spark: SparkSession) = {
+  override def doWorkload(df: DataFrame, spark: SparkSession): DataFrame = {
     val (loadtime, data) = load(df, spark) // necessary to time this?
     val (trainTime, model) = train(data, spark)
-    val (testTime) = test(model, data, spark) // necessary?
-    val (saveTime) = save(data, spark) // necessary?
+    val (testTime, _) = test(model, data, spark) // necessary?
+    val (saveTime, _) = save(data, model, spark) // necessary?
+
+    val schema = StructType(
+      List(
+        StructField("name", StringType, nullable = false),
+        StructField("timestamp", LongType, nullable = false),
+        StructField("load", LongType, nullable = true),
+        StructField("train", LongType, nullable = true),
+        StructField("test", LongType, nullable = true),
+        StructField("save", LongType, nullable = true)
+      )
+    )
+
+    val timeList = spark.sparkContext.parallelize(Seq(Row("kmeans", System.currentTimeMillis(), loadtime, trainTime, testTime, saveTime)))
+    println(timeList.first())
+
+    spark.createDataFrame(timeList, schema)
   }
 
-  def load(df: DataFrame, spark: SparkSession): (Long, Dataset[Vector]) = {
+  def load(df: DataFrame, spark: SparkSession): (Long, RDD[Vector]) = {
+
     time {
-      val baseRDD: Dataset[Vector] = df.map(row => {
-        Vectors.dense(row.toSeq.toArray.map({
-          case s: String => s.toDouble
-          case l: Long => l.toDouble
-          case _ => 0.0
-        }))
-      })
-      baseRDD.cache()
+      val baseDS: RDD[Vector] = df.rdd.map(row => {
+        val range = 1 to row.size
+        val doublez = range.map(i => row.getDouble(i)).toArray
+        Vectors.dense( doublez)
+      }
+      )
+      baseDS.cache()
     }
     //    val loadTime = (System.currentTimeMillis() - start).toDouble / 1000.0
   }
 
-  def train(df: Dataset[Vector], spark: SparkSession): (Long, KMeansModel) = {
+  def train(df: RDD[Vector], spark: SparkSession): (Long, KMeansModel) = {
     time {
       KMeans.train(
-        data = df.rdd,
+        data = df,
         k = conf.workloadSpecific.get("K").asInstanceOf[Int],
         maxIterations = conf.workloadSpecific.get("maxIterations").asInstanceOf[Int],
         initializationMode = KMeans.K_MEANS_PARALLEL,
@@ -65,11 +83,21 @@ class KMeansWorkload(conf: WorkloadConfig) extends Workload(conf){
   }
 
   //Within Sum of Squared Errors
-  def test(model: KMeansModel, df: Dataset[Vector], spark: SparkSession): Unit = {
-    time{ model.computeCost(df.rdd) }
-
+  def test(model: KMeansModel, df: RDD[Vector], spark: SparkSession): (Long, Double) = {
+    time{ model.computeCost(df) }
   }
 
-  def save(df: Dataset[Vector], spark: SparkSession): Unit = ???
+  def save(ds: RDD[Vector], model: KMeansModel, spark: SparkSession): (Long, Unit) = {
+    val res = time {
+      val vectorsAndClusterIdx: RDD[(String, Int)] = ds.map { point =>
+        val prediction = model.predict(point)
+        (point.toString, prediction)
+      }
+      import spark.implicits._
+      writeToDisk(vectorsAndClusterIdx.toDF(), conf.workloadResultsOutputDir, conf.workloadResultsOutputFormat)
+    }
+    ds.unpersist()
+    res
+  }
 
 }
