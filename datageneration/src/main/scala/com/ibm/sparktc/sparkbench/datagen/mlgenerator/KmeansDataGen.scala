@@ -24,7 +24,7 @@ import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
 
-class KmeansDataGen(conf: DataGenerationConf) extends DataGenerator(conf) {
+class KmeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
 
   val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", "2").asInstanceOf[String].toInt
   val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", "2").asInstanceOf[String].toInt

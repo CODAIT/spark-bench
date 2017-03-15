@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.datagen
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-abstract class DataGenerator(conf: DataGenerationConf) {
+abstract class DataGenerator(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) {
 
   def createSparkContext(): SparkSession = {
     SparkSession
@@ -25,8 +25,24 @@ abstract class DataGenerator(conf: DataGenerationConf) {
   }
 
   def run(): Unit = {
-    val spark = createSparkContext()
+    val spark = sparkSessOpt match {
+      case Some(ss: SparkSession) => ss
+      case _ => createSparkContext()
+    }
     val data = generateData(spark)
     writeToDisk(data)
   }
+
+
+//  import scala.collection.parallel.ForkJoinTaskSupport
+//  val iterations = 10
+//  val numConcurrentQueries = 5
+//
+//  val testInput = (1 to iterations).toList.map(number => number * 1000000)
+//  val testInputPar = testInput.par
+//  testInputPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(numConcurrentQueries))
+//  testInputPar.map{ params => spark.sparkContext.parallelize(1 to params).count() }
+
 }
+
+

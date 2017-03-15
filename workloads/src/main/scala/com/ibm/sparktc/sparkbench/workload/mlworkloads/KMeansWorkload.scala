@@ -24,7 +24,7 @@ import org.apache.spark.sql.types._
  * limitations under the License.
  */
 
-class KMeansWorkload(conf: WorkloadConfig) extends Workload(conf){
+class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = None) extends Workload(conf, sparkSessOpt){
 
   /*
       *****************************************************************************************

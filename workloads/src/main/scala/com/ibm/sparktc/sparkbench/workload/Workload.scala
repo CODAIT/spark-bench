@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-abstract class Workload(conf: WorkloadConfig) {
+abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]) {
 
   def createSparkContext(): SparkSession = {
     SparkSession
@@ -29,7 +29,10 @@ abstract class Workload(conf: WorkloadConfig) {
   }
 
   def run(): Unit = {
-    val spark = createSparkContext()
+    val spark = sparkSessOpt match {
+      case Some(ss: SparkSession) => ss
+      case _ => createSparkContext()
+    }
     val df = load(spark)
     val res = doWorkload(df, spark)
     writeToDisk(res, conf.outputDir, conf.outputFormat)
