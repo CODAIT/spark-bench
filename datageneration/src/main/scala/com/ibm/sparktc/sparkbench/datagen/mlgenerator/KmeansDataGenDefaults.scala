@@ -25,24 +25,31 @@ import org.apache.spark.sql.types._
 
 object KmeansDataGenDefaults {
   // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
-  val NUM_OF_CLUSTERS = 2
-  val DIMENSIONS = 20
-  val SCALING = 0.6
-  val NUM_OF_PARTITIONS = 2
+  val NUM_OF_CLUSTERS: Int = 2
+  val DIMENSIONS: Int = 20
+  val SCALING: Double = 0.6
+  val NUM_OF_PARTITIONS: Int = 2
 
   // Params for workload, in addition to some stuff up there ^^
-  val MAX_ITERATION = 2
-  val SEED = 127L
+  val MAX_ITERATION: Int = 2
+  val SEED: Long = 127L
 }
 
 class KmeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
 
   import KmeansDataGenDefaults._
 
-  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", NUM_OF_CLUSTERS.toString).asInstanceOf[String].toInt
-  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", DIMENSIONS.toString).asInstanceOf[String].toInt
-  val scaling = conf.generatorSpecific.getOrElse("scaling", SCALING.toString).asInstanceOf[String].toDouble
-  val numPar = conf.generatorSpecific.getOrElse("partitions", NUM_OF_PARTITIONS.toString).asInstanceOf[String].toInt
+  def getOrDefault[A](map: Map[String, Any], name: String, default: A): A = map.get(name) match {
+      case Some(x) => x.asInstanceOf[A]
+      case None => default
+  }
+
+  val m = conf.generatorSpecific //convenience
+
+  val numCluster: Int = getOrDefault(m, "clusters", NUM_OF_CLUSTERS)
+  val numDim: Int = conf.numCols
+  val scaling: Double = getOrDefault(m, "scaling", SCALING)
+  val numPar: Int = getOrDefault(m, "partitions", NUM_OF_PARTITIONS)
 
   override def generateData(spark: SparkSession): DataFrame = {
 

@@ -7,5 +7,5 @@ ${SPARK_HOME}/bin/spark-submit \
         --driver-memory 1g \
         --total-executor-cores 2 \
         --executor-memory 4g \
-        ${JAR} \
+        ${SPARK_BENCH_JAR} \
         "$@"

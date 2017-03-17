@@ -1,8 +1,9 @@
 package com.ibm.sparktc.sparkbench
+
 import java.io.File
 
 import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGen
+import com.ibm.sparktc.sparkbench.datagen.mlgenerator.{KmeansDataGen, KmeansDataGenDefaults}
 
 import scala.io.Source
 
@@ -21,7 +22,6 @@ class KMeansDataGenTest extends UnitSpec {
   }
 
   "KMeansDataGeneration" should "generate data correctly" in {
-//    file = new File(fileName)
 
     val x = DataGenerationConf(
       generatorName = "kmeans",
@@ -49,7 +49,23 @@ class KMeansDataGenTest extends UnitSpec {
     val length: Int = fileContents.length
 
     length shouldBe x.numRows
-//    file.delete()
+  }
+
+  it should "handle an empty map well enough" in {
+    val x = DataGenerationConf(
+      generatorName = "kmeans",
+      numRows = 10,
+      numCols = 10,
+      outputFormat = "csv",
+      outputDir = fileName,
+      generatorSpecific = Map.empty
+    )
+
+    val generator = new KmeansDataGen(x)
+
+    generator.numPar shouldBe KmeansDataGenDefaults.NUM_OF_PARTITIONS
+
+
   }
 
 }

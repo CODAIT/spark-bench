@@ -20,7 +20,7 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     val kmeans = new Subcommand("kmeans"){
       val k = opt[Int](short = 'k', default = Some(KmeansDataGenDefaults.NUM_OF_CLUSTERS))
       val scaling = opt[Double](short = 'm', default = Some(KmeansDataGenDefaults.SCALING))
-      val partitions = opt[Long](short = 's', default = Some(KmeansDataGenDefaults.NUM_OF_PARTITIONS))
+      val partitions = opt[Int](short = 's', default = Some(KmeansDataGenDefaults.NUM_OF_PARTITIONS))
 
     }
     addSubcommand(kmeans)
