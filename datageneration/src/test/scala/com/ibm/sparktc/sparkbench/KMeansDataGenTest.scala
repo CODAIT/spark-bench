@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench
 import java.io.File
 
 import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGen
+import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGenDefaults
 import org.scalatest._
 
 import scala.io.Source
@@ -30,7 +30,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfter {
       generatorSpecific = Map.empty
     )
 
-    val generator = new KmeansDataGen(x)
+    val generator = new KmeansDataGenDefaults(x)
 
     generator.run()
 

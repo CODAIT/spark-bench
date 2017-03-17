@@ -60,11 +60,12 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
   def load(df: DataFrame, spark: SparkSession): (Long, RDD[Vector]) = {
 
     time {
-      val baseDS: RDD[Vector] = df.rdd.map(row => {
-        val range = 1 to row.size
-        val doublez = range.map(i => row.getDouble(i)).toArray
-        Vectors.dense( doublez)
-      }
+      val baseDS: RDD[Vector] = df.rdd.map(
+        row => {
+          val range = 1 to row.size
+          val doublez = range.map(i => row.getDouble(i)).toArray
+          Vectors.dense( doublez)
+        }
       )
       baseDS.cache()
     }

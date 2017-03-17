@@ -18,3 +18,7 @@ libraryDependencies ++= Seq(
 //  "org.scalactic"               %% "scalactic"             % scalatestVersion        % "test",
 //  "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test"
 )
+
+scalacOptions ++= Seq(
+  "-feature"
+)

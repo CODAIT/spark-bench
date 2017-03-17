@@ -2,18 +2,47 @@ package com.ibm.sparktc.sparkbench.cli
 
 import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
 import com.ibm.sparktc.sparkbench.workload.WorkloadConfig
+import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
+
 
 object ArgsParser {
-  def parseDataGen(sArgs: ScallopArgs): DataGenerationConf = {
 
-		//TODO [DATAGEN] Replace this stub with actual validation and parsing of ScallopArgs to case class
 
+	/*
+    Conf.subcommands match {
+      case List(Conf.sub1, Conf.sub1.sub1a) => something1()
+      case List(Conf.sub1, Conf.sub1.sub1b) => something2()
+    }
+  */
+
+	def parseDataGen(sArgs: ScallopArgs): DataGenerationConf = {
+
+		val numRows = sArgs.datagen.numRows.apply()
+		val outputDir = sArgs.datagen.outputDir.apply()
+		val outputFormat = sArgs.datagen.outputFormat.apply()
+
+		// DATA GENERATION ARG PARSING, ONE FOR EACH GENERATOR
+		val (name, map) = sArgs.datagen match {
+			// KMEANS
+			case sArgs.datagen.kmeans => (
+				"kmeans",
+				Map(
+					"k"	-> sArgs.datagen.kmeans.k.apply(),
+					"maxIterations" -> sArgs.datagen.kmeans.scaling.apply(),
+					"seed" -> sArgs.datagen.kmeans.partitions.apply()
+				)
+			)
+			// OTHER
+			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
+		}
+
+		// OUTPUT COLLECTED ARGUMENTS
 		DataGenerationConf(
-			generatorName = "kmeans",
-			numRows = 10,
-			outputFormat = "csv",
-			outputDir = "/tmp/spark-bench/",
-			generatorSpecific = Map.empty
+			name,
+			numRows,
+			outputDir = outputDir,
+			outputFormat = outputFormat,
+			map
 		)
   }
 
@@ -32,4 +61,5 @@ object ArgsParser {
 			workloadSpecific = Map.empty
 		)
 	}
+
 }

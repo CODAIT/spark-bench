@@ -23,13 +23,26 @@ import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
+object KmeansDataGenDefaults {
+  // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
+  val NUM_OF_CLUSTERS = 2
+  val DIMENSIONS = 20
+  val SCALING = 0.6
+  val NUM_OF_PARTITIONS = 2
+
+  // Params for workload, in addition to some stuff up there ^^
+  val MAX_ITERATION = 2
+  val SEED = 127L
+}
 
 class KmeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
 
-  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", "2").asInstanceOf[String].toInt
-  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", "2").asInstanceOf[String].toInt
-  val scaling = conf.generatorSpecific.getOrElse("scaling", "2").asInstanceOf[String].toInt
-  val numPar = conf.generatorSpecific.getOrElse("partitions", "2").asInstanceOf[String].toInt
+  import KmeansDataGenDefaults._
+
+  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", NUM_OF_CLUSTERS).asInstanceOf[String].toInt
+  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", DIMENSIONS).asInstanceOf[String].toInt
+  val scaling = conf.generatorSpecific.getOrElse("scaling", SCALING).asInstanceOf[String].toInt
+  val numPar = conf.generatorSpecific.getOrElse("partitions", NUM_OF_PARTITIONS).asInstanceOf[String].toInt
 
   override def generateData(spark: SparkSession): DataFrame = {
 
