@@ -18,18 +18,19 @@ object ArgsParser {
 	def parseDataGen(sArgs: ScallopArgs): DataGenerationConf = {
 
 		val numRows = sArgs.datagen.numRows.apply()
+		val numCols = sArgs.datagen.numCols.apply()
 		val outputDir = sArgs.datagen.outputDir.apply()
 		val outputFormat = sArgs.datagen.outputFormat.apply()
 
 		// DATA GENERATION ARG PARSING, ONE FOR EACH GENERATOR
-		val (name, map) = sArgs.datagen match {
+		val (name, map) = sArgs.subcommands match {
 			// KMEANS
-			case sArgs.datagen.kmeans => (
+			case List(sArgs.datagen, sArgs.datagen.kmeans) => (
 				"kmeans",
 				Map(
 					"k"	-> sArgs.datagen.kmeans.k.apply(),
-					"maxIterations" -> sArgs.datagen.kmeans.scaling.apply(),
-					"seed" -> sArgs.datagen.kmeans.partitions.apply()
+					"scaling" -> sArgs.datagen.kmeans.scaling.apply(),
+					"partitions" -> sArgs.datagen.kmeans.partitions.apply()
 				)
 			)
 			// OTHER
@@ -40,6 +41,7 @@ object ArgsParser {
 		DataGenerationConf(
 			name,
 			numRows,
+			numCols,
 			outputDir = outputDir,
 			outputFormat = outputFormat,
 			map

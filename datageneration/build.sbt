@@ -1,9 +1,9 @@
 scalaVersion := "2.11.8"
 
 
-val scalacheckVersion = "1.12.5"
+val scalacheckVersion = "1.11.4"
 val junitVersion = "4.12"
-val scalatestVersion = "3.0.1"
+val scalatestVersion = "2.2.4"
 
 libraryDependencies ++= Seq(
 //  "org.rogach"                  %% "scallop"               % "2.1.1",

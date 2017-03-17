@@ -2,35 +2,37 @@ package com.ibm.sparktc.sparkbench
 import java.io.File
 
 import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGenDefaults
-import org.scalatest._
+import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGen
 
 import scala.io.Source
 
-class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfter {
+class KMeansDataGenTest extends UnitSpec {
 
   val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
-  before {
+  override def beforeAll() {
     file = new File(fileName)
   }
 
-  after {
+  override def afterAll() {
     if(file.exists()) file.delete()
   }
 
   "KMeansDataGeneration" should "generate data correctly" in {
+//    file = new File(fileName)
+
     val x = DataGenerationConf(
       generatorName = "kmeans",
       numRows = 10,
+      numCols = 10,
       outputFormat = "csv",
       outputDir = fileName,
       generatorSpecific = Map.empty
     )
 
-    val generator = new KmeansDataGenDefaults(x)
+    val generator = new KmeansDataGen(x)
 
     generator.run()
 
@@ -44,9 +46,10 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfter {
           .toList
       )
 
-    fileContents.length shouldBe x.numRows
+    val length: Int = fileContents.length
 
+    length shouldBe x.numRows
+//    file.delete()
   }
-/* IDK why IntelliJ is whining about wanting this implemented. Uncommenting this soothes IntelliJ but it blows up in SBT test. */
-//  override protected def withFixture(test: Any): Outcome = {super.withFixture(test)}
+
 }

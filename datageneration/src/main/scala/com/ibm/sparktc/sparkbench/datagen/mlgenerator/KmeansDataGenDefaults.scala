@@ -39,10 +39,10 @@ class KmeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession]
 
   import KmeansDataGenDefaults._
 
-  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", NUM_OF_CLUSTERS).asInstanceOf[String].toInt
-  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", DIMENSIONS).asInstanceOf[String].toInt
-  val scaling = conf.generatorSpecific.getOrElse("scaling", SCALING).asInstanceOf[String].toInt
-  val numPar = conf.generatorSpecific.getOrElse("partitions", NUM_OF_PARTITIONS).asInstanceOf[String].toInt
+  val numCluster: Int = conf.generatorSpecific.getOrElse("clusters", NUM_OF_CLUSTERS.toString).asInstanceOf[String].toInt
+  val numDim: Int = conf.generatorSpecific.getOrElse("dimensions", DIMENSIONS.toString).asInstanceOf[String].toInt
+  val scaling = conf.generatorSpecific.getOrElse("scaling", SCALING.toString).asInstanceOf[String].toDouble
+  val numPar = conf.generatorSpecific.getOrElse("partitions", NUM_OF_PARTITIONS.toString).asInstanceOf[String].toInt
 
   override def generateData(spark: SparkSession): DataFrame = {
 
