@@ -14,7 +14,7 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     val numRows = opt[Int](short = 'r', required = true)
     val numCols = opt[Int](short = 'c', required = true)
     val outputDir = opt[String](short = 'o', required = true)
-    val outputFormat = opt[String](short = 'f')
+    val outputFormat = opt[String](short = 'f', default = Some("csv"))
 
     // DATAGEN
     val kmeans = new Subcommand("kmeans"){
@@ -34,10 +34,10 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
    * *****************
    */
   val workload = new Subcommand("workload") {
-    val workload = opt[String]()
-    val inputDir = opt[String]()
-    val outputFormat = opt[String]()
-    val outputDir = opt[String]()
+    val inputDir = opt[String](short = 'i', required = true)
+    val inputFormat = opt[String](required = false)
+    val outputDir = opt[String](short = 'o', required = true)
+    val outputFormat = opt[String](short = 'f', default = Some("csv"))
 
     // KMEANS
     val kmeans = new Subcommand("kmeans"){

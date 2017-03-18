@@ -20,8 +20,8 @@ object CLIKickoff {
     val sArgs = new ScallopArgs(args)
 
     sArgs.subcommand match {
-      case Some(sArgs.datagen) => startDataGen(sArgs) //how to get this conf to entry point?
-      case Some(sArgs.workload) => {} //TODO
+      case Some(sArgs.datagen) => startDataGen(sArgs)
+      case Some(sArgs.workload) => startWorkload(sArgs)
       case _ => new Exception(s"Unrecognized subcommand.\n${sArgs.printHelp()}")
     }
 
