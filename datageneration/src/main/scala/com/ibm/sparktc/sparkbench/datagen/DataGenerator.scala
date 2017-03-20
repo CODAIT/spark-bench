@@ -14,9 +14,6 @@ abstract class DataGenerator(conf: DataGenerationConf, sparkSessOpt: Option[Spar
 
   def generateData(spark: SparkSession): DataFrame
 
-  def saveAsCSV(data: DataFrame): Unit = {
-  }
-
   def writeToDisk(data: DataFrame): Unit = {
     conf.outputFormat match {
       case "csv" => data.write.csv(conf.outputDir)
@@ -25,10 +22,7 @@ abstract class DataGenerator(conf: DataGenerationConf, sparkSessOpt: Option[Spar
   }
 
   def run(): Unit = {
-    val spark = sparkSessOpt match {
-      case Some(ss: SparkSession) => ss
-      case _ => createSparkContext()
-    }
+    val spark = sparkSessOpt.getOrElse(createSparkContext())
     val data = generateData(spark)
     writeToDisk(data)
   }

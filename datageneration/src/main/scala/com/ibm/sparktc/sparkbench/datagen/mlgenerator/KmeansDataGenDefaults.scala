@@ -23,6 +23,7 @@ import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
+//TODO put the defaults and common functions like getOrDefault in a utils project
 object KmeansDataGenDefaults {
   // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
   val NUM_OF_CLUSTERS: Int = 2

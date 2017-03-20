@@ -1,12 +1,14 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import com.ibm.sparktc.sparkbench.datagen.DataGenerationKickoff
+import com.ibm.sparktc.sparkbench.workload.WorkloadKickoff
 
 object CLIKickoff {
 
   def startWorkload(scallopArgs: ScallopArgs): Unit = {
     val conf = ArgsParser.parseWorkload(scallopArgs)
     println("OMFG I'M RUNNING A WORKLOAD")
+    WorkloadKickoff(conf)
   }
 
   def startDataGen(scallopArgs: ScallopArgs): Unit = {

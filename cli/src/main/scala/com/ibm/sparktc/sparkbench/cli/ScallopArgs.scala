@@ -21,10 +21,8 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
       val k = opt[Int](short = 'k', default = Some(KmeansDataGenDefaults.NUM_OF_CLUSTERS))
       val scaling = opt[Double](short = 'm', default = Some(KmeansDataGenDefaults.SCALING))
       val partitions = opt[Int](short = 's', default = Some(KmeansDataGenDefaults.NUM_OF_PARTITIONS))
-
     }
     addSubcommand(kmeans)
-
   }
   addSubcommand(datagen)
 
@@ -35,9 +33,12 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
    */
   val workload = new Subcommand("workload") {
     val inputDir = opt[String](short = 'i', required = true)
-    val inputFormat = opt[String](required = false)
+    val inputFormat = opt[String](required = false, default = Some("csv"))
     val outputDir = opt[String](short = 'o', required = true)
     val outputFormat = opt[String](short = 'f', default = Some("csv"))
+    val workloadResultsOutputDir = opt[String](noshort = true, required = false, default = None)
+    val workloadResultsOutputFormat = opt[String](noshort = true, required = false, default = None)
+
 
     // KMEANS
     val kmeans = new Subcommand("kmeans"){
@@ -46,8 +47,6 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
       val seed = opt[Long](short = 's', default = Some(KmeansDataGenDefaults.SEED))
     }
     addSubcommand(kmeans)
-
-
   }
 
   addSubcommand(workload)

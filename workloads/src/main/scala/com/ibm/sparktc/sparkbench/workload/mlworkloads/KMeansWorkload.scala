@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
-import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig, WorkloadKickoff}
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 import org.apache.spark.mllib.linalg.Vector
@@ -24,7 +24,22 @@ import org.apache.spark.sql.types._
  * limitations under the License.
  */
 
+//TODO put the defaults and common functions like getOrDefault in a utils project
+object KMeansWorkloadDefaults {
+  // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
+  val NUM_OF_CLUSTERS: Int = 2
+  val DIMENSIONS: Int = 20
+  val SCALING: Double = 0.6
+  val NUM_OF_PARTITIONS: Int = 2
+
+  // Params for workload, in addition to some stuff up there ^^
+  val MAX_ITERATION: Int = 2
+  val SEED: Long = 127L
+}
+
 class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = None) extends Workload(conf, sparkSessOpt){
+
+  import KMeansWorkloadDefaults._
 
   /*
       *****************************************************************************************
@@ -38,7 +53,10 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
     val (loadtime, data) = load(df, spark) // necessary to time this?
     val (trainTime, model) = train(data, spark)
     val (testTime, _) = test(model, data, spark) // necessary?
-    val (saveTime, _) = save(data, model, spark) // necessary?
+    val (saveTime, _) = conf.workloadResultsOutputDir match {
+      case Some(s) => save(data, model, spark)
+      case _ => (null, Unit)
+    }
 
     val schema = StructType(
       List(
@@ -58,28 +76,35 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
   }
 
   def load(df: DataFrame, spark: SparkSession): (Long, RDD[Vector]) = {
-
     time {
       val baseDS: RDD[Vector] = df.rdd.map(
         row => {
           val range = 1 to row.size
-          val doublez = range.map(i => row.getDouble(i)).toArray
-          Vectors.dense( doublez)
+          val doublez: Array[Double] = range.map(i => {
+            println(s"This row: $row\n i: $i")
+            row.getDouble(i)
+          }).toArray
+          Vectors.dense(doublez)
         }
       )
       baseDS.cache()
     }
-    //    val loadTime = (System.currentTimeMillis() - start).toDouble / 1000.0
   }
+
+  def getOrDefault[A](map: Map[String, Any], name: String, default: A): A = map.get(name) match {
+    case Some(x) => x.asInstanceOf[A]
+    case None => default
+  }
+
 
   def train(df: RDD[Vector], spark: SparkSession): (Long, KMeansModel) = {
     time {
       KMeans.train(
         data = df,
-        k = conf.workloadSpecific.get("K").asInstanceOf[Int],
-        maxIterations = conf.workloadSpecific.get("maxIterations").asInstanceOf[Int],
+        k = getOrDefault(conf.workloadSpecific, "k", KMeansWorkloadDefaults.NUM_OF_CLUSTERS),
+        maxIterations = getOrDefault(conf.workloadSpecific, "maxIterations", KMeansWorkloadDefaults.MAX_ITERATION),
         initializationMode = KMeans.K_MEANS_PARALLEL,
-        seed = conf.workloadSpecific.getOrElse("seed", "127").toString.toLong) //TODO ugly haxx
+        seed = getOrDefault(conf.workloadSpecific, "seed", KMeansWorkloadDefaults.SEED) )
     }
   }
 
@@ -95,7 +120,8 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
         (point.toString, prediction)
       }
       import spark.implicits._
-      writeToDisk(vectorsAndClusterIdx.toDF(), conf.workloadResultsOutputDir, conf.workloadResultsOutputFormat)
+      // Already performed the match one level up so these are guaranteed to be Some(something)
+      writeToDisk(vectorsAndClusterIdx.toDF(), conf.workloadResultsOutputDir.get, conf.workloadResultsOutputFormat.get)
     }
     ds.unpersist()
     res

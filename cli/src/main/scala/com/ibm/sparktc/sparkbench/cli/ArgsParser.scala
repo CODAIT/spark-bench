@@ -50,17 +50,38 @@ object ArgsParser {
 
   def parseWorkload(sArgs: ScallopArgs): WorkloadConfig = {
 
-    //TODO [WORKLOAD] Replace this stub with actual validation and parsing of ScallopArgs to case class
+		val inputDir = sArgs.workload.inputDir.apply()
+		val inputFormat = sArgs.workload.inputFormat.apply()
+		val outputDir = sArgs.workload.outputDir.apply()
+		val outputFormat = sArgs.workload.outputFormat.apply()
+		val workloadResOut = sArgs.workload.workloadResultsOutputDir.toOption
+		val workloadFormatOut = sArgs.workload.workloadResultsOutputFormat.toOption
+
+		// Workload ARG PARSING, ONE FOR EACH workload
+		val (name, map) = sArgs.subcommands match {
+			// KMEANS
+			case List(sArgs.workload, sArgs.workload.kmeans) => (
+				"kmeans",
+				Map(
+					"k"	-> sArgs.workload.kmeans.k.apply(),
+					"maxIterations" -> sArgs.workload.kmeans.maxIterations.apply(),
+					"seed" -> sArgs.workload.kmeans.seed.apply()
+				)
+			)
+			// OTHER
+			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
+		}
+
 
     WorkloadConfig(
-			workload = "KMeans",
-			inputDir = "/tmp/spark-bench/input",
-			inputFormat = "csv",
-			workloadResultsOutputDir = "/tmp/spark-bench/workloadoutput",
-			workloadResultsOutputFormat = "csv",
-			outputDir = "/tmp/spark-bench/output",
-			outputFormat = "csv",
-			workloadSpecific = Map.empty
+			name = name,
+			inputDir = inputDir,
+			inputFormat = inputFormat,
+			workloadResultsOutputDir = workloadResOut,
+			workloadResultsOutputFormat = workloadFormatOut,
+			outputDir = outputDir,
+			outputFormat = outputFormat,
+			workloadSpecific = map
 		)
 	}
 

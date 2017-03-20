@@ -16,3 +16,4 @@ target/
 metastore_db
 derby.log
 spark-warehouse
+/project/project/
