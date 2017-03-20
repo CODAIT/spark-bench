@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGenDefaults
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KmeansDataGenDefaults
 import org.rogach.scallop._
 
 class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){

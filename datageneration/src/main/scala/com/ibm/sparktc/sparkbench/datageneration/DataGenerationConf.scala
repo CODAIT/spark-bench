@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench.datagen
+package com.ibm.sparktc.sparkbench.datageneration
 
 case class DataGenerationConf (
                                 generatorName: String,

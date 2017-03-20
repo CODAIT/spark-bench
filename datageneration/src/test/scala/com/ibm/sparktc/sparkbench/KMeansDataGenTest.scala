@@ -2,8 +2,8 @@ package com.ibm.sparktc.sparkbench
 
 import java.io.File
 
-import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.{KmeansDataGen, KmeansDataGenDefaults}
+import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KmeansDataGen, KmeansDataGenDefaults}
 
 import scala.io.Source
 

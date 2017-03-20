@@ -1,6 +1,6 @@
-package com.ibm.sparktc.sparkbench.datagen
+package com.ibm.sparktc.sparkbench.datageneration
 
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.{KmeansDataGen}
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KmeansDataGen}
 
 object DataGenerationKickoff {
 

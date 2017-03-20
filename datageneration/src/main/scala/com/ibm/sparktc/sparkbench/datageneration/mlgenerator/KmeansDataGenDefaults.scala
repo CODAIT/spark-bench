@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.ibm.sparktc.sparkbench.datagen.mlgenerator
+package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
-import com.ibm.sparktc.sparkbench.datagen.{DataGenerationConf, DataGenerator}
+import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerator}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StructField, StructType}

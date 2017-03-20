@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.ibm.sparktc.sparkbench.datagen.mlgenerator
+package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
 import org.apache.spark.mllib.util.LogisticRegressionDataGenerator
 import org.apache.spark.mllib.regression.LabeledPoint

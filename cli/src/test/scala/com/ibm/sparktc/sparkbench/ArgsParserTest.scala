@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.{ArgsParser, ScallopArgs}
-import com.ibm.sparktc.sparkbench.datagen.mlgenerator.KmeansDataGenDefaults
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KmeansDataGenDefaults
 import org.scalatest.{FlatSpec, Matchers}
 
 class ArgsParserTest extends FlatSpec with Matchers {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.ibm.sparktc.sparkbench.datagen.mlgenerator
+package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
 import scala.collection.JavaConversions._
 import scala.util.control.Breaks._

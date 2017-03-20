@@ -21,7 +21,7 @@
  * This file is copied and simplified from Hadoop package org.apache.hadoop.examples.terasort.
  */
 
-package com.ibm.sparktc.sparkbench.datagen.mlgenerator;
+package com.ibm.sparktc.sparkbench.datageneration.mlgenerator;
 
 
 /**

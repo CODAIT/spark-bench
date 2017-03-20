@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.ibm.sparktc.sparkbench.datagen.mlgenerator
+package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
 import org.apache.spark.{SparkContext,SparkConf}
 import org.apache.spark.SparkContext._

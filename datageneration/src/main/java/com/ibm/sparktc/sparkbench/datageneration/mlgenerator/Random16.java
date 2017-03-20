@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.ibm.sparktc.sparkbench.datagen.mlgenerator;
+package com.ibm.sparktc.sparkbench.datageneration.mlgenerator;
 
 /**
  * This file is copied from Hadoop package org.apache.hadoop.examples.terasort.

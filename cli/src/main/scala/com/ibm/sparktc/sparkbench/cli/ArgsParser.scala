@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.datagen.DataGenerationConf
+import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.workload.WorkloadConfig
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
 
