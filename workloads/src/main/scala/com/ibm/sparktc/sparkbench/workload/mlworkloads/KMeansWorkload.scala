@@ -70,9 +70,9 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
     time {
       val baseDS: RDD[Vector] = df.rdd.map(
         row => {
-          val range = 1 to row.size
+          val range = 0 until (row.size - 1)
           val doublez: Array[Double] = range.map(i => {
-            println(s"This row: $row\n i: $i")
+//            println(s"This row: $row\n i: $i")
             row.getDouble(i)
           }).toArray
           Vectors.dense(doublez)

@@ -1,10 +1,10 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.{ArgsParser, ScallopArgs}
+import com.ibm.sparktc.sparkbench.test.UnitSpec
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
-import org.scalatest.{FlatSpec, Matchers}
 
-class ArgsParserTest extends FlatSpec with Matchers {
+class ArgsParserTest extends UnitSpec {
 
   "Correct KMeans Datagen Args" should "parse to a DataGenConf" in {
     val sArgs = new ScallopArgs(
