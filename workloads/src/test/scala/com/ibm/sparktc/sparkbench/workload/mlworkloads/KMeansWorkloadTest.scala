@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
-import com.ibm.sparktc.sparkbench.test.UnitSpec
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
 import com.ibm.sparktc.sparkbench.workload.WorkloadConfig
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD

@@ -1,8 +1,8 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.{ArgsParser, ScallopArgs}
-import com.ibm.sparktc.sparkbench.test.UnitSpec
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
 
 class ArgsParserTest extends UnitSpec {
 

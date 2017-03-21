@@ -4,8 +4,8 @@ import java.io.File
 
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
-import com.ibm.sparktc.sparkbench.test.UnitSpec
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
 
 import scala.io.Source
 

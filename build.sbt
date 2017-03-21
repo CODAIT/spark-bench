@@ -17,7 +17,8 @@ lazy val root = (project in file("."))
 lazy val utils = project
   .settings(
     commonSettings,
-    libraryDependencies ++= sparkDeps
+    libraryDependencies ++= sparkDeps,
+    libraryDependencies ++= testDeps
   )
 
 lazy val workloads = project
