@@ -1,6 +1,7 @@
 package com.ibm.sparktc.sparkbench.datageneration
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 
 abstract class DataGenerator(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) {
 
@@ -14,29 +15,10 @@ abstract class DataGenerator(conf: DataGenerationConf, sparkSessOpt: Option[Spar
 
   def generateData(spark: SparkSession): DataFrame
 
-  def writeToDisk(data: DataFrame): Unit = {
-    conf.outputFormat match {
-      case "csv" => data.write.csv(conf.outputDir)
-      case _ => new Exception("unrecognized save format")
-    }
-  }
-
   def run(): Unit = {
     val spark = sparkSessOpt.getOrElse(createSparkContext())
     val data = generateData(spark)
-    writeToDisk(data)
+    writeToDisk(conf.outputFormat, conf.outputDir, data)
   }
 
-
-//  import scala.collection.parallel.ForkJoinTaskSupport
-//  val iterations = 10
-//  val numConcurrentQueries = 5
-//
-//  val testInput = (1 to iterations).toList.map(number => number * 1000000)
-//  val testInputPar = testInput.par
-//  testInputPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(numConcurrentQueries))
-//  testInputPar.map{ params => spark.sparkContext.parallelize(1 to params).count() }
-
 }
-
-

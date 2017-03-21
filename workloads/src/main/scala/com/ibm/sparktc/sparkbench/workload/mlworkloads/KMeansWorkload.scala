@@ -1,12 +1,17 @@
 package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
-import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig, WorkloadKickoff}
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, time}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
+import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -24,22 +29,8 @@ import org.apache.spark.sql.types._
  * limitations under the License.
  */
 
-//TODO put the defaults and common functions like getOrDefault in a utils project
-object KMeansWorkloadDefaults {
-  // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
-  val NUM_OF_CLUSTERS: Int = 2
-  val DIMENSIONS: Int = 20
-  val SCALING: Double = 0.6
-  val NUM_OF_PARTITIONS: Int = 2
-
-  // Params for workload, in addition to some stuff up there ^^
-  val MAX_ITERATION: Int = 2
-  val SEED: Long = 127L
-}
-
 class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = None) extends Workload(conf, sparkSessOpt){
 
-  import KMeansWorkloadDefaults._
 
   /*
       *****************************************************************************************
@@ -91,20 +82,14 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
     }
   }
 
-  def getOrDefault[A](map: Map[String, Any], name: String, default: A): A = map.get(name) match {
-    case Some(x) => x.asInstanceOf[A]
-    case None => default
-  }
-
-
   def train(df: RDD[Vector], spark: SparkSession): (Long, KMeansModel) = {
     time {
       KMeans.train(
         data = df,
-        k = getOrDefault(conf.workloadSpecific, "k", KMeansWorkloadDefaults.NUM_OF_CLUSTERS),
-        maxIterations = getOrDefault(conf.workloadSpecific, "maxIterations", KMeansWorkloadDefaults.MAX_ITERATION),
+        k = getOrDefault(conf.workloadSpecific, "k", KMeansDefaults.NUM_OF_CLUSTERS),
+        maxIterations = getOrDefault(conf.workloadSpecific, "maxIterations", KMeansDefaults.MAX_ITERATION),
         initializationMode = KMeans.K_MEANS_PARALLEL,
-        seed = getOrDefault(conf.workloadSpecific, "seed", KMeansWorkloadDefaults.SEED) )
+        seed = getOrDefault(conf.workloadSpecific, "seed", KMeansDefaults.SEED) )
     }
   }
 
@@ -121,7 +106,7 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
       }
       import spark.implicits._
       // Already performed the match one level up so these are guaranteed to be Some(something)
-      writeToDisk(vectorsAndClusterIdx.toDF(), conf.workloadResultsOutputDir.get, conf.workloadResultsOutputFormat.get)
+      writeToDisk(conf.workloadResultsOutputFormat.get, conf.workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF())
     }
     ds.unpersist()
     res

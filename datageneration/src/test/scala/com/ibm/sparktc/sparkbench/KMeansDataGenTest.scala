@@ -3,7 +3,8 @@ package com.ibm.sparktc.sparkbench
 import java.io.File
 
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
-import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KmeansDataGen, KmeansDataGenDefaults}
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
+import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 
 import scala.io.Source
 
@@ -32,7 +33,7 @@ class KMeansDataGenTest extends UnitSpec {
       generatorSpecific = Map.empty
     )
 
-    val generator = new KmeansDataGen(x)
+    val generator = new KMeansDataGen(x)
 
     generator.run()
 
@@ -61,11 +62,9 @@ class KMeansDataGenTest extends UnitSpec {
       generatorSpecific = Map.empty
     )
 
-    val generator = new KmeansDataGen(x)
+    val generator = new KMeansDataGen(x)
 
-    generator.numPar shouldBe KmeansDataGenDefaults.NUM_OF_PARTITIONS
-
-
+    generator.numPar shouldBe KMeansDefaults.NUM_OF_PARTITIONS
   }
 
 }

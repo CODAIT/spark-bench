@@ -17,33 +17,18 @@
 package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
 import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerator}
+import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
+
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
-//TODO put the defaults and common functions like getOrDefault in a utils project
-object KmeansDataGenDefaults {
-  // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
-  val NUM_OF_CLUSTERS: Int = 2
-  val DIMENSIONS: Int = 20
-  val SCALING: Double = 0.6
-  val NUM_OF_PARTITIONS: Int = 2
+class KMeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
 
-  // Params for workload, in addition to some stuff up there ^^
-  val MAX_ITERATION: Int = 2
-  val SEED: Long = 127L
-}
-
-class KmeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
-
-  import KmeansDataGenDefaults._
-
-  def getOrDefault[A](map: Map[String, Any], name: String, default: A): A = map.get(name) match {
-      case Some(x) => x.asInstanceOf[A]
-      case None => default
-  }
+  import KMeansDefaults._
 
   val m = conf.generatorSpecific //convenience
 

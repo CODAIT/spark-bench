@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KmeansDataGenDefaults
+import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.rogach.scallop._
 
 class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
@@ -18,9 +18,9 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
     // DATAGEN
     val kmeans = new Subcommand("kmeans"){
-      val k = opt[Int](short = 'k', default = Some(KmeansDataGenDefaults.NUM_OF_CLUSTERS))
-      val scaling = opt[Double](short = 'm', default = Some(KmeansDataGenDefaults.SCALING))
-      val partitions = opt[Int](short = 's', default = Some(KmeansDataGenDefaults.NUM_OF_PARTITIONS))
+      val k = opt[Int](short = 'k', default = Some(KMeansDefaults.NUM_OF_CLUSTERS))
+      val scaling = opt[Double](short = 'm', default = Some(KMeansDefaults.SCALING))
+      val partitions = opt[Int](short = 's', default = Some(KMeansDefaults.NUM_OF_PARTITIONS))
     }
     addSubcommand(kmeans)
   }
@@ -42,9 +42,9 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
     // KMEANS
     val kmeans = new Subcommand("kmeans"){
-      val k = opt[Int](short = 'k', default = Some(KmeansDataGenDefaults.NUM_OF_CLUSTERS))
-      val maxIterations = opt[Int](short = 'm', default = Some(KmeansDataGenDefaults.MAX_ITERATION))
-      val seed = opt[Long](short = 's', default = Some(KmeansDataGenDefaults.SEED))
+      val k = opt[Int](short = 'k', default = Some(KMeansDefaults.NUM_OF_CLUSTERS))
+      val maxIterations = opt[Int](short = 'm', default = Some(KMeansDefaults.MAX_ITERATION))
+      val seed = opt[Long](short = 's', default = Some(KMeansDefaults.SEED))
     }
     addSubcommand(kmeans)
   }

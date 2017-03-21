@@ -15,7 +15,10 @@ lazy val root = (project in file("."))
 
 
 lazy val utils = project
-  .settings(commonSettings)
+  .settings(
+    commonSettings,
+    libraryDependencies ++= sparkDeps
+  )
 
 lazy val workloads = project
   .settings(
@@ -24,6 +27,7 @@ lazy val workloads = project
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps
   )
+  .dependsOn(utils)
 
 lazy val datageneration = project
   .settings(
@@ -32,10 +36,11 @@ lazy val datageneration = project
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps
   )
+  .dependsOn(utils)
 
 lazy val cli = project
   .settings(
     commonSettings,
     libraryDependencies ++= testDeps
   )
-  .dependsOn(workloads, datageneration)
+  .dependsOn(workloads, datageneration, utils)

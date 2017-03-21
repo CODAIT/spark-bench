@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.{ArgsParser, ScallopArgs}
-import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KmeansDataGenDefaults
+import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.scalatest.{FlatSpec, Matchers}
 
 class ArgsParserTest extends FlatSpec with Matchers {
@@ -20,9 +20,9 @@ class ArgsParserTest extends FlatSpec with Matchers {
     conf.outputFormat shouldBe "csv"
     conf.generatorName shouldBe "kmeans"
     conf.generatorSpecific shouldBe Map(
-      "k" -> KmeansDataGenDefaults.NUM_OF_CLUSTERS,
-      "scaling" -> KmeansDataGenDefaults.SCALING,
-      "partitions" -> KmeansDataGenDefaults.NUM_OF_PARTITIONS
+      "k" -> KMeansDefaults.NUM_OF_CLUSTERS,
+      "scaling" -> KMeansDefaults.SCALING,
+      "partitions" -> KMeansDefaults.NUM_OF_PARTITIONS
     )
 
   }
