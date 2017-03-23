@@ -1,11 +1,8 @@
 language: scala
-#cache:
-#  directories:
-#    - $HOME/.ivy2
-#    - $HOME/spark
-#    - $HOME/.sbt/launchers
 scala:
    - 2.11.8
+jdk:
+  - oraclejdk8
 sudo: false
 script:
   - sbt clean coverage test coverageReport
