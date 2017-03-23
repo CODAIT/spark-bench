@@ -15,7 +15,7 @@ object SparkFuncs {
   def load(spark: SparkSession, inputFormat: String, inputDir: String): DataFrame = {
     inputFormat match {
       case "parquet" => spark.read.parquet(inputDir)
-      case "csv" | _ => spark.read.csv(inputDir) //if unspecified, assume csv
+      case "csv" | _ => spark.read.option("inferSchema", "true").csv(inputDir) //if unspecified, assume csv
     }
   }
 

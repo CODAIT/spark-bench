@@ -2,7 +2,8 @@ import Dependencies._
 
 lazy val commonSettings = Seq(
   organization := "com.ibm.sparktc",
-  scalaVersion := "2.11.8"
+  scalaVersion := "2.11.8",
+  parallelExecution in Test := false
 )
 
 lazy val root = (project in file("."))

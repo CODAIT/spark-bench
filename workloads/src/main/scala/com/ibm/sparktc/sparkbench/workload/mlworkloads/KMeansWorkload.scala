@@ -3,7 +3,6 @@ package com.ibm.sparktc.sparkbench.workload.mlworkloads
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, time}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
-
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.mllib.linalg.Vector
@@ -11,6 +10,8 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+
+import scala.util.{Failure, Success, Try}
 
 
 /*
@@ -40,8 +41,27 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
       *****************************************************************************************
    */
 
+  override def reconcileSchema(df: DataFrame): DataFrame = {
+
+//    val current: Seq[StructField] = df.schema
+//    val row = df.first()
+//
+//    val newSchema = current.indices.map(i => current(i).dataType match {
+//      case DoubleType => DoubleType
+//      case StringType => Try(row.getString(i).toDouble) match {
+//        case Success(d) => DoubleType
+//        case Failure(exception) => throw new Exception(s"Could not cast the following item from your data into a double: ${row.getString(i)}")
+//      }
+//      case _ => // error
+//    })
+//
+//    println(stuff)
+
+    df
+  }
+
   override def doWorkload(df: DataFrame, spark: SparkSession): DataFrame = {
-    val (loadtime, data) = load(df, spark) // necessary to time this?
+    val (loadtime, data) = loadToCache(df, spark) // necessary to time this?
     val (trainTime, model) = train(data, spark)
     val (testTime, _) = test(model, data, spark) // necessary?
     val (saveTime, _) = conf.workloadResultsOutputDir match {
@@ -66,14 +86,17 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
     spark.createDataFrame(timeList, schema)
   }
 
-  def load(df: DataFrame, spark: SparkSession): (Long, RDD[Vector]) = {
+  def loadToCache(df: DataFrame, spark: SparkSession): (Long, RDD[Vector]) = {
     time {
       val baseDS: RDD[Vector] = df.rdd.map(
         row => {
-          val range = 0 until (row.size - 1)
+          val range = 0 until row.size
           val doublez: Array[Double] = range.map(i => {
 //            println(s"This row: $row\n i: $i")
-            row.getDouble(i)
+//            println(s"The first element: ${row.get(0)}")
+              val x = row.getDouble(i)
+              x
+
           }).toArray
           Vectors.dense(doublez)
         }
