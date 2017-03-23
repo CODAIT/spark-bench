@@ -2,25 +2,25 @@ package com.ibm.sparktc.sparkbench
 
 import java.io.File
 
+import com.holdenkarau.spark.testing.Utils
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
-import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
+import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 import scala.io.Source
 
-class KMeansDataGenTest extends UnitSpec {
-
+class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
-  override def beforeAll() {
+  override def beforeEach() {
     file = new File(fileName)
   }
 
-  override def afterAll() {
-    if(file.exists()) file.delete()
+  override def afterEach() {
+    Utils.deleteRecursively(file)
   }
 
   "KMeansDataGeneration" should "generate data correctly" in {
@@ -50,7 +50,12 @@ class KMeansDataGenTest extends UnitSpec {
 
     val length: Int = fileContents.length
 
-    length shouldBe x.numRows
+    /*
+    *  Okay, some explanation here. I made headers default for csv, so there's going to be
+    *  one extra header line per partition file. If the csv header option ever changes, this
+    *  test will break, but now you know what's going on so you can fix it :)
+    */
+    length shouldBe x.numRows + fileList.length
   }
 
   it should "handle an empty map well enough" in {

@@ -92,11 +92,8 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
         row => {
           val range = 0 until row.size
           val doublez: Array[Double] = range.map(i => {
-//            println(s"This row: $row\n i: $i")
-//            println(s"The first element: ${row.get(0)}")
               val x = row.getDouble(i)
               x
-
           }).toArray
           Vectors.dense(doublez)
         }
