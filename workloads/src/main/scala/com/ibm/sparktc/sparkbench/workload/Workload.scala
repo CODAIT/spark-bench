@@ -2,7 +2,6 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
-import org.apache.spark.sql.types.StructType
 
 abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]) {
 
@@ -31,7 +30,8 @@ abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]
     val rawdf = load(spark, conf.inputFormat, conf.inputDir)
     val df = reconcileSchema(rawdf)
     val res = doWorkload(df, spark)
-    writeToDisk(conf.outputFormat, conf.outputDir, res)
+    val coalesced = res.coalesce(1)
+    writeToDisk(conf.outputFormat, conf.outputDir, coalesced)
   }
 
 
