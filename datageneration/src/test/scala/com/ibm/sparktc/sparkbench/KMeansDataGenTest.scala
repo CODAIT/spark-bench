@@ -29,7 +29,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       generatorName = "kmeans",
       numRows = 10,
       numCols = 10,
-      outputFormat = "csv",
+      outputFormat = Some("csv"),
       outputDir = fileName,
       generatorSpecific = Map.empty
     )
@@ -63,7 +63,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       generatorName = "kmeans",
       numRows = 10,
       numCols = 10,
-      outputFormat = "csv",
+      outputFormat = Some("csv"),
       outputDir = fileName,
       generatorSpecific = Map.empty
     )

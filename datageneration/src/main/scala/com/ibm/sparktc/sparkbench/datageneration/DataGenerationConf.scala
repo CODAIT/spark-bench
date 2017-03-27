@@ -5,6 +5,6 @@ case class DataGenerationConf (
                                 numRows: Int,
                                 numCols: Int,
                                 outputDir: String,
-                                outputFormat: String,
+                                outputFormat: Option[String],
                                 generatorSpecific: Map[String, Any]
                               )

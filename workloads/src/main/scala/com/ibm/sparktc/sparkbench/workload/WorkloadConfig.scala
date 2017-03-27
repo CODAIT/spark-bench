@@ -2,11 +2,10 @@ package com.ibm.sparktc.sparkbench.workload
 
 case class WorkloadConfig (
                             name: String,
+                            runs: Int,
+                            parallel: Boolean,
                             inputDir: String,
-                            inputFormat: String,
-                            workloadResultsOutputFormat: Option[String],
                             workloadResultsOutputDir: Option[String],
                             outputDir: String,
-                            outputFormat: String,
                             workloadSpecific: Map[String, Any]
 )

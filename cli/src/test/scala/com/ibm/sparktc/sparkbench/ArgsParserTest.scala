@@ -17,7 +17,7 @@ class ArgsParserTest extends UnitSpec {
 
     conf.numRows shouldBe 100
     conf.outputDir shouldBe "/tmp/cool"
-    conf.outputFormat shouldBe "csv"
+    conf.outputFormat shouldBe Some("csv")
     conf.generatorName shouldBe "kmeans"
     conf.generatorSpecific shouldBe Map(
       "k" -> KMeansDefaults.NUM_OF_CLUSTERS,

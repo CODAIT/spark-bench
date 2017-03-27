@@ -2,6 +2,9 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
+import org.apache.spark
+
+import scala.collection.parallel.immutable.ParSeq
 
 abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]) {
 
@@ -22,16 +25,19 @@ abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]
   def doWorkload(df: DataFrame, sparkSession: SparkSession): DataFrame
 
   def run(): Unit = {
+
+
+
     val spark = sparkSessOpt match {
       case Some(ss: SparkSession) => ss
       case _ => createSparkContext()
     }
 
-    val rawdf = load(spark, conf.inputFormat, conf.inputDir)
+    val rawdf = load(spark, conf.inputDir)
     val df = reconcileSchema(rawdf)
     val res = doWorkload(df, spark)
     val coalesced = res.coalesce(1)
-    writeToDisk(conf.outputFormat, conf.outputDir, coalesced)
+    writeToDisk(conf.outputDir, coalesced)
   }
 
 

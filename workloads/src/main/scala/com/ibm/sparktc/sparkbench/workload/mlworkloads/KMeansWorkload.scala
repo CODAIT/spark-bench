@@ -126,7 +126,7 @@ class KMeansWorkload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession] = 
       }
       import spark.implicits._
       // Already performed the match one level up so these are guaranteed to be Some(something)
-      writeToDisk(conf.workloadResultsOutputFormat.get, conf.workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF())
+      writeToDisk(conf.workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF())
     }
     ds.unpersist()
     res

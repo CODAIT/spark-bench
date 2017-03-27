@@ -54,22 +54,24 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
   "reconcileSchema" should "handle a StringType schema and turn it into a DoubleType Schema" in {
     val df2Disk = makeDataFrame()
 
-    writeToDisk("csv", fileName, df2Disk)
+    writeToDisk(fileName, df2Disk, Some("csv"))
 
     val conf = WorkloadConfig(
       name = "kmeans",
+      parallel = false,
+      runs = 1,
       inputDir = fileName,
-      inputFormat = "csv",
-      workloadResultsOutputFormat = None,
+//      inputFormat = "csv",
+//      workloadResultsOutputFormat = None,
       workloadResultsOutputDir = None,
       outputDir = "",
-      outputFormat = "",
+//      outputFormat = "",
       workloadSpecific = Map.empty
     )
 
     val work = new KMeansWorkload(conf, sparkSessOpt = Some(spark))
 
-    val df = load(spark, conf.inputFormat, conf.inputDir)
+    val df = load(spark, conf.inputDir)
 
     val ddf = work.reconcileSchema(df)
 
@@ -81,12 +83,14 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
 
     val conf = WorkloadConfig(
       name = "kmeans",
+      parallel = false,
+      runs = 1,
       inputDir = "",
-      inputFormat = "",
-      workloadResultsOutputFormat = None,
+//      inputFormat = "",
+//      workloadResultsOutputFormat = None,
       workloadResultsOutputDir = None,
       outputDir = "",
-      outputFormat = "",
+//      outputFormat = "",
       workloadSpecific = Map.empty
     )
 
@@ -100,22 +104,24 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
 
   it should "work even when we've pulled the data from disk" in {
     val df2Disk = makeDataFrame()
-    writeToDisk("csv", fileName, df2Disk)
+    writeToDisk(fileName, df2Disk, Some("csv"))
 
     val conf = WorkloadConfig(
       name = "kmeans",
+      parallel = false,
+      runs = 1,
       inputDir = fileName,
-      inputFormat = "csv",
-      workloadResultsOutputFormat = None,
+//      inputFormat = "csv",
+//      workloadResultsOutputFormat = None,
       workloadResultsOutputDir = None,
       outputDir = "",
-      outputFormat = "",
+//      outputFormat = "",
       workloadSpecific = Map.empty
     )
 
     val work = new KMeansWorkload(conf, sparkSessOpt = Some(spark))
 
-    val df = load(spark, conf.inputFormat, conf.inputDir)
+    val df = load(spark, conf.inputDir)
     val ddf = work.reconcileSchema(df)
 
     val (_, rdd) = work.loadToCache(ddf, spark)
