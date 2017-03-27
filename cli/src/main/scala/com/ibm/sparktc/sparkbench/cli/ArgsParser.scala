@@ -59,7 +59,7 @@ object ArgsParser {
 		val workloadResOut = sArgs.workload.workloadResultsOutputDir.toOption
 
 		// Workload ARG PARSING, ONE FOR EACH workload
-		val (name: String, map: Map[String, Any]) = sArgs.subcommands match {
+		val (name: String, map: Map[String, Seq[Any]]) = sArgs.subcommands match {
 			// KMEANS
 			case List(sArgs.workload, sArgs.workload.kmeans) => (
 				"kmeans",
