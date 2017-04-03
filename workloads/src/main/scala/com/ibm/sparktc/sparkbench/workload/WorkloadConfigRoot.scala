@@ -15,7 +15,7 @@ case class WorkloadConfigRoot (
       "name" -> Seq(name),
       "runs" -> Seq(runs), // should always be a Sequence of size 1,
       // just putting it in a sequence for convenience in Cartesian product
-      "inputDir" -> Seq(inputDir),
+      "inputDir" -> inputDir,
       "workloadResultsOutputDir" -> Seq(workloadResultsOutputDir),
       "outputDir" -> Seq(outputDir)
     ) ++ workloadSpecific
@@ -23,7 +23,7 @@ case class WorkloadConfigRoot (
 
 
   //http://stackoverflow.com/questions/14740199/cross-product-in-scala
-  def crossJoin[T](list: Seq[Seq[T]]): Seq[Seq[T]] =
+  def crossJoin(list: Seq[Seq[Any]]): Seq[Seq[Any]] =
     list match {
       case xs :: Nil => xs map (Seq(_))
       case x :: xs => for {
@@ -34,11 +34,17 @@ case class WorkloadConfigRoot (
 
   def split(): Seq[WorkloadConfig] = {
     val m = toMap()
+//    val mSeq: Seq[Seq[Any]] = m.toSeq
+
     val keys: Seq[String] = m.keys.toSeq
-    val valuesSeq = m.values.toSeq
+//    val valuesSeq: Seq[Seq[Any]] = m.values.toSeq
+    val valuesSeq: Seq[Seq[Any]] = m.map(_._2).toSeq
+    println(valuesSeq)
+    //this could be one-lined, I've multi-lined it and explicit typed it for clarity
     val joined: Seq[Seq[Any]] = crossJoin(valuesSeq)
-    val zipped: Seq[Map[String, Any]] = joined.map(keys.zip(_).map(kv => kv._1 -> kv._2).toMap)
-    val confs: Seq[WorkloadConfig] = zipped.map(WorkloadConfig.fromMap)
+    val zipped: Seq[Seq[(String, Any)]] = joined.map(keys.zip(_))
+    val mapSeq: Seq[Map[String, Any]] = zipped.map(_.map(kv => kv._1.toLowerCase -> kv._2).toMap)
+    val confs: Seq[WorkloadConfig] = mapSeq.map(WorkloadConfig.fromMap)
 
     confs
   }

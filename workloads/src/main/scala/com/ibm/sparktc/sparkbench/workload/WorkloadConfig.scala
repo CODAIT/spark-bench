@@ -23,13 +23,14 @@ object WorkloadConfig {
       "parallel",
       "inputdir",
       "workloadresultsoutputdir",
-      "outputDir"
+      "outputdir"
     )
 
     val workloadSpecific: Map[String, Any] = {
       val otherKeys: Seq[String] = m.keys.toSeq.diff(commonKeys)
-      otherKeys.map( str => str -> m.get(str)).toMap
+      otherKeys.map( str => str -> m.get(str).get).toMap
     }
+
 
 
     WorkloadConfig(
@@ -37,10 +38,7 @@ object WorkloadConfig {
       getOrDefault(m, "runs", 1),
       getOrDefault(m, "parallel", false),
       getOrDefault(m, "inputdir", ""),
-      m.get("workloadresultsoutputdir") match {
-        case Some(s) => Some(s.asInstanceOf[String])
-        case _ => None
-      },
+      getOrDefault(m, "workloadresultsoutputdir", None),
       getOrDefault(m, "outputdir", ""),
       workloadSpecific
     )

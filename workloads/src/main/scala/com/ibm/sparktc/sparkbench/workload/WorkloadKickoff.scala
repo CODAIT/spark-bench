@@ -11,7 +11,7 @@ object WorkloadKickoff {
     if(conf.parallel) {
         val confSeqPar = splitOutConfigs.par
         confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(splitOutConfigs.size))
-        confSeqPar.map{ kickoff(_) }
+        confSeqPar.map{ kickoff }
     }
     else {
       for (i <- splitOutConfigs.indices) {

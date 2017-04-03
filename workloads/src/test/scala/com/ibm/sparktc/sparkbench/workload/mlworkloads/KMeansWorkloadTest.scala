@@ -86,11 +86,8 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
       parallel = false,
       runs = 1,
       inputDir = "",
-//      inputFormat = "",
-//      workloadResultsOutputFormat = None,
       workloadResultsOutputDir = None,
       outputDir = "",
-//      outputFormat = "",
       workloadSpecific = Map.empty
     )
 
@@ -111,11 +108,8 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
       parallel = false,
       runs = 1,
       inputDir = fileName,
-//      inputFormat = "csv",
-//      workloadResultsOutputFormat = None,
       workloadResultsOutputDir = None,
       outputDir = "",
-//      outputFormat = "",
       workloadSpecific = Map.empty
     )
 
