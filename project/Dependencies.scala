@@ -10,11 +10,13 @@ object Dependencies {
   // Libraries
   val sparkDeps = Seq(
     "org.apache.spark" %% "spark-core"  % sparkVersion % "provided",
-    "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided"
+    "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+    "org.apache.spark" %% "spark-sql"   % sparkVersion % "provided"
+
   )
 
   val otherCompileDeps = Seq(
-    "org.jblas" % "jblas" % "1.2.4"
+//    "org.jblas" % "jblas" % "1.2.4"
   )
 
   val testDeps = Seq(
