@@ -24,6 +24,7 @@ object Dependencies {
     "org.scalacheck"  % "scalacheck_2.11"     % scalacheckVersion  % "test",
     "org.scalactic"   % "scalactic_2.11"      % scalatestVersion   % "test",
     "org.scalatest"   % "scalatest_2.11"      % scalatestVersion   % "test",
+    "org.apache.spark" %% "spark-hive"       % sparkVersion % "test",
     "com.holdenkarau" %% "spark-testing-base" % "2.1.0_0.6.0"      % "test" excludeAll(
         ExclusionRule(organization = "org.scalacheck"),
         ExclusionRule(organization = "org.scalactic"),

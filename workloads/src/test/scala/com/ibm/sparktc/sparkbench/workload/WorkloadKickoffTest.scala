@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.workload
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.{SharedSparkContext, Utils}
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, SharedSparkContext, Utils}
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.mllib.util.KMeansDataGenerator
@@ -11,7 +11,7 @@ import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SQLContext, SparkSession}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
-class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach with SharedSparkContext {
+class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase {
 
 
   def generateData(output: String) = {
@@ -150,4 +150,5 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
     rowArray(1) shouldBe seqDF(1).first()
 
   }
+
 }

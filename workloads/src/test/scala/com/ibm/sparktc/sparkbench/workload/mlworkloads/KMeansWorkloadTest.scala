@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.Utils
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import com.ibm.sparktc.sparkbench.workload.WorkloadConfig
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
@@ -13,7 +13,7 @@ import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 
-class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach {
+class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase {
   val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
@@ -26,10 +26,10 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
     Utils.deleteRecursively(new File(fileName))
   }
 
-  val spark = SparkSession
-    .builder()
-    .master("local[1]")
-    .getOrCreate()
+//  val spark = SparkSession
+//    .builder()
+//    .master("local[1]")
+//    .getOrCreate()
 
   def makeDataFrame(): DataFrame = {
 

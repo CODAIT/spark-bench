@@ -38,7 +38,7 @@ lazy val datageneration = project
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps
   )
-  .dependsOn(utils)
+  .dependsOn(utils % "compile->compile;test->test")
 
 lazy val cli = project
   .settings(
