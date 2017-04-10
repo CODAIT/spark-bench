@@ -11,8 +11,9 @@ import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SQLContext, SparkSession}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
-class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase {
+import scala.io.Source
 
+class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase {
 
   def generateData(output: String) = {
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
@@ -34,16 +35,21 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
   }
 
   val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
+  val outputDir = "/tmp/testabillion.csv"
+
 
   var file: File = _
+  var outputFile: File = _
 
   override def beforeEach() {
     file = new File(fileName)
+    outputFile = new File(outputDir)
     generateData(fileName)
   }
 
   override def afterEach() {
     Utils.deleteRecursively(file)
+    Utils.deleteRecursively(outputFile)
   }
 
   "WorkloadKickoff" should "throw an error when it's a non-recognized workload name" in {
@@ -150,5 +156,43 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
     rowArray(1) shouldBe seqDF(1).first()
 
   }
+
+  it should "save results to disk" in {
+
+
+    val confRoot = WorkloadConfigRoot(
+      name = "kmeans",
+      runs = 1,
+      parallel = true,
+      inputDir = Seq(fileName),
+      workloadResultsOutputDir = None,
+      outputDir = outputDir,
+      workloadSpecific = Map("k" -> Seq(1, 2))
+    )
+
+    val seqDF = WorkloadKickoff(confRoot)
+
+    val outFile = new File(outputDir)
+
+    outFile.exists() shouldBe true
+
+    val fileList = outFile.listFiles().toList.filter(_.getName.startsWith("part"))
+
+    fileList.length shouldBe 1
+
+    val fileContents: List[String] = fileList
+      .flatMap(
+        Source.fromFile(_)
+          .getLines()
+          .toList
+      )
+
+    val length: Int = fileContents.length
+
+    length shouldBe 2 + 1 // the +1 is for the header line
+
+    Utils.deleteRecursively(outFile)
+  }
+
 
 }

@@ -13,7 +13,7 @@ object WorkloadKickoff {
 
   def apply(conf: WorkloadConfigRoot): Unit = {
     val splitOutConfigs: Seq[WorkloadConfig] = conf.split()
-    val results = run(splitOutConfigs, conf.parallel)
+    val results = run(splitOutConfigs, conf.parallel).coalesce(1)
     writeToDisk(data = results, outputDir = conf.outputDir)
   }
 

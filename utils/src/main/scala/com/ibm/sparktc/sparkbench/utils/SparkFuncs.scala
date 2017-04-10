@@ -16,7 +16,8 @@ object SparkFuncs {
     format match {
       case "parquet" => data.write.parquet(outputDir)
       case "csv" => data.write.option("header", "true").csv(outputDir)
-      case _ => new Exception("unrecognized save format")
+      case _ => throw new Exception(s"Unrecognized or unspecified save format. " +
+        s"Please check the file extension or add a file format to your arguments: $outputDir")
     }
   }
 

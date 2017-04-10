@@ -1,9 +1,24 @@
 package com.ibm.sparktc.sparkbench
 
+import java.io.File
+
+import com.holdenkarau.spark.testing.Utils
 import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerationKickoff}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach {
+  val filename = "whatever.csv"
+
+  var file: File = _
+
+  override def beforeEach() {
+    file = new File(filename)
+  }
+
+  override def afterEach() {
+    Utils.deleteRecursively(file)
+  }
+
   "DataGenKickOff" should "throw an error if it doesn't recognize an input" in {
     val conf: DataGenerationConf = DataGenerationConf(
       generatorName = "not a legit generator name",
@@ -22,7 +37,7 @@ class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach 
       generatorName = "kmeans",
       numRows = 1,
       numCols = 1,
-      outputDir = "whatever",
+      outputDir = filename,
       outputFormat = None,
       generatorSpecific = Map.empty
     )
