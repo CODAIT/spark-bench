@@ -58,3 +58,15 @@ Subcommand: workload kmeans
   -s, --seed  <arg>
       --help                    Show help message
  ```
+ 
+ You can have single arguments or a space-separated list of arguments that will be taken in as a Sequence.
+ This is best understood through example:
+ 
+ `./bin/spark-bench.sh workload -i /tmp/input-data1 -o /Users/ecurtin/Desktop/test-results.csv kmeans -k 2`
+ will run kmeans 1 time over the /tmp/input-data1 set and a k value of 2.
+ 
+ `./bin/spark-bench.sh workload -i /tmp/input-data1 /tmp/input-data2 -o /Users/ecurtin/Desktop/test-results.csv kmeans -k 2`
+ will run kmeans 2 times, once over the /tmp/input-data1 set with a k value of 2, and another time over the /tmp/input-data2 set with a k-value of 2.
+ 
+ `./bin/spark-bench.sh workload -i /tmp/input-data1 /tmp/input-data2 -o /Users/ecurtin/Desktop/test-results.csv kmeans -k 2 32`
+ will run kmeans 4 times with all combinations of /tmp/input-data1, /tmp/input-data2, k = 2, k = 32.

@@ -6,5 +6,10 @@ export SPARK_MASTER_HOST=local[2]
 
 #rm -rf /tmp/coolstuff
 
-./bin/spark-bench.sh generate-data -r 5 -c 5 -o /tmp/coolstuff --output-format csv kmeans
-./bin/spark-bench.sh workload -i /tmp/coolstuff -o ~/Desktop/test-results/ kmeans
+#./bin/spark-bench.sh generate-data -r 5 -c 5 -o /tmp/coolstuff1 --output-format csv kmeans
+#
+#./bin/spark-bench.sh generate-data -r 3000 -c 200 -o /tmp/coolstuff2 --output-format csv kmeans -k 20
+
+rm -rf /Users/ecurtin/Desktop/test-results.csv
+
+./bin/spark-bench.sh workload -i /tmp/coolstuff1 /tmp/coolstuff2 -o /Users/ecurtin/Desktop/test-results.csv kmeans -k 2 32

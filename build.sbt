@@ -9,7 +9,7 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(
     commonSettings,
-    scalacOptions ++= Seq("-feature")
+    scalacOptions ++= Seq("-feature", "-Ylog-classpath")
   )
   .aggregate(utils, workloads, datageneration, cli
   )
@@ -38,11 +38,12 @@ lazy val datageneration = project
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps
   )
-  .dependsOn(utils)
+  .dependsOn(utils % "compile->compile;test->test")
 
 lazy val cli = project
   .settings(
     commonSettings,
+    libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps
   )
   .dependsOn(workloads, datageneration, utils)

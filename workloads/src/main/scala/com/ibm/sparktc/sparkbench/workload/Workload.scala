@@ -1,16 +1,11 @@
 package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
 
-abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]) {
+abstract class Workload(conf: WorkloadConfig, spark: SparkSession) {
 
-  def createSparkContext(): SparkSession = {
-    SparkSession
-      .builder()
-      .appName("spark-bench workload")
-      .getOrCreate()
-  }
+
 
   /**
     *  Validate that the data set has a correct schema and fix if necessary.
@@ -21,18 +16,15 @@ abstract class Workload(conf: WorkloadConfig, sparkSessOpt: Option[SparkSession]
 
   def doWorkload(df: DataFrame, sparkSession: SparkSession): DataFrame
 
-  def run(): Unit = {
-    val spark = sparkSessOpt match {
-      case Some(ss: SparkSession) => ss
-      case _ => createSparkContext()
-    }
+  def run(): DataFrame = {
 
-    val rawdf = load(spark, conf.inputFormat, conf.inputDir)
-    val df = reconcileSchema(rawdf)
+
+
+    val rawDF = load(spark, conf.inputDir)
+    val df = reconcileSchema(rawDF)
     val res = doWorkload(df, spark)
-    val coalesced = res.coalesce(1)
-    writeToDisk(conf.outputFormat, conf.outputDir, coalesced)
-  }
+    res.coalesce(1)
 
+  }
 
 }

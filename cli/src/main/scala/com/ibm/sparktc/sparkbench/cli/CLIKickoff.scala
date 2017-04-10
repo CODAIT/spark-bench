@@ -18,7 +18,7 @@ object CLIKickoff {
   }
 
   def main(args: Array[String]): Unit = {
-    println(s"hello args! ${args.toSeq}")
+//    println(s"hello args! ${args.toSeq}")
     val sArgs = new ScallopArgs(args)
 
     sArgs.subcommand match {
