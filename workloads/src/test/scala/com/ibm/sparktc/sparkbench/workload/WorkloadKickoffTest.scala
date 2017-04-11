@@ -89,7 +89,7 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
       )
     )
 
-    val seqDF = WorkloadKickoff.runWorkloads(confs, false)
+    val seqDF = WorkloadKickoff.runWorkloads(1, confs, false)
 
     seqDF.length shouldBe 2
   }
@@ -116,7 +116,7 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
       )
     )
 
-    val seqDF = WorkloadKickoff.runWorkloads(confs, true)
+    val seqDF = WorkloadKickoff.runWorkloads(1, confs, true)
 
     seqDF.length shouldBe 2
   }
@@ -143,7 +143,7 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
       )
     )
 
-    val seqDF = WorkloadKickoff.runWorkloads(confs, true)
+    val seqDF = WorkloadKickoff.runWorkloads(1, confs, true)
 
     seqDF.length shouldBe 2
 
