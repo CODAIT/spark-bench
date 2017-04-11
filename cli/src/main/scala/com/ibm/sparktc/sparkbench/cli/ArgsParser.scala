@@ -49,7 +49,6 @@ object ArgsParser {
 		)
   }
 
-	// TODO this should output a WorkloadRootConfig or whatever it's called
   def parseWorkload(sArgs: ScallopArgs): WorkloadConfigRoot = {
 
 		val runs = sArgs.workload.runs.apply()

@@ -3,6 +3,7 @@ package com.ibm.sparktc.sparkbench.workload
 import com.ibm.sparktc.sparkbench.workload.mlworkloads.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import org.apache.spark.sql.functions.lit
 
 import scala.collection.parallel.{ForkJoinTaskSupport, ParSeq}
 import scala.util.{Failure, Success}
@@ -13,24 +14,29 @@ object WorkloadKickoff {
 
   def apply(conf: WorkloadConfigRoot): Unit = {
     val splitOutConfigs: Seq[WorkloadConfig] = conf.split()
-    val results = run(splitOutConfigs, conf.parallel).coalesce(1)
+    val results = run(conf, splitOutConfigs, conf.parallel).coalesce(1)
     writeToDisk(data = results, outputDir = conf.outputDir)
   }
 
-  def run(seq: Seq[WorkloadConfig], parallel: Boolean): DataFrame = {
-    val dataframes = runWorkloads(seq, parallel)
+  def run(conf: WorkloadConfigRoot, seq: Seq[WorkloadConfig], parallel: Boolean): DataFrame = {
+    val dataframes = runWorkloads(conf.runs, seq, parallel)
     joinDataFrames(dataframes)
   }
 
   // Separating this function for ease of testing
-  def runWorkloads(seq: Seq[WorkloadConfig], parallel: Boolean): Seq[DataFrame] = {
-    if(parallel) {
-      val confSeqPar = seq.par
-      confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(seq.size))
-      val stuff: ParSeq[DataFrame] = confSeqPar.flatMap( kickoff )
-      stuff.seq
+  def runWorkloads(runs: Int, seq: Seq[WorkloadConfig], parallel: Boolean): Seq[DataFrame] = {
+    (0 until runs).flatMap { i =>
+      val dfSeqFromOneRun = {
+        if (parallel) {
+          val confSeqPar = seq.par
+          confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(seq.size))
+          val stuff: ParSeq[DataFrame] = confSeqPar.flatMap(kickoff)
+          stuff.seq
+        }
+        else seq.flatMap(kickoff)
+      }
+      dfSeqFromOneRun.map(_.withColumn("run", lit(i)))
     }
-    else seq.flatMap( kickoff )
   }
 
 

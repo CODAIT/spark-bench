@@ -90,3 +90,12 @@ Subcommand: workload kmeans
  
  `./bin/spark-bench.sh workload -i /tmp/input-data1 /tmp/input-data2 -o /Users/ecurtin/Desktop/test-results.csv --parallel kmeans -k 2 32`
  will run kmeans 4 times over the two datasets and k values, but unlike the example above it will launch all four variations of the workload in parallel in one SparkSession.
+
+## Multi-Run
+You can run a workload or parallel set of workloads multiple times by specifying the `-n` argument.
+
+`./bin/spark-bench.sh workload -i /tmp/coolstuff1 -o /Users/ecurtin/Desktop/test-results1.csv -n 5 kmeans -k 2`
+will run kmeans once over one dataset with one value of k, but will repeat that workload 5 times and output all 5 results
+
+`./bin/spark-bench.sh workload -i /tmp/coolstuff1 /tmp/coolstuff2 -o /Users/ecurtin/Desktop/test-results3.csv -n 5 kmeans -k 2 32`
+will run kmeans 4 times, in series, but will also run each of those four configurations 5 times. //TODO that's worded confusingly
