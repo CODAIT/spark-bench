@@ -7,6 +7,18 @@
 
 ### Current Spark and spark-bench version: 2.1.0
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# Table of Contents
+
+- [History](#history)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Multiple Arguments](#multiple-arguments)
+- [Parallel Runs](#parallel-runs)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## History
 
 `spark-bench` began as a project led by researchers at IBM to produce benchmarks
@@ -59,6 +71,7 @@ Subcommand: workload kmeans
       --help                    Show help message
  ```
  
+ ## Multiple Arguments
  You can have single arguments or a space-separated list of arguments that will be taken in as a Sequence.
  This is best understood through example:
  
@@ -70,3 +83,10 @@ Subcommand: workload kmeans
  
  `./bin/spark-bench.sh workload -i /tmp/input-data1 /tmp/input-data2 -o /Users/ecurtin/Desktop/test-results.csv kmeans -k 2 32`
  will run kmeans 4 times with all combinations of /tmp/input-data1, /tmp/input-data2, k = 2, k = 32.
+ 
+ ## Parallel Runs
+ Workloads can be run serially or in parallel across a SparkSession. By default, workloads will be run one after the other. 
+ Specify `--parallel` to make your workloads run in parallel on the SparkSession.
+ 
+ `./bin/spark-bench.sh workload -i /tmp/input-data1 /tmp/input-data2 -o /Users/ecurtin/Desktop/test-results.csv --parallel kmeans -k 2 32`
+ will run kmeans 4 times over the two datasets and k values, but unlike the example above it will launch all four variations of the workload in parallel in one SparkSession.
