@@ -3,7 +3,7 @@ package com.ibm.sparktc.sparkbench.cli
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationKickoff
 import com.ibm.sparktc.sparkbench.workload.WorkloadKickoff
 
-object CLIKickoff {
+object CLIKickoff extends App {
 
   def startWorkload(scallopArgs: ScallopArgs): Unit = {
     val conf = ArgsParser.parseWorkload(scallopArgs)
@@ -17,7 +17,7 @@ object CLIKickoff {
     DataGenerationKickoff(conf)
   }
 
-  def main(args: Array[String]): Unit = {
+  override def main(args: Array[String]): Unit = {
 //    println(s"hello args! ${args.toSeq}")
     val sArgs = new ScallopArgs(args)
 

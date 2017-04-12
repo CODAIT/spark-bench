@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export SPARK_BENCH_JAR=./cli/target/scala-2.11/cli-assembly-2.1.0-SNAPSHOT.jar
+export SPARK_BENCH_JAR=./target/scala-2.11/spark-bench.jar
 export SPARK_HOME=/opt/spark-2.1.0-bin-hadoop2.6
 export SPARK_MASTER_HOST=local[2]
 
