@@ -1,14 +1,20 @@
 language: scala
+
 scala:
 - 2.11.8
+
 jdk:
 - oraclejdk8
+
 sudo: false
+
 script:
 - sbt clean coverage test coverageReport
-- sbt dist
+- sbt ++$TRAVIS_SCALA_VERSION dist
+
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
 notifications:
   email:
     recipients:
