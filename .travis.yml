@@ -10,7 +10,7 @@ sudo: false
 
 script:
 - sbt clean coverage test coverageReport
-- sbt ++$TRAVIS_SCALA_VERSION dist
+#- sbt ++$TRAVIS_SCALA_VERSION dist
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
