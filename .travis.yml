@@ -20,6 +20,7 @@ notifications:
     recipients:
     - ecurtin@us.ibm.com
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
     secure: LeNrAN0hpYvuXGv2XDvPivUKzorMp7pd90fGMhyV8iJPZvYRzewPtpK7rNmRjUbXMmUFsx3ysuIN82qGGqv9W1J+ASID2MerygA3sOCMCK3iqBLnHq32JvmR7HaxoRT+LrYkz4kcwLF6Sdx1IWt0aFwHLe8g7rA7jDXdxNOpCbUcs16ErZsav9K37dVGJsVBew/eiZnMtA/cnuJvJXa46nS4OuTx2nEbDNVipRGYERIm5afVFhhVrIAotakld+X4DX1IGwU6st2G9Oo0uepO9Dj+b/XMUZpKpkR5yoxh1LPPrBk58RiBH3ZvMa5J9xONMUd1aZQg4KHc/oSNfIJVhc5zytH1cZcVaU63+nlDNi+445t4zaxqjCUFjffwFU2uy4ob+uCv0NncBvq23lZQqqy/d1TH7rk1k2xwmg/CdmYy+G0eKR+OjmbX+HD4U0PAlm1ufllE88yHUpaKbpvAn/xHwqqbSLZ0K/sCI1HsYiw7Yu20HZFv8Kcn02Sk1hyXh+Ecpv3zH0nj6rJxacnWnCsS4qSEN5/ycfjrTAUAYOom6yd+5YjQbFnQNO6qFdgQQayt//APrfzxa056z+9IhefFiU3KOPUsN9tnn2Wk6IKwI+JT0uRNYjxid7Ap52M0qE3lqLVbYs4WjEXfJ9PrQO3bqKDuL2O3DcFY7KJqN/o=
