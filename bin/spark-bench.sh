@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source spark-bench-env.sh
 
 ${SPARK_HOME}/bin/spark-submit \
         --class com.ibm.sparktc.sparkbench.cli.CLIKickoff \

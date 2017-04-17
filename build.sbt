@@ -1,6 +1,10 @@
 import Dependencies._
 
-val jarName = "spark-bench"
+/*
+    ***************************
+    *       PROJECT           *
+    ***************************
+*/
 
 lazy val commonSettings = Seq(
   organization := "com.ibm.sparktc",
@@ -11,9 +15,10 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(
     commonSettings,
+    name := "spark-bench",
     scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     mainClass in assembly := Some("CLIKickoff"),
-    assemblyJarName in assembly := s"$jarName.jar"
+    assemblyJarName in assembly := s"spark-bench-${version.value}.jar"
   )
   .aggregate(utils, workloads, datageneration, cli)
   .dependsOn(utils, workloads, datageneration, cli)
@@ -50,3 +55,46 @@ lazy val cli = project
     libraryDependencies ++= testDeps
   )
   .dependsOn(workloads, datageneration, utils)
+
+
+/*
+    *************************
+    *       TASKS           *
+    *************************
+*/
+
+val dist = TaskKey[Unit]("dist", "Makes the distribution file for release")
+dist := {
+  val dir = baseDirectory.value.getName
+  val parent = baseDirectory.value.getParent
+
+  val tmpFolder = s"./${name.value}_${version.value}"
+
+  s"rm -rf $tmpFolder"
+
+  s"echo Making tmpFolder".!
+  s"mkdir $tmpFolder".!
+  s"mkdir $tmpFolder/lib".!
+
+  s"cp readme.md $tmpFolder".!
+  s"cp -r bin $tmpFolder/".!
+  s"cp target/scala-2.11/spark-bench-${version.value}.jar $tmpFolder/lib".!
+  s"cp kmeans-example.sh $tmpFolder".!
+
+  s"tar -zcf ./${name.value}_${version.value}.tgz $tmpFolder".!
+}
+
+val rmDist = TaskKey[Unit]("rmDist", "removes all the dist files")
+rmDist := {
+  val dir = baseDirectory.value.getName
+  val parent = baseDirectory.value.getParent
+
+  val tmpFolder = s"./${name.value}_${version.value}"
+  s"rm -rf $tmpFolder".!
+  s"rm -rf ./${name.value}_${version.value}.tgz".!
+}
+
+dist := (dist dependsOn rmDist).value
+dist := (dist dependsOn assembly).value
+
+clean := (clean dependsOn rmDist).value
