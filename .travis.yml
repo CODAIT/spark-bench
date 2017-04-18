@@ -1,30 +1,19 @@
 language: scala
-
 scala:
 - 2.11.8
-
 jdk:
 - oraclejdk8
-
 sudo: false
-
 script:
 - sbt clean coverage test coverageReport
 - sbt clean dist
-
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - sh set_tags.sh
-
 notifications:
   email:
     recipients:
     - ecurtin@us.ibm.com
-
-env:
-  global:
-    secure: LeNrAN0hpYvuXGv2XDvPivUKzorMp7pd90fGMhyV8iJPZvYRzewPtpK7rNmRjUbXMmUFsx3ysuIN82qGGqv9W1J+ASID2MerygA3sOCMCK3iqBLnHq32JvmR7HaxoRT+LrYkz4kcwLF6Sdx1IWt0aFwHLe8g7rA7jDXdxNOpCbUcs16ErZsav9K37dVGJsVBew/eiZnMtA/cnuJvJXa46nS4OuTx2nEbDNVipRGYERIm5afVFhhVrIAotakld+X4DX1IGwU6st2G9Oo0uepO9Dj+b/XMUZpKpkR5yoxh1LPPrBk58RiBH3ZvMa5J9xONMUd1aZQg4KHc/oSNfIJVhc5zytH1cZcVaU63+nlDNi+445t4zaxqjCUFjffwFU2uy4ob+uCv0NncBvq23lZQqqy/d1TH7rk1k2xwmg/CdmYy+G0eKR+OjmbX+HD4U0PAlm1ufllE88yHUpaKbpvAn/xHwqqbSLZ0K/sCI1HsYiw7Yu20HZFv8Kcn02Sk1hyXh+Ecpv3zH0nj6rJxacnWnCsS4qSEN5/ycfjrTAUAYOom6yd+5YjQbFnQNO6qFdgQQayt//APrfzxa056z+9IhefFiU3KOPUsN9tnn2Wk6IKwI+JT0uRNYjxid7Ap52M0qE3lqLVbYs4WjEXfJ9PrQO3bqKDuL2O3DcFY7KJqN/o=
-
 deploy:
   skip_cleanup: true
   provider: releases
@@ -32,3 +21,6 @@ deploy:
   on:
     repo: ecurtin/spark-bench
     branch: develop
+env:
+  global:
+    secure: fLqP19eqU8fIte8KfMaLUxIcL396xpeisfzYdKHpNNt0Mq3JJ7nGX9AWPNSqc3dtzP5C2q1cuWZr5ngRUGUcpxHmPS0R/WB/pnTCVOcQxaJstwF5Hb486Y0GnZq1ukBybHo15XnlYsGZz6bX/9nN1D96IFj5aiz4tncKIOf63UqrVuIVD3VMoadq5EeBkH1iHLcLctB6CSLxSx32T8aSuIQ0QIiYt18JxFtFCybWA40Re2bE0iNKKusGyZR2WstJSH9w91JhpeY/TKRhbCVS3fvnC2+GkhoInTGa1wqRnKXi8PZzAEKqlBq18UtlUFEtRTEWUaMGZJWZWMNiOFfICPncAqcUpehy2/8YRFHJHpon8OTPVIDo7etyiINYVRQhCXwhlPgW8GcU8oeO1QJmQ3Lsb0Ue/OTaOvnOLrAMrhSDgI/OZS/bopYUYrMzklhxvqaUlI4Fl4feGyB/664zr/Nj86V2cqyyGROD5OPCQYukPXKNKOMU75Mq9yG/nB3I3TLXXG3H/V6cowEv8xWKsewIImjonFKB4PHtMRwTTygWDV1+FTE8BcYttkk0tckLrgrP8lqpT/r0Ih5kwUxpmBAGwW+L1HZqjykEnyy6zisg1VB2VGdRHTptqDdr6YvwWFhqJadfjgRJFOSsAaz4L/07NtGjS4GnsZSdW2qmjAI=
