@@ -14,6 +14,7 @@ script:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- sh set_tags.sh
 
 notifications:
   email:
