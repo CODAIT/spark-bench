@@ -20,7 +20,7 @@ deploy:
   provider: releases
   api_key:
     secure: ${GH_TOKEN}
-  file: spark-bench_2.1.0-SNAPSHOT.tgz
+  file: spark-bench_2.1.0-SNAPSHOT*.tgz
   on:
     repo: ecurtin/spark-bench
     branch:
