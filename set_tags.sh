@@ -19,10 +19,11 @@ if [ "$TRAVIS_BRANCH" = "$MASTER_BRANCH" ] || [ "$TRAVIS_BRANCH" = "$DEVELOP_BRA
 
       # Add tag and push to master.
       git tag -a v${TRAVIS_BUILD_NUMBER} -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
-      git push origin --tags
-      git fetch origin
+      git remote add teh-repo https://${GH_TOKEN}@github.com/ecurtin/spark-bench.git
+      git push teh-repo --tags
+      git fetch teh-repo
 
       echo -e "Done magic with tags.\n"
-  fi
+    fi
   fi
 fi
