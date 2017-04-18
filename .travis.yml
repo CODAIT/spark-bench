@@ -6,9 +6,9 @@ jdk:
 sudo: false
 script:
 - sbt clean coverage test coverageReport
-- sbt clean dist
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- sbt clean dist
 notifications:
   email:
     recipients:
@@ -17,10 +17,10 @@ before_deploy:
   - sh set_tags.sh
 deploy:
   skip_cleanup: true
-  file_glob: true
   provider: releases
   api_key:
     secure: ${GH_TOKEN}
+  file_glob: true
   file: spark-bench_*.tgz
   on:
     repo: ecurtin/spark-bench
