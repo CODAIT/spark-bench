@@ -1,3 +1,6 @@
+branches:
+  except:
+    - /^v[0-9]/
 language: scala
 scala:
 - 2.11.8

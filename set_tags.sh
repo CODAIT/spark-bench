@@ -18,7 +18,7 @@ if [ "$TRAVIS_BRANCH" = "$MASTER_BRANCH" ] || [ "$TRAVIS_BRANCH" = "$DEVELOP_BRA
       git config --global user.name "Travis"
 
       # Add tag and push to master.
-      git tag -a v${TRAVIS_BUILD_NUMBER} -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
+      git tag -a v${TRAVIS_BUILD_NUMBER}
       git remote rm origin
       git remote add origin https://user:${GH_TOKEN}@github.com/ecurtin/spark-bench.git
       git push origin --tags
