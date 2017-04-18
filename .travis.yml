@@ -9,18 +9,24 @@ script:
 - sbt clean dist
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- sh set_tags.sh
 notifications:
   email:
     recipients:
     - ecurtin@us.ibm.com
+before_deploy:
+  - sh set_tags.sh
 deploy:
   skip_cleanup: true
   provider: releases
+  api_key:
+    secure: ${GH_TOKEN}
   file: spark-bench_2.1.0-SNAPSHOT.tgz
   on:
     repo: ecurtin/spark-bench
-    branch: develop
+    branch:
+      - develop
+      - master
+    tags: false
 env:
   global:
     secure: fLqP19eqU8fIte8KfMaLUxIcL396xpeisfzYdKHpNNt0Mq3JJ7nGX9AWPNSqc3dtzP5C2q1cuWZr5ngRUGUcpxHmPS0R/WB/pnTCVOcQxaJstwF5Hb486Y0GnZq1ukBybHo15XnlYsGZz6bX/9nN1D96IFj5aiz4tncKIOf63UqrVuIVD3VMoadq5EeBkH1iHLcLctB6CSLxSx32T8aSuIQ0QIiYt18JxFtFCybWA40Re2bE0iNKKusGyZR2WstJSH9w91JhpeY/TKRhbCVS3fvnC2+GkhoInTGa1wqRnKXi8PZzAEKqlBq18UtlUFEtRTEWUaMGZJWZWMNiOFfICPncAqcUpehy2/8YRFHJHpon8OTPVIDo7etyiINYVRQhCXwhlPgW8GcU8oeO1QJmQ3Lsb0Ue/OTaOvnOLrAMrhSDgI/OZS/bopYUYrMzklhxvqaUlI4Fl4feGyB/664zr/Nj86V2cqyyGROD5OPCQYukPXKNKOMU75Mq9yG/nB3I3TLXXG3H/V6cowEv8xWKsewIImjonFKB4PHtMRwTTygWDV1+FTE8BcYttkk0tckLrgrP8lqpT/r0Ih5kwUxpmBAGwW+L1HZqjykEnyy6zisg1VB2VGdRHTptqDdr6YvwWFhqJadfjgRJFOSsAaz4L/07NtGjS4GnsZSdW2qmjAI=

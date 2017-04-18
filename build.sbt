@@ -82,17 +82,26 @@ dist := {
   s"cp target/scala-2.11/spark-bench-${version.value}.jar $tmpFolder/lib".!
   s"cp kmeans-example.sh $tmpFolder".!
 
-  s"tar -zcf ./${name.value}_${version.value}.tgz $tmpFolder".!
+  val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
+  val artifactName = buildNum match {
+    case None => s"${name.value}_${version.value}.tgz"
+    case Some(bn) => s"${name.value}_${version.value}_$bn.tgz"
+  }
+
+  s"tar -zcf ./$artifactName $tmpFolder".!
+
 }
 
 val rmDist = TaskKey[Unit]("rmDist", "removes all the dist files")
 rmDist := {
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
+  val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
 
-  val tmpFolder = s"./${name.value}_${version.value}"
+
+  val tmpFolder = s"./${name.value}_${version.value}*"
   s"rm -rf $tmpFolder".!
-  s"rm -rf ./${name.value}_${version.value}.tgz".!
+//  s"rm -rf ./$artifactName".!
 }
 
 dist := (dist dependsOn rmDist).value
