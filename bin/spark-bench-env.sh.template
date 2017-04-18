@@ -25,5 +25,3 @@ PARENTDIR="$(dirname "${BASEDIR}")"
 SB_JAR=`ls ${PARENTDIR}/lib/`
 
 export SPARK_BENCH_JAR=${PARENTDIR}/lib/${SB_JAR}
-
-#TODO: change this to a template. Would make sense to wrap this change into building multiple spark-submits
