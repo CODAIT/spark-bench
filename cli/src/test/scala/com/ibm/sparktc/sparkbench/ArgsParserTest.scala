@@ -6,9 +6,9 @@ import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
 
 class ArgsParserTest extends UnitSpec {
 
-  "Correct KMeans Datagen Args" should "parse to a DataGenConf" in {
+  "Correct KMeans Datagen Args" should "take arguments that are in a differnt order" in {
     val sArgs = new ScallopArgs(
-      Array("generate-data", "-r", "100", "-c", "10", "-o", "/tmp/cool", "--output-format", "csv", "kmeans")
+      Array("generate-data", "kmeans", "-r", "100", "-c", "10", "-o", "/tmp/cool", "--output-format", "csv")
     )
 
     val conf = ArgsParser.parseDataGen(sArgs)
@@ -28,7 +28,7 @@ class ArgsParserTest extends UnitSpec {
 
   "Correct KMeans Workload Args" should "parse to a WorkloadConf" in {
     val sArgs = new ScallopArgs(
-      Array("workload", "-i", "/tmp/coolstuff1", "/tmp/coolstuff2", "-o", "~/Desktop/test-results/", "kmeans", "-k", "2", "32")
+      Array("workload", "kmeans", "-i", "/tmp/coolstuff1", "/tmp/coolstuff2", "-o", "~/Desktop/test-results/",  "-k", "2", "32")
     )
 
     val conf = ArgsParser.parseWorkload(sArgs)

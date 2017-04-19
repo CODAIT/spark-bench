@@ -18,16 +18,12 @@ object ArgsParser {
 
 	def parseDataGen(sArgs: ScallopArgs): DataGenerationConf = {
 
-		val numRows = sArgs.datagen.numRows.apply()
-		val numCols = sArgs.datagen.numCols.apply()
-		val outputDir = sArgs.datagen.outputDir.apply()
-		val outputFormat = sArgs.datagen.outputFormat.toOption
-
 		// DATA GENERATION ARG PARSING, ONE FOR EACH GENERATOR
-		val (name, map) = sArgs.subcommands match {
+		val (name, base, map) = sArgs.subcommands match {
 			// KMEANS
 			case List(sArgs.datagen, sArgs.datagen.kmeans) => (
 				"kmeans",
+				sArgs.datagen.kmeans.parseDataGeneratorArgs(),
 				Map(
 					"k"	-> sArgs.datagen.kmeans.k.apply(),
 					"scaling" -> sArgs.datagen.kmeans.scaling.apply(),
@@ -41,27 +37,22 @@ object ArgsParser {
 		// OUTPUT COLLECTED ARGUMENTS
 		DataGenerationConf(
 			name,
-			numRows,
-			numCols,
-			outputDir = outputDir,
-			outputFormat = outputFormat,
+			base.numRows,
+			base.numCols,
+			outputDir = base.outputDir,
+			outputFormat = base.outputFormat,
 			map
 		)
   }
 
   def parseWorkload(sArgs: ScallopArgs): WorkloadConfigRoot = {
 
-		val runs = sArgs.workload.runs.apply()
-		val parallel = sArgs.workload.parallel.apply()
-		val inputDir = sArgs.workload.inputDir.apply()
-		val outputDir = sArgs.workload.outputDir.apply()
-		val workloadResOut = sArgs.workload.workloadResultsOutputDir.toOption
-
 		// Workload ARG PARSING, ONE FOR EACH workload
-		val (name: String, map: Map[String, Seq[Any]]) = sArgs.subcommands match {
+		val (name: String, base: WorkloadConfBase, map: Map[String, Seq[Any]]) = sArgs.subcommands match {
 			// KMEANS
 			case List(sArgs.workload, sArgs.workload.kmeans) => (
 				"kmeans",
+				sArgs.workload.kmeans.parseWorkloadArgs(),
 				Map(
 					"k"	-> sArgs.workload.kmeans.k.apply(),
 					"maxIterations" -> sArgs.workload.kmeans.maxIterations.apply(),
@@ -74,11 +65,11 @@ object ArgsParser {
 
     WorkloadConfigRoot(
 			name = name,
-			runs = runs,
-			parallel = parallel,
-			inputDir = inputDir,
-			workloadResultsOutputDir = workloadResOut,
-			outputDir = outputDir,
+			runs = base.runs,
+			parallel = base.parallel,
+			inputDir = base.inputDir,
+			workloadResultsOutputDir = base.workloadResultsOutputDir,
+			outputDir = base.outputDir,
 			workloadSpecific = map
 		)
 	}
