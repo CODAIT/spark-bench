@@ -14,7 +14,7 @@ import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenera
 import com.ibm.sparktc.sparkbench.utils.LinearRegressionDefaults
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
 
-class LinearRegressionDataGen (conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
+class LinearRegressionDataGen (conf: DataGenerationConf, spark: SparkSession) extends DataGenerator(conf, spark) {
 
   import LinearRegressionDefaults._
 
