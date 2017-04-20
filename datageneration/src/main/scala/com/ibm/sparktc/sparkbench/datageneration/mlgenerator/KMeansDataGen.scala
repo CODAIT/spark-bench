@@ -26,7 +26,7 @@ import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
-class KMeansDataGen(conf: DataGenerationConf, sparkSessOpt: Option[SparkSession] = None) extends DataGenerator(conf, sparkSessOpt) {
+class KMeansDataGen(conf: DataGenerationConf, spark: SparkSession) extends DataGenerator(conf, spark) {
 
   import KMeansDefaults._
 

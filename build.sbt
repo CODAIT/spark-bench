@@ -98,7 +98,7 @@ rmDist := {
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
 
-  val tmpFolder = s"${name.value}_${version.value}*"
+  val tmpFolder = s"./${name.value}_${version.value}*"
   s"rm -rf $tmpFolder".!
 //  s"rm -rf ./$artifactName".!
 }
