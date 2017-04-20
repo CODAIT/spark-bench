@@ -97,10 +97,8 @@ val rmDist = TaskKey[Unit]("rmDist", "removes all the dist files")
 rmDist := {
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
-  val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
 
-
-  val tmpFolder = s"./${name.value}_${version.value}*"
+  val tmpFolder = s"${name.value}_${version.value}*"
   s"rm -rf $tmpFolder".!
 //  s"rm -rf ./$artifactName".!
 }
