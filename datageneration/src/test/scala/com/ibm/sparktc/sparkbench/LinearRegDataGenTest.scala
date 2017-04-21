@@ -35,7 +35,7 @@ class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEac
       generatorSpecific = Map.empty
     )
 
-    val generator = new LinearRegressionDataGen(x)
+    val generator = new LinearRegressionDataGen(x, spark)
 
     generator.run()
 
