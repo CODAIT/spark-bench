@@ -2,8 +2,34 @@ package com.ibm.sparktc.sparkbench.cli
 
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.rogach.scallop._
+import java.io.File
+
+import org.rogach.scallop.exceptions._
 
 class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
+
+  shortSubcommandsHelp()
+
+  version("spark-bench for Spark 2.1.0")
+
+  banner(
+    s"""
+       |Usage:
+       |      spark-bench generate-data <GENERATE DATA ARGS>   ->   see "spark-bench generate-data --help" for more info
+       |      spark-bench workload <WORKLOAD ARGS>             ->   see "spark-bench workload --help" for more info
+       |      spark-bench /path/to/configuration/file.conf     ->   run spark-bench from a configuration file
+       |
+       |More options:
+     """.stripMargin)
+
+  footer("\nSee the README and project wiki for more documentation.")
+
+  val confFile = trailArg[File](required = false)
+
+  val dryRun = opt[Boolean](required = false, default = Some(false), descr = "Prints the configuration of each workload that will run but does not actually run them.")
+
+
+
 
   /*
    * ***********************
@@ -20,6 +46,10 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     addSubcommand(kmeans)
   }
   addSubcommand(datagen)
+
+
+
+
 
   /*
    * *****************
@@ -39,5 +69,16 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
   addSubcommand(workload)
 
+  override def onError(e: Throwable): Unit = e match {
+    case ScallopException(message) => throw e
+    case _ => super.onError(e)
+  }
+//
+//  override def printHelp(): Unit = {
+//
+//  }
+
+  validateFileExists(confFile)
+  validateFileIsFile(confFile)
   verify()
 }

@@ -1,6 +1,7 @@
 package com.ibm.sparktc.sparkbench.workload
 
 case class WorkloadConfigRoot (
+//                                dryRun: Boolean,
                                 name: String,
                                 runs: Int,
                                 parallel: Boolean,
@@ -34,12 +35,9 @@ case class WorkloadConfigRoot (
 
   def split(): Seq[WorkloadConfig] = {
     val m = toMap()
-//    val mSeq: Seq[Seq[Any]] = m.toSeq
-
     val keys: Seq[String] = m.keys.toSeq
-//    val valuesSeq: Seq[Seq[Any]] = m.values.toSeq
     val valuesSeq: Seq[Seq[Any]] = m.map(_._2).toSeq
-    println(valuesSeq)
+//    println(valuesSeq)
     //this could be one-lined, I've multi-lined it and explicit typed it for clarity
     val joined: Seq[Seq[Any]] = crossJoin(valuesSeq)
     val zipped: Seq[Seq[(String, Any)]] = joined.map(keys.zip(_))

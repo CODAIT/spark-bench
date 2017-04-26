@@ -17,6 +17,10 @@ object CLIKickoff extends App {
     DataGenerationKickoff(conf)
   }
 
+  def useConfFile(sArgs: ScallopArgs): Unit = {
+    println(sArgs.confFile.apply())
+  }
+
   override def main(args: Array[String]): Unit = {
 //    println(s"hello args! ${args.toSeq}")
     val sArgs = new ScallopArgs(args)
@@ -24,6 +28,7 @@ object CLIKickoff extends App {
     sArgs.subcommand match {
       case Some(sArgs.datagen) => startDataGen(sArgs)
       case Some(sArgs.workload) => startWorkload(sArgs)
+      case None => useConfFile(sArgs)
       case _ => new Exception(s"Unrecognized subcommand.\n${sArgs.printHelp()}")
     }
 

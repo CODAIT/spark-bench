@@ -6,7 +6,7 @@ import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
 
 class ArgsParserTest extends UnitSpec {
 
-  "Correct KMeans Datagen Args" should "take arguments that are in a differnt order" in {
+  "Correct KMeans Datagen Args" should "take arguments that are in a different order" in {
     val sArgs = new ScallopArgs(
       Array("generate-data", "kmeans", "-r", "100", "-c", "10", "-o", "/tmp/cool", "--output-format", "csv")
     )

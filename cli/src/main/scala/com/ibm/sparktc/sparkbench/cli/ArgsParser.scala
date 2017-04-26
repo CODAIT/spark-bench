@@ -74,4 +74,7 @@ object ArgsParser {
 		)
 	}
 
+	def parseConfFile(sArgs: ScallopArgs): WorkloadConfigRoot = {
+		null
+	}
 }

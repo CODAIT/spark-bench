@@ -54,7 +54,8 @@ lazy val cli = project
   .settings(
     commonSettings,
     libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= testDeps
+    libraryDependencies ++= testDeps,
+    libraryDependencies ++= typesafe
   )
   .dependsOn(workloads, datageneration, utils)
 
@@ -98,9 +99,13 @@ rmDist := {
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
 
-  val tmpFolder = s"./${name.value}_${version.value}*"
+  val tmpFolder = s"./${name.value}_${version.value}"
+  s"echo Removing $tmpFolder".!
   s"rm -rf $tmpFolder".!
-//  s"rm -rf ./$artifactName".!
+  s"echo Removing $tmpFolder.tgz".!
+  s"""rm -f spark-bench*.tgz""".!
+  s"echo rmDist Complete!".!
+
 }
 
 dist := (dist dependsOn rmDist).value
