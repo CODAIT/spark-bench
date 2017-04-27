@@ -1,7 +1,8 @@
 package com.ibm.sparktc.sparkbench.workload
 
-case class WorkloadConfigRoot (
-//                                dryRun: Boolean,
+import scala.annotation.tailrec
+
+case class RunConfig(
                                 name: String,
                                 runs: Int,
                                 parallel: Boolean,
@@ -14,8 +15,7 @@ case class WorkloadConfigRoot (
   def toMap() = {
     Map(
       "name" -> Seq(name),
-      "runs" -> Seq(runs), // should always be a Sequence of size 1,
-      // just putting it in a sequence for convenience in Cartesian product
+      "runs" -> Seq(runs), // should always be a Sequence of size 1, just putting it in a sequence for convenience in Cartesian product
       "inputDir" -> inputDir,
       "workloadResultsOutputDir" -> Seq(workloadResultsOutputDir),
       "outputDir" -> Seq(outputDir)
@@ -33,7 +33,7 @@ case class WorkloadConfigRoot (
       } yield Seq(i) ++ j
     }
 
-  def split(): Seq[WorkloadConfig] = {
+  def splitToWorkloads(): Seq[WorkloadConfig] = {
     val m = toMap()
     val keys: Seq[String] = m.keys.toSeq
     val valuesSeq: Seq[Seq[Any]] = m.map(_._2).toSeq

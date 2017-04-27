@@ -160,7 +160,7 @@ class WorkloadKickoffTest extends FlatSpec with Matchers with BeforeAndAfterEach
   it should "save results to disk" in {
 
 
-    val confRoot = WorkloadConfigRoot(
+    val confRoot = RunConfig(
       name = "kmeans",
       runs = 1,
       parallel = true,

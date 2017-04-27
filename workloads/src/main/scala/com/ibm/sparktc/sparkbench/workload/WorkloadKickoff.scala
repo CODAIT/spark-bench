@@ -12,13 +12,13 @@ object WorkloadKickoff {
 
   val spark = createSparkContext()
 
-  def apply(conf: WorkloadConfigRoot): Unit = {
-    val splitOutConfigs: Seq[WorkloadConfig] = conf.split()
+  def apply(conf: RunConfig): Unit = {
+    val splitOutConfigs: Seq[WorkloadConfig] = conf.splitToWorkloads()
     val results = run(conf, splitOutConfigs, conf.parallel).coalesce(1)
     writeToDisk(data = results, outputDir = conf.outputDir)
   }
 
-  def run(conf: WorkloadConfigRoot, seq: Seq[WorkloadConfig], parallel: Boolean): DataFrame = {
+  def run(conf: RunConfig, seq: Seq[WorkloadConfig], parallel: Boolean): DataFrame = {
     val dataframes = runWorkloads(conf.runs, seq, parallel)
     joinDataFrames(dataframes)
   }

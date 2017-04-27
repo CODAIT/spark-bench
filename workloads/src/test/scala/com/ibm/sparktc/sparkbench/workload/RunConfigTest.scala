@@ -2,10 +2,10 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
-class WorkloadConfigRootTest  extends FlatSpec with Matchers with BeforeAndAfterEach {
+class RunConfigTest  extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   "WorkloadConfigRoot" should "got into a map cleanly" in {
-    val wcr = WorkloadConfigRoot(
+    val wcr = RunConfig(
       name = "kmeans",
       runs = 1,
       parallel = false,
@@ -30,7 +30,7 @@ class WorkloadConfigRootTest  extends FlatSpec with Matchers with BeforeAndAfter
   }
 
   it should "crossJoin a Seq of Seqs" in {
-    val wcr = WorkloadConfigRoot(
+    val wcr = RunConfig(
       name = "kmeans",
       runs = 1,
       parallel = false,
@@ -54,7 +54,7 @@ class WorkloadConfigRootTest  extends FlatSpec with Matchers with BeforeAndAfter
   }
 
   it should "split into a Seq of WorkloadConfigs with all the combos" in {
-    val wcr = WorkloadConfigRoot(
+    val wcr = RunConfig(
       name = "kmeans",
       runs = 1,
       parallel = false,
@@ -102,7 +102,7 @@ class WorkloadConfigRootTest  extends FlatSpec with Matchers with BeforeAndAfter
       )
     )
 
-    wcr.split() shouldBe that
+    wcr.splitToWorkloads() shouldBe that
   }
 
 }

@@ -47,4 +47,11 @@ class ArgsParserTest extends UnitSpec {
     )
   }
 
+//  "A configuration file" should "get parsed to a RunConfig" in {
+//    val path = getClass.getResource("etc/SimpleUnitTest.conf").getPath
+//    val sArgs = new ScallopArgs(Array(path))
+//
+//    ArgsParser.parseConfFile(sArgs)
+//  }
+
 }

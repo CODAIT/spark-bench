@@ -30,6 +30,11 @@ import scala.util.{Failure, Success, Try}
  * limitations under the License.
  */
 
+//case class KMeansConfig(
+//
+//                       ) extends WorkloadConfig
+
+
 class KMeansWorkload(conf: WorkloadConfig, spark: SparkSession) extends Workload(conf, spark){
 
 

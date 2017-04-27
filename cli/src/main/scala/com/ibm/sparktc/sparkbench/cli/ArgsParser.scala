@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
-import com.ibm.sparktc.sparkbench.workload.WorkloadConfigRoot
+import com.ibm.sparktc.sparkbench.workload.RunConfig
 
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
 
@@ -45,7 +45,7 @@ object ArgsParser {
 		)
   }
 
-  def parseWorkload(sArgs: ScallopArgs): WorkloadConfigRoot = {
+  def parseWorkload(sArgs: ScallopArgs): RunConfig = {
 
 		// Workload ARG PARSING, ONE FOR EACH workload
 		val (name: String, base: WorkloadConfBase, map: Map[String, Seq[Any]]) = sArgs.subcommands match {
@@ -63,7 +63,7 @@ object ArgsParser {
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-    WorkloadConfigRoot(
+    RunConfig(
 			name = name,
 			runs = base.runs,
 			parallel = base.parallel,
@@ -74,7 +74,7 @@ object ArgsParser {
 		)
 	}
 
-	def parseConfFile(sArgs: ScallopArgs): WorkloadConfigRoot = {
-		null
-	}
+//	def parseConfFile(sArgs: ScallopArgs): RunConfig = {
+//
+//	}
 }

@@ -5,8 +5,6 @@ import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
 
 abstract class Workload(conf: WorkloadConfig, spark: SparkSession) {
 
-
-
   /**
     *  Validate that the data set has a correct schema and fix if necessary.
     *  This is to solve issues such as the KMeans load-from-disk pathway returning

@@ -5,7 +5,7 @@ import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 class WorkloadConfigTest extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   "WorkloadConfigs" should "get created from a Map" in {
-    val wcr = WorkloadConfigRoot(
+    val wcr = RunConfig(
       name = "kmeans",
       runs = 1,
       parallel = false,
