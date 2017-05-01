@@ -1,47 +1,21 @@
 package com.ibm.sparktc.sparkbench.workload
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
 
-case class WorkloadConfig (
-                            name: String,
-                            runs: Int,
-                            parallel: Boolean,
-                            inputDir: String,
-                            workloadResultsOutputDir: Option[String],
-                            outputDir: String,
-                            workloadSpecific: Map[String, Any]
-)
-object WorkloadConfig {
+import org.apache.spark.sql.SparkSession
 
-  def fromMap(m: Map[String, Any]): WorkloadConfig = {
+trait WorkloadConfig {
 
-    // it's possible that I could use .getClass to get the names of the
-    // member values of the case class and build this from that, but this is
-    // easiest for now.
-    def commonKeys: Seq[String] = Seq(      
-      "name",
-      "runs",
-      "parallel",
-      "inputdir",
-      "workloadresultsoutputdir",
-      "outputdir"
-    )
+  val name: String
+  val inputDir: Option[String]
+  val workloadResultsOutputDir: Option[String]
 
-    val workloadSpecific: Map[String, Any] = {
-      val otherKeys: Seq[String] = m.keys.toSeq.diff(commonKeys)
-      otherKeys.map( str => str -> m.get(str).get).toMap
-    }
-
-
-
-    WorkloadConfig(
-      getOrDefault(m, "name", ""),
-      getOrDefault(m, "runs", 1),
-      getOrDefault(m, "parallel", false),
-      getOrDefault(m, "inputdir", ""),
-      getOrDefault(m, "workloadresultsoutputdir", None),
-      getOrDefault(m, "outputdir", ""),
-      workloadSpecific
-    )
-  }
+  /**
+    * Throws an exception if a required param is not present
+    * Fills in defaults for missing optional params
+    * Prints configuration for --verbose and --dryRun
+    * Returns an extension of WorkloadConfig
+    * @param map
+    * @return A subtype of WorkloadConfig with appropriate arguments filled in
+    */
+  def fromMap(map: Map[String, Any], spark: SparkSession)
 
 }

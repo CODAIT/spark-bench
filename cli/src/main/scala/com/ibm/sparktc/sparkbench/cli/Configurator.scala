@@ -3,19 +3,23 @@ package com.ibm.sparktc.sparkbench.cli
 import java.util
 import scala.collection.JavaConverters._
 
-import com.ibm.sparktc.sparkbench.workload.RunConfig
+import com.ibm.sparktc.sparkbench.workload.Suite
 import com.typesafe.config.{Config, ConfigFactory, ConfigObject}
 
 
 object Configurator {
-//  def apply(path: String) = {
-//    val config: Config = ConfigFactory.load(path)
-//
+
+  def apply(path: String) = {
+    val config: Config = ConfigFactory.load(path)
+  }
+
+
+    //
 //    val workloadObjs: Iterable[ConfigObject] = config.getObjectList("workloads").asScala
 //
 //    val workloadCfgs: Iterable[Config] = workloadObjs.map(_.toConfig)
 //
-//    workloadCfgs.map(cfg =>{
+//    workloadCfgs.map(cfg => {
 //      val name = cfg.getString("name")
 //      val runs = cfg.getInt("repeat")
 //      val parallel = cfg.getBoolean("parallel")
@@ -26,9 +30,8 @@ object Configurator {
 //
 //      cfg.entrySet().asScala.toSet
 //
-//      RunConfig(
-//        name = name,
-//        runs = runs,
+//      Suite(
+//        repeat = runs,
 //        parallel = parallel,
 //        inputDir = inputDir,
 //        workloadResultsOutputDir = workloadResultsOutputDir,
@@ -39,7 +42,7 @@ object Configurator {
 //
 //
 //
-//      val name = work.
+//      val name =
 //      val runs = 1
 //      val parallel = false
 //      val inputDir = Seq("")
@@ -78,4 +81,28 @@ object Configurator {
 //        workloadSpecific = workloadSpecific
 //      )
 //  }
+
+  def parseSparkContext(config: Config): List[SparkContextConf] = {
+    val sparkContextConfs = getConfigListByName("spark-contexts", config)
+    val suites = getConfigListByName("suites", config).map(parseSuites)
+
+
+    SparkContextConf(
+
+    )
+  }
+
+  private def getConfigListByName(name: String, config: Config): List[Config] = {
+    val workloadObjs: Iterable[ConfigObject] = config.getObjectList("workloads").asScala
+    workloadObjs.map(_.toConfig).toList
+  }
+
+  def parseSuite(config: Config): Suite = {
+
+  }
+
+  def parseWorkload(config: Config): Map[String, Seq[Any]] = {
+    
+  }
+
 }

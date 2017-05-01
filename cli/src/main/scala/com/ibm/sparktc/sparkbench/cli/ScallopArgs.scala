@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.utils.{KMeansDefaults, TimedSleepDefaults}
 import org.rogach.scallop._
 import java.io.File
 
@@ -59,12 +59,19 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
   val workload = new Subcommand("workload") {
 
     // KMEANS
-    val kmeans = new WorkloadArgs("kmeans"){
+    val kmeans = new SuiteArgs("kmeans"){
       val k = opt[List[Int]](short = 'k', default = Some(List(KMeansDefaults.NUM_OF_CLUSTERS)))
       val maxIterations = opt[List[Int]](short = 'm', default = Some(List(KMeansDefaults.MAX_ITERATION)))
       val seed = opt[List[Long]](short = 's', default = Some(List(KMeansDefaults.SEED)))
     }
     addSubcommand(kmeans)
+
+    // TIMED SLEEP
+    val timedsleep = new SuiteArgs("timedsleep"){
+      val partitions = opt[List[Int]](short = 'p', default = Some(List(TimedSleepDefaults.PARTITIONS)), descr = "how many partitions to spawn")
+      val sleepMS = opt[List[Long]](short = 's', default = Some(List(TimedSleepDefaults.SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
+    }
+    addSubcommand(timedsleep)
   }
 
   addSubcommand(workload)

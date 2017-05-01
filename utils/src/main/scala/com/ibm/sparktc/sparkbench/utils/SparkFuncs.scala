@@ -1,12 +1,17 @@
 package com.ibm.sparktc.sparkbench.utils
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import java.net.URI
+import org.apache.hadoop.fs.FileSystem
+import org.apache.hadoop.fs.Path
 
 object SparkFuncs {
 
   // TODO what if output file is already there or if input file doesn't exist
 
-  def writeToDisk(outputDir: String, data: DataFrame, fileFormat: Option[String] = None): Unit = {
+  def writeToDisk(outputDir: String, data: DataFrame, fileFormat: Option[String] = None, spark: SparkSession): Unit = {
+
+    verifyPathExistsOrThrow(outputDir, s"Error: $outputDir already exists!", spark)
 
     val format = fileFormat match {
       case None => outputDir.split('.').last
@@ -23,6 +28,8 @@ object SparkFuncs {
 
   def load(spark: SparkSession, inputDir: String, fileFormat: Option[String] = None): DataFrame = {
 
+    verifyPathExistsOrThrow(inputDir, s"Error: $inputDir does not exist!", spark)
+
     val inputFormat = fileFormat match {
       case None => inputDir.split('.').last
       case Some(s) => s
@@ -32,6 +39,20 @@ object SparkFuncs {
       case "parquet" => spark.read.parquet(inputDir)
       case "csv" | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
     }
+  }
+
+  def verifyPathExistsOrThrow(path: String, errorMessage: String, spark: SparkSession): String = {
+    val conf = spark.sparkContext.hadoopConfiguration
+    val fs = org.apache.hadoop.fs.FileSystem.get(conf)
+    if (fs.exists(new org.apache.hadoop.fs.Path(path))) { path } // "It is true that this file exists"
+    else { throw SparkBenchException(errorMessage) }
+  }
+
+  def verifyPathNotExistsOrThrow(path: String, errorMessage: String, spark: SparkSession): String = {
+    val conf = spark.sparkContext.hadoopConfiguration
+    val fs = org.apache.hadoop.fs.FileSystem.get(conf)
+    if ( ! fs.exists(new org.apache.hadoop.fs.Path(path))) { path } // "It is true that this file does not exist"
+    else { throw SparkBenchException(errorMessage) }
   }
 
 }

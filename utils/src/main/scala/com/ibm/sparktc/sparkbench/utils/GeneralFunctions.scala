@@ -1,5 +1,6 @@
 package com.ibm.sparktc.sparkbench.utils
 
+
 object GeneralFunctions {
 
   def getOrDefault[A](map: Map[String, Any], name: String, default: A): A = map.get(name) match {
@@ -21,5 +22,24 @@ object GeneralFunctions {
         f.setAccessible(true)
         a + (f.getName -> f.get(cc))
     }
+
+  def verifyOrThrow[A](
+                        m: Map[String, Any],
+                        key: String,
+                        whatItShouldBe: A,
+                        errorMessage: String): A = m.get(key) match {
+    case None => throw SparkBenchException(s"Required key not found: $key")
+    case Some(`whatItShouldBe`) => whatItShouldBe.asInstanceOf[A]
+    case _ => throw SparkBenchException(errorMessage)
+  }
+
+  def getOrThrow[A](opt: Option[A]): A = opt match {
+    case Some(x) => x
+    case _ => throw SparkBenchException("Error: empty option")
+  }
+
+  def getOrThrow(m: Map[String, Any], key: String): Any = getOrThrow(m.get(key))
+
+
 
 }

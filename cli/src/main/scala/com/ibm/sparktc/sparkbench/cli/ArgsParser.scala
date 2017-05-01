@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
-import com.ibm.sparktc.sparkbench.workload.RunConfig
+import com.ibm.sparktc.sparkbench.workload.Suite
 
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
 
@@ -16,14 +16,17 @@ object ArgsParser {
     }
   */
 
-	def parseDataGen(sArgs: ScallopArgs): DataGenerationConf = {
+	def parseDataGen(sArgs: ScallopArgs): Map[String, Seq[Any]] = {
 
 		// DATA GENERATION ARG PARSING, ONE FOR EACH GENERATOR
-		val (name, base, map) = sArgs.subcommands match {
+		val m: Map[String, Seq[Any]] = sArgs.subcommands match {
 			// KMEANS
-			case List(sArgs.datagen, sArgs.datagen.kmeans) => (
-				"kmeans",
-				sArgs.datagen.kmeans.parseDataGeneratorArgs(),
+			case List(sArgs.datagen, sArgs.datagen.kmeans) =>
+				"name" -> Seq(kmeans"),
+				numRows.apply(),
+				numCols.apply(),
+				outputDir.apply(),
+				outputFormat.toOption,
 				Map(
 					"k"	-> sArgs.datagen.kmeans.k.apply(),
 					"scaling" -> sArgs.datagen.kmeans.scaling.apply(),
@@ -32,45 +35,38 @@ object ArgsParser {
 			)
 			// OTHER
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
-		}
 
-		// OUTPUT COLLECTED ARGUMENTS
-		DataGenerationConf(
-			name,
-			base.numRows,
-			base.numCols,
-			outputDir = base.outputDir,
-			outputFormat = base.outputFormat,
-			map
-		)
+		m
   }
 
-  def parseWorkload(sArgs: ScallopArgs): RunConfig = {
+  def parseWorkload(sArgs: ScallopArgs): Map[String, Seq[Any]] = {
 
 		// Workload ARG PARSING, ONE FOR EACH workload
-		val (name: String, base: WorkloadConfBase, map: Map[String, Seq[Any]]) = sArgs.subcommands match {
+		val stuff = sArgs.subcommands match {
 			// KMEANS
-			case List(sArgs.workload, sArgs.workload.kmeans) => (
-				"kmeans",
-				sArgs.workload.kmeans.parseWorkloadArgs(),
-				Map(
+			case List(sArgs.workload, sArgs.workload.kmeans) => Map (
+					"name" -> "kmeans",
 					"k"	-> sArgs.workload.kmeans.k.apply(),
 					"maxIterations" -> sArgs.workload.kmeans.maxIterations.apply(),
 					"seed" -> sArgs.workload.kmeans.seed.apply()
 				)
-			)
+			// TIMED SLEEP
+			case List(sArgs.workload, sArgs.workload.timedsleep) => Map (
+					"name" -> "kmeans",
+					"partitions"	-> sArgs.workload.timedsleep.partitions.apply(),
+					"sleepms" -> sArgs.workload.timedsleep.sleepMS.apply()
+				)
 			// OTHER
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-    RunConfig(
+    Suite(
 			name = name,
 			runs = base.runs,
 			parallel = base.parallel,
 			inputDir = base.inputDir,
-			workloadResultsOutputDir = base.workloadResultsOutputDir,
 			outputDir = base.outputDir,
-			workloadSpecific = map
+
 		)
 	}
 

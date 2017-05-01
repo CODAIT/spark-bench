@@ -23,6 +23,8 @@ object LinearRegressionDefaults {
 //  val SPARK_STORAGE_MEMORYFRACTION = 0.5
 }
 
-object SomeOtherDefaults{
+object TimedSleepDefaults {
+  val PARTITIONS: Int = 48
+  val SLEEPMS: Long = 12000L
 
 }

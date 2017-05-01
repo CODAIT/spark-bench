@@ -2,6 +2,7 @@ package com.ibm.sparktc.sparkbench.workload
 
 import com.ibm.sparktc.sparkbench.workload.mlworkloads.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+import com.ibm.sparktc.sparkbench.workload.exercise.{TimedSleepWorkload, TimedSleepWorkloadConf}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions.lit
 
@@ -12,31 +13,42 @@ object WorkloadKickoff {
 
   val spark = createSparkContext()
 
-  def apply(conf: RunConfig): Unit = {
-    val splitOutConfigs: Seq[WorkloadConfig] = conf.splitToWorkloads()
-    val results = run(conf, splitOutConfigs, conf.parallel).coalesce(1)
-    writeToDisk(data = results, outputDir = conf.outputDir)
+  def apply(confsFromArgs: Seq[Map[String, Seq[Any]]],
+            description: String,
+            repeat: Int,
+            parallel: Boolean,
+            benchmarkOutput: String): Unit = {
+
+    val suite: Suite = Suite (
+      description,
+      repeat,
+      parallel,
+      benchmarkOutput,
+      confsFromArgs
+    )
+
+//    val splitOutConfigs: Seq[WorkloadConfig] = conf.splitToWorkloads()
+//    val results = run(conf, splitOutConfigs, conf.parallel).coalesce(1)
+//    writeToDisk(data = results, outputDir = conf.outputDir, spark)
   }
 
-  def run(conf: RunConfig, seq: Seq[WorkloadConfig], parallel: Boolean): DataFrame = {
-    val dataframes = runWorkloads(conf.runs, seq, parallel)
-    joinDataFrames(dataframes)
-  }
+  def run(s: Suite): DataFrame = {
+    val confs = s.workloadConfigs.map(ConfigCreator.mapToConf(_, spark))
 
-  // Separating this function for ease of testing
-  def runWorkloads(runs: Int, seq: Seq[WorkloadConfig], parallel: Boolean): Seq[DataFrame] = {
-    (0 until runs).flatMap { i =>
-      val dfSeqFromOneRun = {
-        if (parallel) {
-          val confSeqPar = seq.par
-          confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(seq.size))
-          val stuff: ParSeq[DataFrame] = confSeqPar.flatMap(kickoff)
-          stuff.seq
+    val dataframes: Seq[DataFrame] = { (0 until s.repeat).flatMap { i =>
+        val dfSeqFromOneRun: Seq[DataFrame] = {
+          if (s.parallel) {
+            val confSeqPar = confs.par
+            confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(confSeqPar.size))
+            val stuff: ParSeq[DataFrame] = confSeqPar.flatMap(kickoff)
+            stuff.seq
+          }
+          else confs.flatMap(kickoff)
         }
-        else seq.flatMap(kickoff)
+        dfSeqFromOneRun.map(_.withColumn("run", lit(i)))
       }
-      dfSeqFromOneRun.map(_.withColumn("run", lit(i)))
     }
+    joinDataFrames(dataframes)
   }
 
 
@@ -48,10 +60,10 @@ object WorkloadKickoff {
   }
 
   def kickoff(conf: WorkloadConfig): Option[DataFrame] = {
-    println(s"\t\t\t\t\t\t\t\tTHIS IS THE CONFIG I'M WORKING ON NOW:\n\t\t\t\t\t\t\t\t\t$conf")
-    conf.name.toLowerCase match {
-      case "kmeans" => Success(new KMeansWorkload(conf, spark).run()).toOption
-      case _ => Failure(throw new Exception(s"Unrecognized workload name: ${conf.name}")).toOption
+    conf match {
+//      case "kmeans" => Success(new KMeansWorkload(conf, spark).run()).toOption
+      case _: TimedSleepWorkloadConf => Success(new TimedSleepWorkload(conf.asInstanceOf[TimedSleepWorkloadConf], spark).run()).toOption
+      case _ => Failure(throw new Exception(s"Unrecognized or unimplemented workload")).toOption
     }
   }
 

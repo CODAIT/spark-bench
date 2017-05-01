@@ -5,7 +5,7 @@ import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 class RunConfigTest  extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   "WorkloadConfigRoot" should "got into a map cleanly" in {
-    val wcr = RunConfig(
+    val wcr = Suite(
       name = "kmeans",
       runs = 1,
       parallel = false,
@@ -30,7 +30,7 @@ class RunConfigTest  extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   it should "crossJoin a Seq of Seqs" in {
-    val wcr = RunConfig(
+    val wcr = Suite(
       name = "kmeans",
       runs = 1,
       parallel = false,
@@ -54,7 +54,7 @@ class RunConfigTest  extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   it should "split into a Seq of WorkloadConfigs with all the combos" in {
-    val wcr = RunConfig(
+    val wcr = Suite(
       name = "kmeans",
       runs = 1,
       parallel = false,
