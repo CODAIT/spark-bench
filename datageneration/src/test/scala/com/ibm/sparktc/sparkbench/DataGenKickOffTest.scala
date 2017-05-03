@@ -13,6 +13,7 @@ class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach 
 
   override def beforeEach() {
     file = new File(filename)
+    Utils.deleteRecursively(file)
   }
 
   override def afterEach() {

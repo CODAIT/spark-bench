@@ -7,7 +7,8 @@ import scala.collection.JavaConverters._
 class ConfiguratorTest extends UnitSpec {
 
   "Configurator" should "test of importing a list in a generic way" in {
-    val path = getClass.getResource("etc/ListTest.conf").getPath
+    val resource = getClass.getResource("/etc/ListTest.conf")
+      val path = resource.getPath
     val conf = ConfigFactory.load(path)
 
     val stuff: Set[java.util.Map.Entry[String, ConfigValue]] = conf.entrySet().asScala.toSet
@@ -17,5 +18,4 @@ class ConfiguratorTest extends UnitSpec {
 
     val vt = test.valueType()
   }
-
 }

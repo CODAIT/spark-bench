@@ -11,7 +11,7 @@ object SparkFuncs {
 
   def writeToDisk(outputDir: String, data: DataFrame, fileFormat: Option[String] = None, spark: SparkSession): Unit = {
 
-    verifyPathExistsOrThrow(outputDir, s"Error: $outputDir already exists!", spark)
+    verifyPathNotExistsOrThrow(outputDir, s"Error: $outputDir already exists!", spark)
 
     val format = fileFormat match {
       case None => outputDir.split('.').last
