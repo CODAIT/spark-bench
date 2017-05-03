@@ -8,34 +8,23 @@ import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType
 
 case class TimedSleepWorkloadConf(
                                    name: String,
-                                   inputDir: Option[String],
-                                   workloadResultsOutputDir: Option[String],
+                                   inputDir: Option[String] = None,
+                                   workloadResultsOutputDir: Option[String] = None,
                                    partitions: Int,
                                    sleepMS: Long
                                  ) extends WorkloadConfig {
 
-  def apply(m: Map[String, Any], spark: SparkSession): TimedSleepWorkloadConf = {
-    val tswc: TimedSleepWorkloadConf = fromMap(m, spark)
-    tswc
-  }
-
-  override def fromMap(m: Map[String, Any], spark: SparkSession): TimedSleepWorkloadConf = {
-    val name = verifyOrThrow(m, "name", "timedsleep", s"Required field name does not match")
-    val inputDir = None
-    val workloadResultsOutputDir = None
-    val partitions = getOrDefault(m, "partitions", TimedSleepDefaults.PARTITIONS)
-    val sleepMS = getOrDefault(m, "sleepms", TimedSleepDefaults.SLEEPMS)
-
-    TimedSleepWorkloadConf(
-      name,
-      inputDir,
-      workloadResultsOutputDir,
-      partitions,
-      sleepMS
+  def this(m: Map[String, Any], spark: SparkSession) = {
+    this(
+      verifyOrThrow(m, "name", "timedsleep", s"Required field name does not match"),
+      None,
+      None,
+      getOrDefault(m, "partitions", TimedSleepDefaults.PARTITIONS),
+      getOrDefault(m, "sleepms", TimedSleepDefaults.SLEEPMS)
     )
   }
-}
 
+}
 
 class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) extends Workload[TimedSleepWorkloadConf](conf, spark) {
 

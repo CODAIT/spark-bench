@@ -17,7 +17,7 @@ abstract class DataGenerator(conf: DataGenerationConf, spark: SparkSession) {
 
   def run(): Unit = {
     val data = generateData(spark)
-    writeToDisk(conf.outputDir, data, conf.outputFormat)
+    writeToDisk(conf.outputDir, data, conf.outputFormat, spark = spark)
   }
 
 }

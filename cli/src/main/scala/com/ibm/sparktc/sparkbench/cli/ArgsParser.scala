@@ -1,48 +1,38 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.workload.Suite
-
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
-
 
 object ArgsParser {
 
-
-	/*
-    Conf.subcommands match {
-      case List(Conf.sub1, Conf.sub1.sub1a) => something1()
-      case List(Conf.sub1, Conf.sub1.sub1b) => something2()
-    }
-  */
-
-	def parseDataGen(sArgs: ScallopArgs): Map[String, Seq[Any]] = {
+	def parseDataGen(sArgs: ScallopArgs): Map[String, Any] = {
 
 		// DATA GENERATION ARG PARSING, ONE FOR EACH GENERATOR
-		val m: Map[String, Seq[Any]] = sArgs.subcommands match {
+		val m: Map[String, Any] = sArgs.subcommands match {
 			// KMEANS
-			case List(sArgs.datagen, sArgs.datagen.kmeans) =>
-				"name" -> Seq(kmeans"),
-				numRows.apply(),
-				numCols.apply(),
-				outputDir.apply(),
-				outputFormat.toOption,
-				Map(
-					"k"	-> sArgs.datagen.kmeans.k.apply(),
-					"scaling" -> sArgs.datagen.kmeans.scaling.apply(),
-					"partitions" -> sArgs.datagen.kmeans.partitions.apply()
-				)
+			case List(sArgs.datagen, sArgs.datagen.kmeans) => Map(
+				"name" -> "kmeans",
+				"numrows" -> sArgs.datagen.kmeans.numRows.apply(),
+				"numcols" -> sArgs.datagen.kmeans.numCols.apply(),
+				"outputdir" -> sArgs.datagen.kmeans.outputDir.apply(),
+				"outputformat" -> sArgs.datagen.kmeans.outputFormat.toOption,
+				"k" -> sArgs.datagen.kmeans.k.apply(),
+				"scaling" -> sArgs.datagen.kmeans.scaling.apply(),
+				"partitions" -> sArgs.datagen.kmeans.partitions.apply()
 			)
 			// OTHER
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
+		}
 
 		m
-  }
+	}
 
-  def parseWorkload(sArgs: ScallopArgs): Map[String, Seq[Any]] = {
+  def parseWorkload(sArgs: ScallopArgs): Suite = {
+		val subcommand: SuiteArgs = sArgs.workload.subcommand.get.asInstanceOf[SuiteArgs]
+//		val parseWorkloadSpecificArgs = subcommand.parseWorkloadArgs()
 
 		// Workload ARG PARSING, ONE FOR EACH workload
-		val stuff = sArgs.subcommands match {
+		val workloadArgs: Map[String, Seq[Any]] = sArgs.subcommands match {
 			// KMEANS
 			case List(sArgs.workload, sArgs.workload.kmeans) => Map (
 					"name" -> "kmeans",
@@ -60,14 +50,7 @@ object ArgsParser {
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-    Suite(
-			name = name,
-			runs = base.runs,
-			parallel = base.parallel,
-			inputDir = base.inputDir,
-			outputDir = base.outputDir,
-
-		)
+		subcommand.parseWorkloadArgs()(workloadArgs)
 	}
 
 //	def parseConfFile(sArgs: ScallopArgs): RunConfig = {

@@ -1,20 +1,20 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.datageneration.DataGenerationKickoff
-import com.ibm.sparktc.sparkbench.workload.WorkloadKickoff
+import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerationKickoff}
+import com.ibm.sparktc.sparkbench.workload.SuiteKickoff
 
 object CLIKickoff extends App {
 
   def startWorkload(scallopArgs: ScallopArgs): Unit = {
-    val conf = ArgsParser.parseWorkload(scallopArgs)
+    val suite = ArgsParser.parseWorkload(scallopArgs)
     println("OMFG I'M RUNNING A WORKLOAD")
-    WorkloadKickoff(conf)
+    SuiteKickoff.run(suite)
   }
 
   def startDataGen(scallopArgs: ScallopArgs): Unit = {
-    val conf = ArgsParser.parseDataGen(scallopArgs)
+    val conf: Map[String, Any] = ArgsParser.parseDataGen(scallopArgs)
     println("OMFG I'M TOTES GENERATING DATA")
-    DataGenerationKickoff(conf)
+    DataGenerationKickoff(DataGenerationConf(conf))
   }
 
   def useConfFile(sArgs: ScallopArgs): Unit = {

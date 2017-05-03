@@ -9,12 +9,12 @@ import org.apache.spark.sql.functions.lit
 import scala.collection.parallel.{ForkJoinTaskSupport, ParSeq}
 import scala.util.{Failure, Success}
 
-object WorkloadKickoff {
+object SuiteKickoff {
 
   val spark = createSparkContext()
 
   def apply(confsFromArgs: Seq[Map[String, Seq[Any]]],
-            description: String,
+            description: Option[String],
             repeat: Int,
             parallel: Boolean,
             benchmarkOutput: String): Unit = {
@@ -27,23 +27,20 @@ object WorkloadKickoff {
       confsFromArgs
     )
 
-//    val splitOutConfigs: Seq[WorkloadConfig] = conf.splitToWorkloads()
-//    val results = run(conf, splitOutConfigs, conf.parallel).coalesce(1)
-//    writeToDisk(data = results, outputDir = conf.outputDir, spark)
   }
 
   def run(s: Suite): DataFrame = {
-    val confs = s.workloadConfigs.map(ConfigCreator.mapToConf(_, spark))
+    val workloadConfigs = s.workloadConfigs.map(ConfigCreator.mapToConf(_, spark))
 
     val dataframes: Seq[DataFrame] = { (0 until s.repeat).flatMap { i =>
         val dfSeqFromOneRun: Seq[DataFrame] = {
           if (s.parallel) {
-            val confSeqPar = confs.par
+            val confSeqPar = workloadConfigs.par
             confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(confSeqPar.size))
             val stuff: ParSeq[DataFrame] = confSeqPar.flatMap(kickoff)
             stuff.seq
           }
-          else confs.flatMap(kickoff)
+          else workloadConfigs.flatMap(kickoff)
         }
         dfSeqFromOneRun.map(_.withColumn("run", lit(i)))
       }
