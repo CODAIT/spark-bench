@@ -1,15 +1,14 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerationKickoff}
-import com.ibm.sparktc.sparkbench.workload.SuiteKickoff
+import com.ibm.sparktc.sparkbench.workload.{SparkContextConf, SparkContextKickoff, SuiteKickoff}
 
 object CLIKickoff extends App {
 
   def startWorkload(scallopArgs: ScallopArgs): Unit = {
-    val suite = ArgsParser.parseWorkload(scallopArgs)
+    val sparkContextConfs: SparkContextConf = ArgsParser.parseWorkload(scallopArgs)
     println("OMFG I'M RUNNING A WORKLOAD")
-    SuiteKickoff.run(suite)
-  }
+    SparkContextKickoff.run(Seq(sparkContextConfs))  }
 
   def startDataGen(scallopArgs: ScallopArgs): Unit = {
     val conf: Map[String, Any] = ArgsParser.parseDataGen(scallopArgs)
@@ -19,11 +18,9 @@ object CLIKickoff extends App {
 
   def useConfFile(sArgs: ScallopArgs): Unit = {
     println(sArgs.confFile.apply())
-    val suites = ArgsParser.parseConfFile(sArgs)//todo eventually this will return List[SparkContextConf] with List[Suite] inside each
+    val sparkContextConfs = ArgsParser.parseConfFile(sArgs)
     // We do want this to be serial so that one suite finishes entirely and the next suite starts.
-    for (i <- suites.indices) {
-      SuiteKickoff.run(suites(i))
-    }
+      SparkContextKickoff.run(sparkContextConfs)
   }
 
   override def main(args: Array[String]): Unit = {

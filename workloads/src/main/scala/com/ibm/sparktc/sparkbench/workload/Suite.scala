@@ -11,7 +11,7 @@ case class Suite(
 
 object Suite {
 
-  def apply(confsFromArgs: Seq[Map[String, Seq[Any]]],
+  def build(confsFromArgs: Seq[Map[String, Seq[Any]]],
             description: Option[String],
             repeat: Int,
             parallel: Boolean,

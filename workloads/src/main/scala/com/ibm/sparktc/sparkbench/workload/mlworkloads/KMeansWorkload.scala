@@ -38,8 +38,8 @@ case class KMeansWorkloadConfig(
 
   def this(m: Map[String, Any], spark: SparkSession) = {
     this(
-        name = verifyOrThrow(m, "name", "timedsleep", s"Required field name does not match"),
-        inputDir = getOrThrow(m, "inputdir").asInstanceOf[Option[String]],
+        name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
+        inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
         workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
         k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
         seed = getOrDefault(m, "seed", KMeansDefaults.SEED),

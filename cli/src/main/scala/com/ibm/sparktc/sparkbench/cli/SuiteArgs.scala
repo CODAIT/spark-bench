@@ -31,7 +31,7 @@ class SuiteArgs(name: String) extends Subcommand(name) {
       "workloadresultsoutputdir" -> Seq(workloadResultsOutputDir.toOption)
     ) ++ workloadArgLists
 
-    Suite(
+    Suite.build(
       Seq(workloadSpecificArgs),
       description.toOption,
       runs.apply(),

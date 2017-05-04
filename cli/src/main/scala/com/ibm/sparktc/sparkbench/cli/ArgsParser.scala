@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
 
-import com.ibm.sparktc.sparkbench.workload.Suite
+import com.ibm.sparktc.sparkbench.workload.{SparkContextConf, Suite}
 
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
 
@@ -30,9 +30,10 @@ object ArgsParser {
 		m
 	}
 
-  def parseWorkload(sArgs: ScallopArgs): Suite = {
+  def parseWorkload(sArgs: ScallopArgs): SparkContextConf = {
 		val subcommand: SuiteArgs = sArgs.workload.subcommand.get.asInstanceOf[SuiteArgs]
 //		val parseWorkloadSpecificArgs = subcommand.parseWorkloadArgs()
+		val master = sys.env.getOrElse("SPARK_MASTER_HOST", "")
 
 		// Workload ARG PARSING, ONE FOR EACH workload
 		val workloadArgs: Map[String, Seq[Any]] = sArgs.subcommands match {
@@ -53,10 +54,15 @@ object ArgsParser {
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-		subcommand.parseWorkloadArgs()(workloadArgs)
+		val suite = subcommand.parseWorkloadArgs()(workloadArgs)
+
+		SparkContextConf(
+			suites = Seq(suite),
+			master = master
+		)
 	}
 
-	def parseConfFile(sArgs: ScallopArgs): Seq[Suite] = {
+	def parseConfFile(sArgs: ScallopArgs): Seq[SparkContextConf] = {
 		val path: File = sArgs.confFile.apply()
 		Configurator(path)
 	}

@@ -3,7 +3,7 @@ package com.ibm.sparktc.sparkbench.cli
 import java.io.File
 
 import scala.collection.JavaConverters._
-import com.ibm.sparktc.sparkbench.workload.Suite
+import com.ibm.sparktc.sparkbench.workload.{SparkContextConf, Suite}
 import com.typesafe.config.{Config, ConfigFactory, ConfigObject, ConfigValue}
 
 import scala.util.Try
@@ -12,17 +12,18 @@ import scala.util.Try
 object Configurator {
 
   // TODO in the future this will return a List[SparkContextConf]
-  def apply(file: File): Seq[Suite] = {
+  def apply(file: File): Seq[SparkContextConf] = {
     val config: Config = ConfigFactory.parseFile(file)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
     val sparkContextConfs = parseSparkContext(sparkBenchConfig)
-    sparkContextConfs.head.suites
+    sparkContextConfs
   }
 
   def parseSparkContext(config: Config): List[SparkContextConf] = {
     val sparkContextConfs = getConfigListByName("spark-contexts", config)
     sparkContextConfs.map( sparkContextConf =>
       SparkContextConf(
+        master = sparkContextConf.getString("master"),
         suites = getConfigListByName("suites", sparkContextConf).map(parseSuite)
       )
     )
@@ -40,16 +41,15 @@ object Configurator {
     val output: String = config.getString("output") // throws exception
     val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(parseWorkload)
 
-    Suite(
+    Suite.build(
+      workloads,
       descr,
       repeat,
       parallel,
-      output,
-      workloads
+      output
     )
   }
 
-  //todo i doubt this is going to work right, i think this is parsing the root instead of the individual blocks
   def parseWorkload(config: Config): Map[String, Seq[Any]] = {
     val cfgObj = config.root()
     val unwrapped = cfgObj.unwrapped().asScala.toMap
