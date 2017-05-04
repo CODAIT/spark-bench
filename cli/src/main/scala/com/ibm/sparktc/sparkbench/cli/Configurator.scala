@@ -1,5 +1,7 @@
 package com.ibm.sparktc.sparkbench.cli
 
+import java.io.File
+
 import scala.collection.JavaConverters._
 import com.ibm.sparktc.sparkbench.workload.Suite
 import com.typesafe.config.{Config, ConfigFactory, ConfigObject, ConfigValue}
@@ -9,8 +11,12 @@ import scala.util.Try
 
 object Configurator {
 
-  def apply(path: String) = {
-    val config: Config = ConfigFactory.load(path)
+  // TODO in the future this will return a List[SparkContextConf]
+  def apply(file: File): Seq[Suite] = {
+    val config: Config = ConfigFactory.parseFile(file)
+    val sparkBenchConfig = config.getObject("spark-bench").toConfig
+    val sparkContextConfs = parseSparkContext(sparkBenchConfig)
+    sparkContextConfs.head.suites
   }
 
   def parseSparkContext(config: Config): List[SparkContextConf] = {
@@ -23,7 +29,7 @@ object Configurator {
   }
 
   private def getConfigListByName(name: String, config: Config): List[Config] = {
-    val workloadObjs: Iterable[ConfigObject] = config.getObjectList("workloads").asScala
+    val workloadObjs: Iterable[ConfigObject] = config.getObjectList(name).asScala
     workloadObjs.map(_.toConfig).toList
   }
 
@@ -32,7 +38,7 @@ object Configurator {
     val parallel: Boolean = Try(config.getBoolean("parallel")).getOrElse(false)
     val repeat: Int = Try(config.getInt("repeat")).getOrElse(1)
     val output: String = config.getString("output") // throws exception
-    val workloads = getConfigListByName("workloads", config).map(parseWorkload).toSeq
+    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(parseWorkload)
 
     Suite(
       descr,
@@ -43,18 +49,15 @@ object Configurator {
     )
   }
 
-  def parseWorkload(config: Config): Map[String, Seq[Any]] = ???
+  //todo i doubt this is going to work right, i think this is parsing the root instead of the individual blocks
+  def parseWorkload(config: Config): Map[String, Seq[Any]] = {
+    val cfgObj = config.root()
+    val unwrapped = cfgObj.unwrapped().asScala.toMap
+    val stuff = unwrapped.map(kv => {
+      kv._1 -> kv._2.asInstanceOf[java.util.ArrayList[Any]].toArray
+    })
 
-//  {
-//    val stuff: Set[java.util.Map.Entry[String, ConfigValue]] = config.entrySet().asScala.toSet
-//    val configValueMap = stuff.map(utilMapEntry => { utilMapEntry.getKey -> utilMapEntry.getValue }).toMap
-//
-//    val test = configValueMap.head._2
-//
-//    val vt = test.valueType()
-//
-//    vt.values()
-//
-//  }
+    stuff.map(kv => {kv._1 -> kv._2.toSeq})
+  }
 
 }

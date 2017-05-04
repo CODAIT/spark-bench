@@ -1,6 +1,9 @@
 package com.ibm.sparktc.sparkbench.cli
 
+import java.io.File
+
 import com.ibm.sparktc.sparkbench.workload.Suite
+
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
 
 object ArgsParser {
@@ -53,7 +56,8 @@ object ArgsParser {
 		subcommand.parseWorkloadArgs()(workloadArgs)
 	}
 
-//	def parseConfFile(sArgs: ScallopArgs): RunConfig = {
-//
-//	}
+	def parseConfFile(sArgs: ScallopArgs): Seq[Suite] = {
+		val path: File = sArgs.confFile.apply()
+		Configurator(path)
+	}
 }

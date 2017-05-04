@@ -1,9 +1,6 @@
 package com.ibm.sparktc.sparkbench.utils
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import java.net.URI
-import org.apache.hadoop.fs.FileSystem
-import org.apache.hadoop.fs.Path
 
 object SparkFuncs {
 

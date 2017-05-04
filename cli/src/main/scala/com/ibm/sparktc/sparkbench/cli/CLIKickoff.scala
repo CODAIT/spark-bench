@@ -19,6 +19,11 @@ object CLIKickoff extends App {
 
   def useConfFile(sArgs: ScallopArgs): Unit = {
     println(sArgs.confFile.apply())
+    val suites = ArgsParser.parseConfFile(sArgs)//todo eventually this will return List[SparkContextConf] with List[Suite] inside each
+    // We do want this to be serial so that one suite finishes entirely and the next suite starts.
+    for (i <- suites.indices) {
+      SuiteKickoff.run(suites(i))
+    }
   }
 
   override def main(args: Array[String]): Unit = {
@@ -31,6 +36,5 @@ object CLIKickoff extends App {
       case None => useConfFile(sArgs)
       case _ => new Exception(s"Unrecognized subcommand.\n${sArgs.printHelp()}")
     }
-
   }
 }
