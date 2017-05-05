@@ -1,18 +1,21 @@
 package com.ibm.sparktc.sparkbench
 
 import java.io.File
-import com.holdenkarau.spark.testing.DataFrameSuiteBase
-import com.holdenkarau.spark.testing.Utils
+
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.cli.CLIKickoff
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
-import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
-class ConfigFileTest extends UnitSpec with DataFrameSuiteBase {
+class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with DataFrameSuiteBase {
 
   val inputFile = "/tmp/whatever.parquet"
 
   override def beforeAll(): Unit = {
+    super.beforeAll()
+
     val conf = DataGenerationConf(
       generatorName = "kmeans",
       numRows = 100,
@@ -22,6 +25,10 @@ class ConfigFileTest extends UnitSpec with DataFrameSuiteBase {
       generatorSpecific = Map[String, Any]()
     )
     val kMeansDataGen = new KMeansDataGen(conf, spark)
+
+    val df = kMeansDataGen.generateData(spark)
+
+    writeToDisk(conf.outputDir, df, None, spark)
   }
 
   override def afterAll(): Unit = {
@@ -34,4 +41,6 @@ class ConfigFileTest extends UnitSpec with DataFrameSuiteBase {
     val path = resource.getPath
     CLIKickoff.main(Array(path))
   }
+
+
 }
