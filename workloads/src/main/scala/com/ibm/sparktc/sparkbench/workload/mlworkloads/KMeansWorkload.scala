@@ -9,7 +9,7 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, time, verifyOrThrow, getOrThrow}
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -42,7 +42,7 @@ case class KMeansWorkloadConfig(
         inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
         workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
         k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
-        seed = getOrDefault(m, "seed", KMeansDefaults.SEED),
+        seed = getOrDefault(m, "seed", KMeansDefaults.SEED, Some(any2Int2Long)),
         maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION)
       )
   }

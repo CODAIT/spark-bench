@@ -16,6 +16,8 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with 
   override def beforeAll(): Unit = {
     super.beforeAll()
 
+    Utils.deleteRecursively(new File(inputFile))
+
     val conf = DataGenerationConf(
       generatorName = "kmeans",
       numRows = 100,

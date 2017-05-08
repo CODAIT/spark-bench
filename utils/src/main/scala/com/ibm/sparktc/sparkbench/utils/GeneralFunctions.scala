@@ -3,10 +3,24 @@ package com.ibm.sparktc.sparkbench.utils
 
 object GeneralFunctions {
 
-  def getOrDefault[A](map: Map[String, Any], name: String, default: A): A = map.get(name) match {
-    case Some(x) => x.asInstanceOf[A]
-    case None => default
+  val any2Int2Long = (a: Any) => {
+    val x = a.asInstanceOf[Int]
+    x.toLong
   }
+
+  def getOrDefault[A](
+                       map: Map[String, Any],
+                       name: String, default: A,
+                       optFunc: Option[(Any) => A] = None
+                     ): A =
+    (map.get(name), optFunc) match {
+      case (Some(a), Some(f)) => f(a)
+      case (Some(x), None) => x.asInstanceOf[A]
+      case (_, _) => default
+    }
+
+
+
 
   def time[R](block: => R): (Long, R) = {
     val t0 = System.nanoTime()
