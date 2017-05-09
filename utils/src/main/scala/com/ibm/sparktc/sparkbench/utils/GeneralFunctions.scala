@@ -1,5 +1,7 @@
 package com.ibm.sparktc.sparkbench.utils
 
+import java.io.StringWriter
+
 
 object GeneralFunctions {
 
@@ -54,6 +56,13 @@ object GeneralFunctions {
 
   def getOrThrow(m: Map[String, Any], key: String): Any = getOrThrow(m.get(key))
 
+  def stringifyStackTrace(e: Throwable): String = {
+    import java.io.PrintWriter
+    val sw = new StringWriter()
+    val pw = new PrintWriter(sw)
+    e.printStackTrace(pw)
+    sw.toString
+  }
 
 
 }

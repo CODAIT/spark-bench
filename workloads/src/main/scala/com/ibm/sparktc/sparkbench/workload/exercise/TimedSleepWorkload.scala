@@ -41,8 +41,8 @@ class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) ext
 
     val yeah = cool.reduceByKey(_ + _)
 
-    val uhhuh = yeah.collect()
-    uhhuh.foreach(println)
+    yeah.collect()
+//    uhhuh.foreach(println)
   }
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
@@ -59,7 +59,7 @@ class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) ext
 
 
     val timeList = spark.sparkContext.parallelize(Seq(Row("timedsleep", System.currentTimeMillis(), t)))
-    println(timeList.first())
+//    println(timeList.first())
 
     spark.createDataFrame(timeList, schema)
   }

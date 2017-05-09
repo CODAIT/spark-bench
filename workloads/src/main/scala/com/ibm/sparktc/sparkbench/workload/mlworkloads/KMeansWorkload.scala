@@ -74,7 +74,7 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
     )
 
     val timeList = spark.sparkContext.parallelize(Seq(Row("kmeans", System.currentTimeMillis(), loadtime, trainTime, testTime, saveTime)))
-    println(timeList.first())
+    //println(timeList.first())
 
     spark.createDataFrame(timeList, schema)
   }

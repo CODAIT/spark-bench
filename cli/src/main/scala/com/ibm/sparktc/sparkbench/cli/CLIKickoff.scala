@@ -7,17 +7,17 @@ object CLIKickoff extends App {
 
   def startWorkload(scallopArgs: ScallopArgs): Unit = {
     val sparkContextConfs: SparkContextConf = ArgsParser.parseWorkload(scallopArgs)
-    println("OMFG I'M RUNNING A WORKLOAD")
+    //println("OMFG I'M RUNNING A WORKLOAD")
     SparkContextKickoff.run(Seq(sparkContextConfs))  }
 
   def startDataGen(scallopArgs: ScallopArgs): Unit = {
     val conf: Map[String, Any] = ArgsParser.parseDataGen(scallopArgs)
-    println("OMFG I'M TOTES GENERATING DATA")
+    //println("OMFG I'M TOTES GENERATING DATA")
     DataGenerationKickoff(DataGenerationConf(conf))
   }
 
   def useConfFile(sArgs: ScallopArgs): Unit = {
-    println(sArgs.confFile.apply())
+    //println(sArgs.confFile.apply())
     val sparkContextConfs = ArgsParser.parseConfFile(sArgs)
     // We do want this to be serial so that one suite finishes entirely and the next suite starts.
       SparkContextKickoff.run(sparkContextConfs)

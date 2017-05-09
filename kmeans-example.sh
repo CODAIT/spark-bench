@@ -13,9 +13,9 @@ rm -rf /tmp/spark-bench-demo/test-results5.csv
 # Generate data
 # --------------
 
-./bin/spark-bench.sh generate-data kmeans -r 5 -c 5 -o /tmp/spark-bench-demo/kmeans-dataset-1 --output-format csv
+bin/spark-bench.sh generate-data kmeans -r 5 -c 5 -o /tmp/spark-bench-demo/kmeans-dataset-1 --output-format csv
 #
-./bin/spark-bench.sh generate-data kmeans -r 3000 -c 200 -o /tmp/spark-bench-demo/kmeans-dataset-2 --output-format csv -k 20
+bin/spark-bench.sh generate-data kmeans -r 3000 -c 200 -o /tmp/spark-bench-demo/kmeans-dataset-2 --output-format csv -k 20
 
 
 

@@ -10,14 +10,16 @@ object SparkFuncs {
 
     verifyPathNotExistsOrThrow(outputDir, s"Error: $outputDir already exists!", spark)
 
-    val format = fileFormat match {
-      case None => outputDir.split('.').last
-      case Some(s) => s
+    val format = (outputDir, fileFormat) match {
+      case ("console", None) => "console"
+      case (_, None)         => outputDir.split('.').last
+      case (_, Some(s))      => s
     }
 
     format match {
       case "parquet" => data.write.parquet(outputDir)
       case "csv" => data.write.option("header", "true").csv(outputDir)
+      case "console" => data.show()
       case _ => throw new Exception(s"Unrecognized or unspecified save format. " +
         s"Please check the file extension or add a file format to your arguments: $outputDir")
     }
