@@ -1,6 +1,6 @@
 branches:
   except:
-    - /^v[0-9]/
+  - "/^v[0-9]/"
 language: scala
 scala:
 - 2.11.8
@@ -8,10 +8,10 @@ jdk:
 - oraclejdk8
 sudo: false
 sbt_args:
-- -Xmx1536M
-- -XX:+UseConcMarkSweepGC
-- -XX:+CMSClassUnloadingEnabled
-- -Xss2M
+- "-Xmx1536M"
+- "-XX:+UseConcMarkSweepGC"
+- "-XX:+CMSClassUnloadingEnabled"
+- "-Xss2M"
 script:
 - sbt clean coverage test coverageReport
 after_success:
@@ -22,21 +22,20 @@ notifications:
     recipients:
     - ecurtin@us.ibm.com
 before_deploy:
-  - sh set_tags.sh
+- sh set_tags.sh
 deploy:
   skip_cleanup: true
   provider: releases
   api_key:
-    secure: ${GH_TOKEN}
+    secure: "${GH_TOKEN}"
   file_glob: true
   file: spark-bench_*.tgz
   on:
-    tags: true
+    tags: false
     repo: ecurtin/spark-bench
     branch:
-      - develop
-      - master
-    tags: false
+    - develop
+    - master
 env:
-  global:
-    secure: fLqP19eqU8fIte8KfMaLUxIcL396xpeisfzYdKHpNNt0Mq3JJ7nGX9AWPNSqc3dtzP5C2q1cuWZr5ngRUGUcpxHmPS0R/WB/pnTCVOcQxaJstwF5Hb486Y0GnZq1ukBybHo15XnlYsGZz6bX/9nN1D96IFj5aiz4tncKIOf63UqrVuIVD3VMoadq5EeBkH1iHLcLctB6CSLxSx32T8aSuIQ0QIiYt18JxFtFCybWA40Re2bE0iNKKusGyZR2WstJSH9w91JhpeY/TKRhbCVS3fvnC2+GkhoInTGa1wqRnKXi8PZzAEKqlBq18UtlUFEtRTEWUaMGZJWZWMNiOFfICPncAqcUpehy2/8YRFHJHpon8OTPVIDo7etyiINYVRQhCXwhlPgW8GcU8oeO1QJmQ3Lsb0Ue/OTaOvnOLrAMrhSDgI/OZS/bopYUYrMzklhxvqaUlI4Fl4feGyB/664zr/Nj86V2cqyyGROD5OPCQYukPXKNKOMU75Mq9yG/nB3I3TLXXG3H/V6cowEv8xWKsewIImjonFKB4PHtMRwTTygWDV1+FTE8BcYttkk0tckLrgrP8lqpT/r0Ih5kwUxpmBAGwW+L1HZqjykEnyy6zisg1VB2VGdRHTptqDdr6YvwWFhqJadfjgRJFOSsAaz4L/07NtGjS4GnsZSdW2qmjAI=
+  global: 
+    secure: JS/rka6JhO1QeDm24KcOfb5rdvgi3yu0HnCxdSbFRosJLOiFbRLft8TYac0bapfB4JinYHHdghLThIbFxZBCJ1i0vYKp+XA0k5Y0iI7JjTf8TbwbNPpqaHd++ST60oMUJlnn47ZWrnmEg0sp5+iHseyUR66TNJ0VyLWpNS5c1xsYkdepZfKJegolCI/0naTw/c5BBNkIEqQqtATZGEe5XsqyiqMBpM9ZSLKvWQXuxQQlC5bJnmuV53meIjhDbGEpsaxIXkJKdwP5PPS/wGktVS1m4THy8egpY6oKGN4x8rL6lofZEX1qD6bG/m2MOlFLt77+Qd6VDxTZAn/dQt0aDnL71mVSs3tXjgC5/UB4Yg2kFwPWkSk+v9HwgNA6uP34M6a3gVeVWK6uNEJ+D6goUboXvgLH6BFDhquhoNWEgDcYmULGHuq/X/wrMgW1RTZmB89NZBdWKY7rvzDC1zR6qOZLZivSuqjaJrpd85pGXyCIt7JAalZXkD8GdZwzsW4ypqVnQrfnt42EGaXDXGIQwk4vRa9BXG3cK1A8jmpAgRT9+LJ4/uSFVS6r2MYbrxMSr/Xu6wRxcyciURF2btJmRQZZu36i5yrhhlKkEUZi9M68OHvdRN15jKW2MI/9QZxMYluycqRdndzJqwuBAAY4PFaZWpOhtUpo+HCGGWvXHg0=
