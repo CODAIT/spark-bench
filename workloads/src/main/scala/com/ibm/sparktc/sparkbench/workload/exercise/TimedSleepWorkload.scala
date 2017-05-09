@@ -29,7 +29,7 @@ case class TimedSleepWorkloadConf(
 
 class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) extends Workload[TimedSleepWorkloadConf](conf, spark) {
 
-  def doStuff() = time {
+  def doStuff(): (Long, Unit) = time {
 
     val ms = conf.sleepMS
     val stuff: RDD[Int] = spark.sparkContext.parallelize(0 until conf.partitions, conf.partitions)
@@ -40,9 +40,8 @@ class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) ext
     }
 
     val yeah = cool.reduceByKey(_ + _)
-
     yeah.collect()
-//    uhhuh.foreach(println)
+
   }
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
@@ -56,10 +55,7 @@ class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) ext
       )
     )
 
-
-
     val timeList = spark.sparkContext.parallelize(Seq(Row("timedsleep", System.currentTimeMillis(), t)))
-//    println(timeList.first())
 
     spark.createDataFrame(timeList, schema)
   }

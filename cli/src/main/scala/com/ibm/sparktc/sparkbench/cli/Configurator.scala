@@ -1,17 +1,13 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
-
 import scala.collection.JavaConverters._
 import com.ibm.sparktc.sparkbench.workload.{SparkContextConf, Suite}
-import com.typesafe.config.{Config, ConfigFactory, ConfigObject, ConfigValue}
-
+import com.typesafe.config.{Config, ConfigFactory, ConfigObject}
 import scala.util.Try
-
 
 object Configurator {
 
-  // TODO in the future this will return a List[SparkContextConf]
   def apply(file: File): Seq[SparkContextConf] = {
     val config: Config = ConfigFactory.parseFile(file)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
@@ -50,6 +46,7 @@ object Configurator {
     )
   }
 
+  //TODO work on this so you can have values as singles instead of everything a list
   def parseWorkload(config: Config): Map[String, Seq[Any]] = {
     val cfgObj = config.root()
     val unwrapped = cfgObj.unwrapped().asScala.toMap

@@ -20,7 +20,6 @@ class LinearRegressionDataGen (conf: DataGenerationConf, spark: SparkSession) ex
 
   val m = conf.generatorSpecific //convenience
 
-//  val output: String = args(0)
   val nExamples: Int = conf.numRows
   val nFeatures: Int = conf.numCols
   val eps: Double = getOrDefault(m, "eps", EPS)
