@@ -2,6 +2,8 @@ package com.ibm.sparktc.sparkbench.utils
 
 import java.io.StringWriter
 
+import scala.util.Try
+
 
 object GeneralFunctions {
 
@@ -14,14 +16,21 @@ object GeneralFunctions {
                        map: Map[String, Any],
                        name: String, default: A,
                        optFunc: Option[(Any) => A] = None
-                     ): A =
-    (map.get(name), optFunc) match {
-      case (Some(a), Some(f)) => f(a)
-      case (Some(x), None) => x.asInstanceOf[A]
-      case (_, _) => default
+                     ): A ={
+    val optA: Option[Any] = map.get(name)
+
+    val castedValue: Option[A] = optA match {
+      case Some(b) => Some(b.asInstanceOf[A])
+      case None => None
     }
 
-
+    (optA, castedValue, optFunc) match {
+      case (None, _, _) => default
+      case (Some(a), Some(v), _) => v
+      case (Some(a), None, Some(f)) => f(a)
+      case (_, _, _) => default
+    }
+  }
 
 
   def time[R](block: => R): (Long, R) = {

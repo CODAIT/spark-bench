@@ -31,30 +31,27 @@ object ArgsParser {
 	}
 
   def parseWorkload(sArgs: ScallopArgs): SparkContextConf = {
-		val subcommand: SuiteArgs = sArgs.workload.subcommand.get.asInstanceOf[SuiteArgs]
+//		val subcommand: SuiteArgs = sArgs.workload.subcommand.get.asInstanceOf[SuiteArgs] //TODO
 //		val parseWorkloadSpecificArgs = subcommand.parseWorkloadArgs()
 		val master = sys.env.getOrElse("SPARK_MASTER_HOST", "")
 
 		// Workload ARG PARSING, ONE FOR EACH workload
-		val workloadArgs: Map[String, Seq[Any]] = sArgs.subcommands match {
+		val suite: Suite = sArgs.subcommands match {
 			// KMEANS
-			case List(sArgs.workload, sArgs.workload.kmeans) => Map (
-					"name" -> "kmeans",
+			case List(sArgs.workload, sArgs.workload.kmeans) => sArgs.workload.kmeans.parseWorkoadArgs()(Map(
 					"k"	-> sArgs.workload.kmeans.k.apply(),
 					"maxIterations" -> sArgs.workload.kmeans.maxIterations.apply(),
 					"seed" -> sArgs.workload.kmeans.seed.apply()
-				)
+				))
 			// TIMED SLEEP
-			case List(sArgs.workload, sArgs.workload.timedsleep) => Map (
-					"name" -> "kmeans",
+			case List(sArgs.workload, sArgs.workload.timedsleep) => sArgs.workload.timedsleep.parseWorkoadArgs()(Map (
 					"partitions"	-> sArgs.workload.timedsleep.partitions.apply(),
 					"sleepms" -> sArgs.workload.timedsleep.sleepMS.apply()
-				)
+				))
 			// OTHER
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-		val suite = subcommand.parseWorkloadArgs()(workloadArgs)
 
 		SparkContextConf(
 			suites = Seq(suite),

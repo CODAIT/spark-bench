@@ -3,7 +3,7 @@ package com.ibm.sparktc.sparkbench.cli
 import com.ibm.sparktc.sparkbench.workload.Suite
 import org.rogach.scallop._
 
-class SuiteArgs(name: String) extends Subcommand(name) {
+class SuiteArgs(val name: String*) extends Subcommand(name:_*) {
   //todo the dir and format arguments should have a codependent verification relationship. See the Scallop wiki for more.
 
   val runs = opt[Int](short = 'n', required = false, default = Some(1), descr = "Number of times each workload variation is run")
@@ -18,16 +18,14 @@ class SuiteArgs(name: String) extends Subcommand(name) {
 
   val inputDir = opt[List[String]](short = 'i', required = true)
 
-  def parseWorkloadArgs()(workloadArgLists: Map[String, Seq[Any]]): Suite = {
-    Map(
-      "repeat" -> Seq(runs.apply()),
-      "parallel" -> Seq(parallel.apply()),
-      "outputdir" -> Seq(outputDir.apply())
-    )
+  val nameName: String = name.head
+//  println(s"nameName is: $nameName")
+//  println(s"nameName class is: ${nameName.getClass}")
 
+  def parseWorkoadArgs()(workloadArgLists: Map[String, Seq[Any]]): Suite = {
     val workloadSpecificArgs: Map[String, Seq[Any]] = Map(
-      "name" -> Seq(name),
-      "inputdir" -> Seq(inputDir.apply()),
+      "name" -> Seq(nameName),
+      "input" -> inputDir.apply(),
       "workloadresultsoutputdir" -> Seq(workloadResultsOutputDir.toOption)
     ) ++ workloadArgLists
 
