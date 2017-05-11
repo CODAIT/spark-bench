@@ -42,7 +42,7 @@ case class KMeansWorkloadConfig(
         inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
         workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
         k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
-        seed = getOrDefault(m, "seed", KMeansDefaults.SEED, Some(any2Int2Long)),
+        seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
         maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION)
       )
   }

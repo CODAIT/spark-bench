@@ -3,7 +3,7 @@ package com.ibm.sparktc.sparkbench.cli
 import com.ibm.sparktc.sparkbench.workload.Suite
 import org.rogach.scallop._
 
-class SuiteArgs(val name: String*) extends Subcommand(name:_*) {
+class SuiteArgs(name: String*) extends Subcommand(name:_*) {
   //todo the dir and format arguments should have a codependent verification relationship. See the Scallop wiki for more.
 
   val runs = opt[Int](short = 'n', required = false, default = Some(1), descr = "Number of times each workload variation is run")

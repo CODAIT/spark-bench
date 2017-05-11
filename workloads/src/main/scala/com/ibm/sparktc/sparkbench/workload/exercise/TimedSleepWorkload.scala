@@ -21,7 +21,7 @@ case class TimedSleepWorkloadConf(
       None,
       None,
       getOrDefault(m, "partitions", TimedSleepDefaults.PARTITIONS),
-      getOrDefault[Long](m, "sleepms", TimedSleepDefaults.SLEEPMS, Some(any2Int2Long))
+      getOrDefault[Long](m, "sleepms", TimedSleepDefaults.SLEEPMS, any2Int2Long)
     )
   }
 

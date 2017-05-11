@@ -13,7 +13,7 @@ import scala.io.Source
 /**
   * Everything in the examples file that goes in the distribution should go through here to make sure it's up to date
   */
-class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterAll with DataFrameSuiteBase {
+class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   val path = "kmeans-example.sh"
   val datagenOutput = """-o (\S*)""".r.unanchored

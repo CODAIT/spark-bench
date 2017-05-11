@@ -2,33 +2,53 @@ package com.ibm.sparktc.sparkbench.utils
 
 import java.io.StringWriter
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 
 object GeneralFunctions {
 
-  val any2Int2Long = (a: Any) => {
+  val any2Int2Long = (a: Any) => Try{
     val x = a.asInstanceOf[Int]
     x.toLong
+  } match {
+    case Success(l) => l
+    case Failure(ex) => throw ex
   }
+
+//  def getOrDefault[A](
+//                       map: Map[String, Any],
+//                       name: String, default: A,
+//                       optFunc: Option[(Any) => A] = None
+//                     ): A ={
+//    val optA: Option[Any] = map.get(name)
+//
+//    val castedValue: Option[A] = optA match {
+//      case Some(b) => Try(b.asInstanceOf[A]).toOption
+//      case None => None
+//    }
+//
+//    (optA, castedValue, optFunc) match {
+//      case (None, _, _) => default
+//      case (Some(a), Some(v), _) => v
+//      case (Some(a), None, Some(f)) => f(a)
+//      case (_, _, _) => default
+//    }
+//  }
 
   def getOrDefault[A](
                        map: Map[String, Any],
                        name: String, default: A,
-                       optFunc: Option[(Any) => A] = None
-                     ): A ={
-    val optA: Option[Any] = map.get(name)
+                       func: (Any) => A = {(any: Any) => any.asInstanceOf[A]}
+                     ): A = {
 
-    val castedValue: Option[A] = optA match {
-      case Some(b) => Some(b.asInstanceOf[A])
-      case None => None
+    val any = map.get(name) match {
+      case None => return default
+      case Some(a) => a
     }
 
-    (optA, castedValue, optFunc) match {
-      case (None, _, _) => default
-      case (Some(a), Some(v), _) => v
-      case (Some(a), None, Some(f)) => f(a)
-      case (_, _, _) => default
+    Try(func(any)) match {
+      case Success(b) => b
+      case Failure(_) => default
     }
   }
 
