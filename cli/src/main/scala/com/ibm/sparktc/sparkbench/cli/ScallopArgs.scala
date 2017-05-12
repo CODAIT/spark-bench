@@ -60,7 +60,6 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
     // KMEANS
     val kmeansStr: String = "kmeans"
-    println(kmeansStr)
     val kmeans = new SuiteArgs(kmeansStr){
       val k = opt[List[Int]](short = 'k', default = Some(List(KMeansDefaults.NUM_OF_CLUSTERS)))
       val maxIterations = opt[List[Int]](short = 'm', default = Some(List(KMeansDefaults.MAX_ITERATION)))

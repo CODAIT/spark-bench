@@ -32,10 +32,10 @@ class KMeansDataGen(conf: DataGenerationConf, spark: SparkSession) extends DataG
 
   val m = conf.generatorSpecific //convenience
 
-  val numCluster: Int = getOrDefault(m, "clusters", NUM_OF_CLUSTERS)
+  val numCluster: Int = getOrDefault[Int](m, "clusters", NUM_OF_CLUSTERS)
   val numDim: Int = conf.numCols
-  val scaling: Double = getOrDefault(m, "scaling", SCALING)
-  val numPar: Int = getOrDefault(m, "partitions", NUM_OF_PARTITIONS)
+  val scaling: Double = getOrDefault[Double](m, "scaling", SCALING)
+  val numPar: Int = getOrDefault[Int](m, "partitions", NUM_OF_PARTITIONS)
 
   override def generateData(spark: SparkSession): DataFrame = {
 

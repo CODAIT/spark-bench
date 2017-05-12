@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load}
 
 abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
 
@@ -26,7 +26,6 @@ abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
 
     val res = doWorkload(df, spark)
     res.coalesce(1)
-
   }
 
 }

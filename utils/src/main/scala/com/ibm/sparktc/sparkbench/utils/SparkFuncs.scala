@@ -4,7 +4,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object SparkFuncs {
 
-  def writeToDisk(outputDir: String, data: DataFrame, fileFormat: Option[String] = None, spark: SparkSession): Unit = {
+  def writeToDisk(outputDir: String, data: DataFrame, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
 
     verifyPathNotExistsOrThrow(outputDir, s"Error: $outputDir already exists!", spark)
 

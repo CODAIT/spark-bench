@@ -2,6 +2,7 @@ package com.ibm.sparktc.sparkbench.workload
 
 import com.ibm.sparktc.sparkbench.workload.mlworkloads.{KMeansWorkload, KMeansWorkloadConfig}
 import com.ibm.sparktc.sparkbench.workload.exercise.{TimedSleepWorkload, TimedSleepWorkloadConf}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions.{col, lit}
 
@@ -10,7 +11,7 @@ import scala.util.{Failure, Success}
 
 object SuiteKickoff {
 
-  def run(s: Suite, spark: SparkSession): DataFrame = {
+  def run(s: Suite, spark: SparkSession): Unit = {
     val workloadConfigs = s.workloadConfigs.map(ConfigCreator.mapToConf(_, spark))
 
     //TODO reading this makes me sad :(
@@ -28,7 +29,8 @@ object SuiteKickoff {
         dfSeqFromOneRun.map(_.withColumn("run", lit(i)))
       }
     }
-    joinDataFrames(dataframes, spark)
+    val singleDF = joinDataFrames(dataframes, spark)
+    writeToDisk(s.benchmarkOutput, singleDF, spark)
   }
 
 
