@@ -2,15 +2,15 @@ package com.ibm.sparktc.sparkbench
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.Utils
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
-import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 import scala.io.Source
 
-class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
+class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase{
   val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
@@ -34,7 +34,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       generatorSpecific = Map.empty
     )
 
-    val generator = new KMeansDataGen(x)
+    val generator = new KMeansDataGen(x, spark)
 
     generator.run()
 
@@ -68,7 +68,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       generatorSpecific = Map.empty
     )
 
-    val generator = new KMeansDataGen(x)
+    val generator = new KMeansDataGen(x, spark)
 
     generator.numPar shouldBe KMeansDefaults.NUM_OF_PARTITIONS
   }

@@ -1,7 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload.mlworkloads
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, time}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
@@ -10,9 +9,7 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
-
-import scala.util.{Failure, Success, Try}
-
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -30,42 +27,38 @@ import scala.util.{Failure, Success, Try}
  * limitations under the License.
  */
 
-class KMeansWorkload(conf: WorkloadConfig, spark: SparkSession) extends Workload(conf, spark){
+case class KMeansWorkloadConfig(
+                                 name: String,
+                                 inputDir: Option[String],
+                                 workloadResultsOutputDir: Option[String],
+                                 k: Int,
+                                 seed: Long,
+                                 maxIterations: Int
+                       ) extends WorkloadConfig {
 
-
-  /*
-      *****************************************************************************************
-      LET'S CONSIDER:
-      - Does timing the load, save, and testing really get us anything? Are these valuable?
-      - Better to let users write their own workloads and it's on them to time the right stuff?
-      *****************************************************************************************
-   */
-
-  override def reconcileSchema(df: DataFrame): DataFrame = {
-
-//    val current: Seq[StructField] = df.schema
-//    val row = df.first()
-//
-//    val newSchema = current.indices.map(i => current(i).dataType match {
-//      case DoubleType => DoubleType
-//      case StringType => Try(row.getString(i).toDouble) match {
-//        case Success(d) => DoubleType
-//        case Failure(exception) => throw new Exception(s"Could not cast the following item from your data into a double: ${row.getString(i)}")
-//      }
-//      case _ => // error
-//    })
-//
-//    println(stuff)
-
-    df
+  def this(m: Map[String, Any], spark: SparkSession) = {
+    this(
+        name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
+        inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
+        workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+        k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
+        seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
+        maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION)
+      )
   }
 
-  override def doWorkload(df: DataFrame, spark: SparkSession): DataFrame = {
-    val (loadtime, data) = loadToCache(df, spark) // necessary to time this?
+
+}
+
+
+class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Workload[KMeansWorkloadConfig](conf, spark){
+
+  override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
+    val (loadtime, data) = loadToCache(df.get, spark) // Should fail loudly if df == None
     val (trainTime, model) = train(data, spark)
-    val (testTime, _) = test(model, data, spark) // necessary?
+    val (testTime, _) = test(model, data, spark)
     val (saveTime, _) = conf.workloadResultsOutputDir match {
-      case Some(s) => save(data, model, spark)
+      case Some(_) => save(data, model, spark)
       case _ => (null, Unit)
     }
 
@@ -81,7 +74,7 @@ class KMeansWorkload(conf: WorkloadConfig, spark: SparkSession) extends Workload
     )
 
     val timeList = spark.sparkContext.parallelize(Seq(Row("kmeans", System.currentTimeMillis(), loadtime, trainTime, testTime, saveTime)))
-    println(timeList.first())
+    //println(timeList.first())
 
     spark.createDataFrame(timeList, schema)
   }
@@ -106,10 +99,10 @@ class KMeansWorkload(conf: WorkloadConfig, spark: SparkSession) extends Workload
     time {
       KMeans.train(
         data = df,
-        k = getOrDefault(conf.workloadSpecific, "k", KMeansDefaults.NUM_OF_CLUSTERS),
-        maxIterations = getOrDefault(conf.workloadSpecific, "maxIterations", KMeansDefaults.MAX_ITERATION),
+        k = conf.k,
+        maxIterations = conf.maxIterations,
         initializationMode = KMeans.K_MEANS_PARALLEL,
-        seed = getOrDefault(conf.workloadSpecific, "seed", KMeansDefaults.SEED) )
+        seed = conf.seed )
     }
   }
 
@@ -126,7 +119,7 @@ class KMeansWorkload(conf: WorkloadConfig, spark: SparkSession) extends Workload
       }
       import spark.implicits._
       // Already performed the match one level up so these are guaranteed to be Some(something)
-      writeToDisk(conf.workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF())
+      writeToDisk(conf.workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF(), spark = spark)
     }
     ds.unpersist()
     res

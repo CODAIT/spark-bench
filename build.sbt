@@ -10,7 +10,8 @@ import Dependencies._
 lazy val commonSettings = Seq(
   organization := "com.ibm.sparktc",
   scalaVersion := "2.11.8",
-  parallelExecution in Test := false
+  parallelExecution in Test := false,
+  test in assembly := {}
 )
 
 lazy val root = (project in file("."))
@@ -53,7 +54,8 @@ lazy val cli = project
   .settings(
     commonSettings,
     libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= testDeps
+    libraryDependencies ++= testDeps,
+    libraryDependencies ++= typesafe
   )
   .dependsOn(workloads, datageneration, utils)
 
@@ -96,12 +98,14 @@ val rmDist = TaskKey[Unit]("rmDist", "removes all the dist files")
 rmDist := {
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
-  val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
 
-
-  val tmpFolder = s"./${name.value}_${version.value}*"
+  val tmpFolder = s"./${name.value}_${version.value}"
+  s"echo Removing $tmpFolder".!
   s"rm -rf $tmpFolder".!
-//  s"rm -rf ./$artifactName".!
+  s"echo Removing $tmpFolder.tgz".!
+  s"""rm -f spark-bench*.tgz""".!
+  s"echo rmDist Complete!".!
+
 }
 
 dist := (dist dependsOn rmDist).value

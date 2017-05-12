@@ -32,4 +32,8 @@ object Dependencies {
       )
   )
 
+  val typesafe = Seq(
+    "com.typesafe" % "config" % "1.3.1"
+  )
+
 }

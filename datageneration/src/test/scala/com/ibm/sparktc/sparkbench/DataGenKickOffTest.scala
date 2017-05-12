@@ -2,17 +2,18 @@ package com.ibm.sparktc.sparkbench
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.Utils
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerationKickoff}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
-class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach {
+class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase {
   val filename = "whatever.csv"
 
   var file: File = _
 
   override def beforeEach() {
     file = new File(filename)
+    Utils.deleteRecursively(file)
   }
 
   override def afterEach() {
