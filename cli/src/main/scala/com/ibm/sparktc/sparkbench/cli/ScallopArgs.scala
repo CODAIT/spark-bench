@@ -24,11 +24,9 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
   footer("\nSee the README and project wiki for more documentation.")
 
-  val confFile = trailArg[File](required = false)
+  val confFile = trailArg[File](required = false, descr = "Path to a spark-bench configuration file. See REAME and examples for more on configuration files.")
 
-  val dryRun = opt[Boolean](required = false, default = Some(false), descr = "Prints the configuration of each workload that will run but does not actually run them.")
-
-
+  val dryRun = opt[Boolean](required = false, default = Some(false), descr = "[EXPERIMENTAL] Prints the configuration of each workload that will run but does not actually run them.")
 
 
   /*
@@ -40,14 +38,12 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     // DATAGEN
     val kmeans = new DataGeneratorArgs("kmeans"){
       val k = opt[Int](short = 'k', default = Some(KMeansDefaults.NUM_OF_CLUSTERS))
-      val scaling = opt[Double](short = 'm', default = Some(KMeansDefaults.SCALING))
-      val partitions = opt[Int](short = 's', default = Some(KMeansDefaults.NUM_OF_PARTITIONS))
+      val scaling = opt[Double](short = 's', default = Some(KMeansDefaults.SCALING))
+      val partitions = opt[Int](short = 'p', default = Some(KMeansDefaults.NUM_OF_PARTITIONS))
     }
     addSubcommand(kmeans)
   }
   addSubcommand(datagen)
-
-
 
 
 
@@ -63,14 +59,14 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     val kmeans = new SuiteArgs(kmeansStr){
       val k = opt[List[Int]](short = 'k', default = Some(List(KMeansDefaults.NUM_OF_CLUSTERS)))
       val maxIterations = opt[List[Int]](short = 'm', default = Some(List(KMeansDefaults.MAX_ITERATION)))
-      val seed = opt[List[Long]](short = 's', default = Some(List(KMeansDefaults.SEED)))
+      val seed = opt[List[Long]](short = 'e', default = Some(List(KMeansDefaults.SEED)))
     }
     addSubcommand(kmeans)
 
     // TIMED SLEEP
     val timedsleep = new SuiteArgs("timedsleep"){
       val partitions = opt[List[Int]](short = 'p', default = Some(List(TimedSleepDefaults.PARTITIONS)), descr = "how many partitions to spawn")
-      val sleepMS = opt[List[Long]](short = 's', default = Some(List(TimedSleepDefaults.SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
+      val sleepMS = opt[List[Long]](short = 't', default = Some(List(TimedSleepDefaults.SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
     }
     addSubcommand(timedsleep)
   }
@@ -81,6 +77,7 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     case ScallopException(message) => throw e
     case _ => super.onError(e)
   }
+
 //
 //  override def printHelp(): Unit = {
 //
