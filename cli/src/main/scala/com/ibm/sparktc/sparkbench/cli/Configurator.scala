@@ -34,7 +34,7 @@ object Configurator {
     val descr: Option[String] = Try(config.getString("descr")).toOption
     val parallel: Boolean = Try(config.getBoolean("parallel")).getOrElse(false)
     val repeat: Int = Try(config.getInt("repeat")).getOrElse(1)
-    val output: String = config.getString("output") // throws exception
+    val output: String = config.getString("benchmark-output") // throws exception
     val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(parseWorkload)
 
     Suite.build(
