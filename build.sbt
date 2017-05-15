@@ -23,7 +23,7 @@ lazy val root = (project in file("."))
     assemblyJarName in assembly := s"spark-bench-${version.value}.jar"
   )
   .aggregate(utils, workloads, datageneration, cli)
-  .dependsOn(utils, workloads, datageneration, cli)
+  .dependsOn(utils % "compile->compile;test->test", workloads, datageneration, cli)
 
 lazy val utils = project
   .settings(
@@ -57,7 +57,7 @@ lazy val cli = project
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
   )
-  .dependsOn(workloads, datageneration, utils)
+  .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
 
 
 /*

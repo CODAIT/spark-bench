@@ -5,6 +5,7 @@ import java.io.File
 import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
+import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.sql.SparkSession
 
@@ -22,7 +23,7 @@ object BuildAndTeardownData {
     fileSeq.foreach(str => Utils.deleteRecursively(new File(str)))
   }
 
-  def generateKMeansData(spark: SparkSession): Unit = {
+  def generateKMeansData(): Unit = {
     val conf = DataGenerationConf(
       generatorName = "kmeans",
       numRows = 100,
@@ -32,11 +33,11 @@ object BuildAndTeardownData {
       generatorSpecific = Map[String, Any]()
     )
 
-    val kMeansDataGen = new KMeansDataGen(conf, spark)
+    val kMeansDataGen = new KMeansDataGen(conf, SparkSessionProvider.spark)
 
-    val df = kMeansDataGen.generateData(spark)
+    val df = kMeansDataGen.generateData(SparkSessionProvider.spark)
 
-    writeToDisk(conf.outputDir, df, spark)
+    writeToDisk(conf.outputDir, df, SparkSessionProvider.spark)
   }
 
 }

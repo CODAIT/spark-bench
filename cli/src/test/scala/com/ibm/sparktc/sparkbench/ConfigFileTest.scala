@@ -1,15 +1,15 @@
 package com.ibm.sparktc.sparkbench
 
-import com.holdenkarau.spark.testing.DataFrameSuiteBase
 import com.ibm.sparktc.sparkbench.cli.CLIKickoff
+import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
-class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with DataFrameSuiteBase with Capturing {
+class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     BuildAndTeardownData.deleteFiles()
-    BuildAndTeardownData.generateKMeansData(spark)
+    BuildAndTeardownData.generateKMeansData()
   }
 
   override def afterAll(): Unit = {

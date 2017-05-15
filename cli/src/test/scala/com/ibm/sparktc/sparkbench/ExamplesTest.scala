@@ -2,8 +2,7 @@ package com.ibm.sparktc.sparkbench
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.DataFrameSuiteBase
-import com.holdenkarau.spark.testing.Utils
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, LocalSparkContext, Utils}
 import com.ibm.sparktc.sparkbench.cli.CLIKickoff
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FlatSpec, Matchers}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{stringifyStackTrace => SST}
@@ -13,7 +12,7 @@ import scala.io.Source
 /**
   * Everything in the examples file that goes in the distribution should go through here to make sure it's up to date
   */
-class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase  {
+class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   val path = "kmeans-example.sh"
   val datagenOutput = """-o (\S*)""".r.unanchored
@@ -24,12 +23,10 @@ class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterEach with D
   })
 
   override def beforeAll(): Unit = {
-    super.beforeAll()
     BuildAndTeardownData.deleteFiles(outputFiles)
   }
 
   override def afterAll(): Unit = {
-    super.afterAll()
     BuildAndTeardownData.deleteFiles(outputFiles)
     BuildAndTeardownData.deleteFiles()
   }
