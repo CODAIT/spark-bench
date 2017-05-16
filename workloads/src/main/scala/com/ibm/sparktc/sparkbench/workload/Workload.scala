@@ -34,7 +34,7 @@ abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
 
   def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
     def dealWithNones(a: Any): Any = a match {
-      case None => null
+      case None => ""
       case Some(b) => b
       case _ => a
     }
