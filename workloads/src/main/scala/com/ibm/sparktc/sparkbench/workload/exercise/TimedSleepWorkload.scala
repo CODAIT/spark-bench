@@ -25,6 +25,7 @@ case class TimedSleepWorkloadConf(
     )
   }
 
+  override def toMap(cc: AnyRef) = super.toMap(this)
 }
 
 class TimedSleepWorkload (conf: TimedSleepWorkloadConf, spark: SparkSession) extends Workload[TimedSleepWorkloadConf](conf, spark) {

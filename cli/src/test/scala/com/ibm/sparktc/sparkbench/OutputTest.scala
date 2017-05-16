@@ -24,4 +24,13 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
     )
     println(out)
   }
+
+
+  "Want to see configuration added to results when there's crazy stuff" should "work" in {
+    val (out) = captureOutput(CLIKickoff.main(
+      Array("bin/spark-bench.sh", "workload", "kmeans", "-i", BuildAndTeardownData.inputFile, "-o", "/tmp/spark-bench-demo/test-results5.csv",
+        "--parallel", "-n", "5", "-k", "2", "32", "-e", "127", "1093"))
+    )
+    println(out)
+  }
 }

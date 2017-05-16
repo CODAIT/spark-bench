@@ -47,6 +47,8 @@ case class KMeansWorkloadConfig(
       )
   }
 
+  override def toMap(cc: AnyRef) = super.toMap(this)
+
 
 }
 
