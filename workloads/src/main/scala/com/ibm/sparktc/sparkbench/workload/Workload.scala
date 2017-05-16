@@ -1,7 +1,10 @@
 package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
+import org.apache.spark.sql.functions.{col, lit}
+
+import scala.collection.immutable
 
 abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
 
@@ -26,6 +29,19 @@ abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
 
     val res = doWorkload(df, spark)
     res.coalesce(1)
+    addConfToResults(res, conf.toMap(conf))
+  }
+
+  def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
+    def dealWithNones(a: Any): Any = a match {
+      case None => null
+      case Some(b) => b
+      case _ => a
+    }
+
+    var ddf: DataFrame = df
+    m.foreach( keyValue => ddf = ddf.withColumn(keyValue._1, lit(dealWithNones(keyValue._2))) )
+    ddf
   }
 
 }

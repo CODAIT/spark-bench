@@ -8,6 +8,11 @@ trait WorkloadConfig {
   val inputDir: Option[String]
   val workloadResultsOutputDir: Option[String]
 
+  def toMap(cc: AnyRef) =
+    (Map[String, Any]() /: cc.getClass.getDeclaredFields) {(a, f) =>
+      f.setAccessible(true)
+      a + (f.getName -> f.get(cc))
+    }
 //  /**
 //    * Throws an exception if a required param is not present
 //    * Fills in defaults for missing optional params
