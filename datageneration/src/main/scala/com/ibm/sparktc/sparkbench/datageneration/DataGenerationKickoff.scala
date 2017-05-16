@@ -11,7 +11,7 @@ object DataGenerationKickoff {
     SparkSession
       .builder()
       .appName("spark-bench workload")
-      .master(getOrThrow(sys.env.get("SPARK_MASTER_HOST")))
+      .master(sys.env.getOrElse("SPARK_MASTER_HOST", ""))
       .getOrCreate()
   }
 
