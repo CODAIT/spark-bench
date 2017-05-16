@@ -16,7 +16,7 @@ class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   val path = "kmeans-example.sh"
   val datagenOutput = """-o (\S*)""".r.unanchored
-  val exampleFileLines = Source.fromFile(path).getLines().toList.filter(_.startsWith("bin/spark-bench.sh "))
+  val exampleFileLines: Seq[String]  = Source.fromFile(path).getLines().toList.filter(_.startsWith("bin/spark-bench.sh "))
   val dataGenerationLines = exampleFileLines.filter(_.startsWith("bin/spark-bench.sh generate-data"))
   val outputFiles: Seq[String]  = dataGenerationLines.map(str => str match {
     case datagenOutput(f) => f.toString
@@ -36,7 +36,9 @@ class ExamplesTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   "All the examples" should "work" in {
-    exampleFileLines.map(_.split(" ")).map( args => try {
+    val realArgs = exampleFileLines.map(_.split(" ")).map(_.tail)
+    realArgs.map(args => try {
+      println(args.mkString(" "))
       CLIKickoff.main(args)
     } catch {
       case e: Exception => fail(s"This run of spark-bench failed: ${args.toSeq}\n ${SST(e)}")

@@ -34,7 +34,6 @@ deploy:
     tags: false
     repo: ecurtin/spark-bench
     branch:
-    - develop
     - master
 env:
   global:
