@@ -2,6 +2,7 @@ package com.ibm.sparktc.sparkbench.datageneration
 
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
 import org.apache.spark.sql.SparkSession
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 
 object DataGenerationKickoff {
   val spark = createSparkContext()
@@ -10,6 +11,7 @@ object DataGenerationKickoff {
     SparkSession
       .builder()
       .appName("spark-bench workload")
+      .master(sys.env.getOrElse("SPARK_MASTER_HOST", ""))
       .getOrCreate()
   }
 

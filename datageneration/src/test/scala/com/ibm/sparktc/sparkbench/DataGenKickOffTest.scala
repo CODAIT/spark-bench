@@ -6,7 +6,7 @@ import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerationKickoff}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
-class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach with DataFrameSuiteBase {
+class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val filename = "whatever.csv"
 
   var file: File = _
