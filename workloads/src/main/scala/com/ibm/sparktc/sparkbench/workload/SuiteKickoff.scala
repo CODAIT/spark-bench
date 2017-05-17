@@ -1,8 +1,9 @@
 package com.ibm.sparktc.sparkbench.workload
 
-import com.ibm.sparktc.sparkbench.workload.mlworkloads.{KMeansWorkload, KMeansWorkloadConfig}
-import com.ibm.sparktc.sparkbench.workload.exercise.{TimedSleepWorkload, TimedSleepWorkloadConf}
+import com.ibm.sparktc.sparkbench.workload.ml.{KMeansWorkload, KMeansWorkloadConfig}
+import com.ibm.sparktc.sparkbench.workload.exercise.{PartitionAndSleepWorkload, PartitionAndSleepWorkloadConf, Sleep, SleepWorkloadConf}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+import com.ibm.sparktc.sparkbench.workload.sql.{SQLWorkload, SQLWorkloadConf}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions.{col, lit}
 
@@ -34,13 +35,13 @@ object SuiteKickoff {
   }
 
 
-
-
   def kickoff(conf: WorkloadConfig, spark: SparkSession): Option[DataFrame] = {
     //TODO this needs refactoring to get rid of boilerplate, design for the custom case
     conf match {
       case _: KMeansWorkloadConfig => Success(new KMeansWorkload(conf.asInstanceOf[KMeansWorkloadConfig], spark).run()).toOption
-      case _: TimedSleepWorkloadConf => Success(new TimedSleepWorkload(conf.asInstanceOf[TimedSleepWorkloadConf], spark).run()).toOption
+      case _: PartitionAndSleepWorkloadConf => Success(new PartitionAndSleepWorkload(conf.asInstanceOf[PartitionAndSleepWorkloadConf], spark).run()).toOption
+      case _: SleepWorkloadConf => Success(new Sleep(conf.asInstanceOf[SleepWorkloadConf], spark).run()).toOption
+      case _: SQLWorkloadConf => Success(new SQLWorkload(conf.asInstanceOf[SQLWorkloadConf], spark).run()).toOption
       case _ => Failure(throw new Exception(s"Unrecognized or unimplemented workload")).toOption
     }
   }

@@ -55,6 +55,7 @@ object ArgsParser {
 
 		SparkContextConf(
 			suites = Seq(suite),
+			suitesParallel = false,
 			master = master
 		)
 	}

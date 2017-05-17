@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench.workload.mlworkloads
+package com.ibm.sparktc.sparkbench.workload.ml
 
 case class MLWorkloadResults(
                               workloadName: String,

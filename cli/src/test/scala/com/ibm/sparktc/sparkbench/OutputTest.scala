@@ -1,6 +1,7 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.CLIKickoff
+import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
@@ -10,7 +11,7 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
 
     BuildAndTeardownData.deleteFiles()
 
-    BuildAndTeardownData.generateKMeansData()
+    BuildAndTeardownData.generateKMeansData(1000, 5, BuildAndTeardownData.inputFile)
   }
 
   override def afterAll(): Unit = {

@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench.workload.mlworkloads
+package com.ibm.sparktc.sparkbench.workload.ml
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
@@ -56,6 +56,8 @@ case class KMeansWorkloadConfig(
 class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Workload[KMeansWorkloadConfig](conf, spark){
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
+    val timestamp = System.currentTimeMillis()
+
     val (loadtime, data) = loadToCache(df.get, spark) // Should fail loudly if df == None
     val (trainTime, model) = train(data, spark)
     val (testTime, _) = test(model, data, spark)
@@ -64,6 +66,9 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
       case _ => (null, Unit)
     }
 
+    val total = loadtime + trainTime + testTime
+                + (if (saveTime == null) 0L else saveTime.asInstanceOf[Long])
+
     val schema = StructType(
       List(
         StructField("name", StringType, nullable = false),
@@ -71,11 +76,12 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
         StructField("load", LongType, nullable = true),
         StructField("train", LongType, nullable = true),
         StructField("test", LongType, nullable = true),
-        StructField("save", LongType, nullable = true)
+        StructField("save", LongType, nullable = true),
+        StructField("total_runtime", LongType, nullable = false)
       )
     )
 
-    val timeList = spark.sparkContext.parallelize(Seq(Row("kmeans", System.currentTimeMillis(), loadtime, trainTime, testTime, saveTime)))
+    val timeList = spark.sparkContext.parallelize(Seq(Row("kmeans", timestamp, loadtime, trainTime, testTime, saveTime, total)))
     //println(timeList.first())
 
     spark.createDataFrame(timeList, schema)

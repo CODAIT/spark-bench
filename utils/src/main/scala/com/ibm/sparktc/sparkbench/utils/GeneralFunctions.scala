@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.utils
 
 import java.io.StringWriter
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Random, Success, Try}
 
 
 object GeneralFunctions {
@@ -93,5 +93,9 @@ object GeneralFunctions {
     sw.toString
   }
 
+  def randomLong(max: Long): Long = {
+    val start = 0L
+    (start + (Random.nextDouble() * (max - start) + start)).toLong
+  }
 
 }
