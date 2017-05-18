@@ -31,7 +31,8 @@ class SQLWorkload (conf: SQLWorkloadConf, spark: SparkSession) extends Workload[
 
   def loadFromDisk(spark: SparkSession): (Long, DataFrame) = time {
     val df = load(spark, conf.inputDir.get)
-    if
+    if(conf.cache) df.cache()
+    df
   }
 
   def query(df: DataFrame, spark: SparkSession): (Long, DataFrame) = time {
