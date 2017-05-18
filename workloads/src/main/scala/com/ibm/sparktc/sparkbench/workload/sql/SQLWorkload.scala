@@ -10,7 +10,8 @@ case class SQLWorkloadConf(
                                    name: String,
                                    inputDir: Option[String],
                                    workloadResultsOutputDir: Option[String] = None,
-                                   queryStr: String
+                                   queryStr: String,
+                                   cache: Boolean
                                  ) extends WorkloadConfig {
 
   def this(m: Map[String, Any], spark: SparkSession) = {
@@ -18,7 +19,8 @@ case class SQLWorkloadConf(
       verifyOrThrow(m, "name", "sql", s"Required field name does not match"),
       inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
       workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-      getOrThrow(m, "query").asInstanceOf[String]
+      getOrThrow(m, "query").asInstanceOf[String],
+      getOrDefault(m, "cache", false)
     )
   }
 
@@ -28,7 +30,8 @@ case class SQLWorkloadConf(
 class SQLWorkload (conf: SQLWorkloadConf, spark: SparkSession) extends Workload[SQLWorkloadConf](conf, spark) {
 
   def loadFromDisk(spark: SparkSession): (Long, DataFrame) = time {
-    load(spark, conf.inputDir.get)
+    val df = load(spark, conf.inputDir.get)
+    if
   }
 
   def query(df: DataFrame, spark: SparkSession): (Long, DataFrame) = time {

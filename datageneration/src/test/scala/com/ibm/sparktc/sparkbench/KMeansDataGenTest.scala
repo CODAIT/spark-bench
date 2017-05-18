@@ -5,14 +5,14 @@ import java.io.File
 import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
-import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
+import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 import scala.io.Source
 
 class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
-  val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
+  val fileName = s"${BuildAndTeardownData.inputFolder}/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
@@ -21,7 +21,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   }
 
   override def afterEach() {
-    Utils.deleteRecursively(file)
+    BuildAndTeardownData.deleteFiles()
   }
 
   "KMeansDataGeneration" should "generate data correctly" in {

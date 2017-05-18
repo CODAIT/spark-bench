@@ -5,7 +5,7 @@ import java.io.File
 import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
 import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
-import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
+import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
 import com.ibm.sparktc.sparkbench.utils.{KMeansDefaults, LinearRegressionDefaults}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
@@ -13,7 +13,7 @@ import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import scala.io.Source
 
 class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
-  val fileName = s"/tmp/linear-regression/${java.util.UUID.randomUUID.toString}.csv"
+  val fileName = s"${BuildAndTeardownData.inputFolder}/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
@@ -22,7 +22,7 @@ class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEac
   }
 
   override def afterEach() {
-    Utils.deleteRecursively(file)
+    BuildAndTeardownData.deleteFiles()
   }
 
   "LinearRegressionDataGen" should "generate data correctly" in {
