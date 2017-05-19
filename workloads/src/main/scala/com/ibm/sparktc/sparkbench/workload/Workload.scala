@@ -2,11 +2,12 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
-import org.apache.spark.sql.functions.{col, lit}
+import org.apache.spark.sql.functions.lit
 
-import scala.collection.immutable
-
-abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
+trait Workload {
+  val name: String
+  val inputDir: Option[String]
+  val workloadResultsOutputDir: Option[String]
 
   /**
     *  Validate that the data set has a correct schema and fix if necessary.
@@ -17,19 +18,19 @@ abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
 
   def doWorkload(df: Option[DataFrame], sparkSession: SparkSession): DataFrame
 
-  def run(): DataFrame = {
+  def run(spark: SparkSession): DataFrame = {
 
-    val df = conf.inputDir match {
+    val df = inputDir match {
       case None => None
       case Some(input) => {
-        val rawDF = load(spark, conf.inputDir.get)
+        val rawDF = load(spark, inputDir.get)
         Some(reconcileSchema(rawDF))
       }
     }
 
     val res = doWorkload(df, spark)
     res.coalesce(1)
-    addConfToResults(res, conf.toMap(conf))
+    addConfToResults(res, toMap)
   }
 
   def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
@@ -43,5 +44,11 @@ abstract class Workload[A <: WorkloadConfig](conf: A, spark: SparkSession) {
     m.foreach( keyValue => ddf = ddf.withColumn(keyValue._1, lit(dealWithNones(keyValue._2))) )
     ddf
   }
+
+  def toMap: Map[String, Any] =
+    (Map[String, Any]() /: this.getClass.getDeclaredFields) { (a, f) =>
+      f.setAccessible(true)
+      a + (f.getName -> f.get(this))
+    }
 
 }
