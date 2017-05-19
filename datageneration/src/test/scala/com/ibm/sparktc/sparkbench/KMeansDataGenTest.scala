@@ -17,6 +17,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   var file: File = _
 
   override def beforeEach() {
+    BuildAndTeardownData.deleteFiles()
     file = new File(fileName)
   }
 

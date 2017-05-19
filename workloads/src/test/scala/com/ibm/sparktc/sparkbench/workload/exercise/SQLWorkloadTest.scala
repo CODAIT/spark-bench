@@ -12,6 +12,7 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
+    BuildAndTeardownData.deleteFiles()
     BuildAndTeardownData.generateKMeansData(1000, 10, smallData)
   }
 
@@ -25,7 +26,8 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
       name = "sql",
       inputDir = Some(smallData),
       workloadResultsOutputDir = Some(resOutput),
-      queryStr = "select `0` from input where `0` < -0.9"
+      queryStr = "select `0` from input where `0` < -0.9",
+      cache = false
     )
 
     val workload = new SQLWorkload(conf, spark)
