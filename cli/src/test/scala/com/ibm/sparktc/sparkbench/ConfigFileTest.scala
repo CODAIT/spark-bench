@@ -1,19 +1,22 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.CLIKickoff
-import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FlatSpec, Matchers}
+import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
+import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with Capturing {
 
+  val dataShiznit = new BuildAndTeardownData("tmp")
+
   override def beforeEach(): Unit = {
     super.beforeEach()
-    BuildAndTeardownData.deleteFiles()
-    BuildAndTeardownData.generateKMeansData(1000, 5, BuildAndTeardownData.inputFile)
+    dataShiznit.deleteFolders()
+    dataShiznit.createFolders()
+    dataShiznit.generateKMeansData(1000, 5, dataShiznit.kmeansFile)
   }
 
   override def afterEach(): Unit = {
-    BuildAndTeardownData.deleteFiles()
+    dataShiznit.deleteFolders()
   }
 
   "Spark-bench run through a config file serially" should "work" in {
@@ -29,6 +32,5 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with
     val path = resource.getPath
     CLIKickoff.main(Array(path))
   }
-
 
 }

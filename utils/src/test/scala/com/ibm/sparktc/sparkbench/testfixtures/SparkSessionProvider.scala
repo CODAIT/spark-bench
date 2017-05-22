@@ -9,4 +9,5 @@ object SparkSessionProvider {
       .getOrCreate()
 
   spark.conf.set("mapreduce.fileoutputcommitter.algorithm.version", "2")
+  spark.conf.set("speculation", "false")
 }

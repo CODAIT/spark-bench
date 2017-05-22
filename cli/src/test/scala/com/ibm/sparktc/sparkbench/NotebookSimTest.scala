@@ -5,16 +5,21 @@ import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class NotebookSimTest extends FlatSpec with Matchers with BeforeAndAfterEach with Capturing {
+  val dataMaker = new BuildAndTeardownData("notebook-sim-test")
+
+  val giantData = s"${dataMaker.sparkBenchTestFolder}/giant-kmeans-data.parquet"
+  val tinyData = s"${dataMaker.sparkBenchTestFolder}/tiny-kmeans-data.parquet"
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    BuildAndTeardownData.deleteFiles()
-    BuildAndTeardownData.generateKMeansData(400000, 50, s"${BuildAndTeardownData.inputFolder}/giant-kmeans-data.parquet")
-    BuildAndTeardownData.generateKMeansData(100, 5, s"${BuildAndTeardownData.inputFolder}/tiny-kmeans-data.parquet")
+    dataMaker.createFolders()
+//    BuildAndTeardownData.deleteFilesStr(Seq(giantData, tinyData))
+    dataMaker.generateKMeansData(400000, 50, giantData)
+    dataMaker.generateKMeansData(100, 5, tinyData)
   }
 
   override def afterEach(): Unit = {
-    BuildAndTeardownData.deleteFiles()
+    dataMaker.deleteFolders()
   }
 
   "Simulating two notebook users" should "work" in {

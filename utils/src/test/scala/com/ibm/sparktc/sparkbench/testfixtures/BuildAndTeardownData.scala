@@ -10,20 +10,21 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
 
-object BuildAndTeardownData {
-  val inputFolder = "/tmp/spark-bench-test"
-  val inputFile = s"$inputFolder/kmeans-data.parquet"
-  val inputFileForExamples = "/tmp/spark-bench-demo"
-
+class BuildAndTeardownData(prefix: String) {
+  val sparkBenchTestFolder = s"$prefix/spark-bench-test"
+  val kmeansFile = s"${sparkBenchTestFolder}/kmeans-data.parquet"
+  val sparkBenchDemoFolder = s"$prefix/spark-bench-demo"
   val spark = SparkSessionProvider.spark
 
-  def deleteFiles(): Unit = {
-    Utils.deleteRecursively(new File(inputFolder))
-    Utils.deleteRecursively(new File(inputFileForExamples))
+  def createFolders(): Unit = {
+    val fileSeq = Seq(new File(sparkBenchTestFolder), new File(sparkBenchDemoFolder))
+    fileSeq.foreach(folder => folder.mkdirs())
   }
 
-  def deleteFiles(fileSeq: Seq[String]): Unit = {
-    fileSeq.foreach(str => Utils.deleteRecursively(new File(str)))
+  def deleteFolders(): Unit = {
+//    val fileSeq = Seq(new File(sparkBenchTestFolder), new File(sparkBenchDemoFolder))
+//    fileSeq.foreach(folder => Utils.deleteRecursively(folder))
+    Utils.deleteRecursively(new File(prefix))
   }
 
   def generateKMeansData(rows: Int, cols: Int, outputFile: String): Unit = {

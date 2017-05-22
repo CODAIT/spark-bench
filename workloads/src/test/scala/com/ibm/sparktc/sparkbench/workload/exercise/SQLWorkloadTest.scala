@@ -5,20 +5,25 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import com.ibm.sparktc.sparkbench.workload.sql.{SQLWorkload, SQLWorkloadConf}
 
 class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
+  
+  val ioStuff = new BuildAndTeardownData("sql-workload")
+  
   val spark = SparkSessionProvider.spark
-  val outputFileRootName = BuildAndTeardownData.inputFolder
+  val outputFileRootName = ioStuff.sparkBenchTestFolder
   val smallData = s"$outputFileRootName/small-kmeans-data.parquet"
   val resOutput = "console"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    BuildAndTeardownData.deleteFiles()
-    BuildAndTeardownData.generateKMeansData(1000, 10, smallData)
+    ioStuff.deleteFolders()
+    ioStuff.createFolders()
+//    ioStuff.deleteFilesStr(Seq(smallData))
+    ioStuff.generateKMeansData(1000, 10, smallData)
   }
 
   override def afterAll(): Unit = {
     super.afterAll()
-    BuildAndTeardownData.deleteFiles()
+    ioStuff.deleteFolders()
   }
 
   "Sql Queries over generated kmeans data" should "work" in {
