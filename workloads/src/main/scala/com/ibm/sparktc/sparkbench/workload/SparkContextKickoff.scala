@@ -1,6 +1,5 @@
 package com.ibm.sparktc.sparkbench.workload
 
-import com.ibm.sparktc.sparkbench.workload.SuiteKickoff.kickoff
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import scala.collection.parallel.{ForkJoinTaskSupport, ParSeq}

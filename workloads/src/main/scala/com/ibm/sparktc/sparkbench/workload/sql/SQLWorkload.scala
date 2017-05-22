@@ -2,42 +2,42 @@ package com.ibm.sparktc.sparkbench.workload.sql
 
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
-import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
-import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import com.ibm.sparktc.sparkbench.workload.Workload
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
-case class SQLWorkloadConf(
-                                   name: String,
+case class SQLWorkloadResult(
+                            name: String,
+                            timestamp: Long,
+                            loadTime: Long,
+                            queryTime: Long,
+                            saveTime: Long = 0L,
+                            total_Runtime: Long
+                            )
+
+case class SQLWorkload (name: String,
                                    inputDir: Option[String],
                                    workloadResultsOutputDir: Option[String] = None,
                                    queryStr: String,
-                                   cache: Boolean
-                                 ) extends WorkloadConfig {
+                                   cache: Boolean) extends Workload {
 
-  def this(m: Map[String, Any], spark: SparkSession) = {
-    this(
-      verifyOrThrow(m, "name", "sql", s"Required field name does not match"),
-      inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
-      workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-      getOrThrow(m, "query").asInstanceOf[String],
-      getOrDefault(m, "cache", false)
-    )
-  }
-
-  override def toMap(cc: AnyRef): Map[String, Any] = super.toMap(this)
-}
-
-class SQLWorkload (conf: SQLWorkloadConf, spark: SparkSession) extends Workload[SQLWorkloadConf](conf, spark) {
+  def this(m: Map[String, Any]) =
+  this(
+    name = verifyOrThrow(m, "name", "sql", "Incorrect or missing workload name."),
+    inputDir = m.get("input").map(_.asInstanceOf[String]),
+    workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+    queryStr = getOrThrow(m, "query").asInstanceOf[String],
+    cache = getOrDefault(m, "cache", false)
+  )
 
   def loadFromDisk(spark: SparkSession): (Long, DataFrame) = time {
-    val df = load(spark, conf.inputDir.get)
-    if(conf.cache) df.cache()
+    val df = load(spark, inputDir.get)
+    if(cache) df.cache()
     df
   }
 
   def query(df: DataFrame, spark: SparkSession): (Long, DataFrame) = time {
     df.createOrReplaceTempView("input")
-    spark.sqlContext.sql(conf.queryStr)
+    spark.sqlContext.sql(queryStr)
   }
 
   def save(res: DataFrame, where: String, spark: SparkSession): (Long, Unit) = time {
@@ -48,26 +48,22 @@ class SQLWorkload (conf: SQLWorkloadConf, spark: SparkSession) extends Workload[
     val timestamp = System.currentTimeMillis()
     val (loadtime, df) = loadFromDisk(spark)
     val (querytime, res) = query(df, spark)
-    val (savetime, _) = conf.workloadResultsOutputDir match {
+    val (savetime, _) = workloadResultsOutputDir match {
       case Some(dir) => save(res, dir, spark)
       case _ => (0L, Unit)
     }
     val total = loadtime + querytime + savetime
 
-    val schema = StructType(
-      List(
-        StructField("name", StringType, nullable = false),
-        StructField("timestamp", LongType, nullable = false),
-        StructField("load", LongType, nullable = true),
-        StructField("query", LongType, nullable = false),
-        StructField("save", LongType, nullable = true),
-        StructField("total_runtime", LongType, nullable = false)
+    spark.createDataFrame(Seq(
+      SQLWorkloadResult(
+        "sql",
+        timestamp,
+        loadtime,
+        querytime,
+        savetime,
+        total
       )
-    )
-
-    val timeList = spark.sparkContext.parallelize(Seq(Row("sql", timestamp, loadtime, querytime, savetime, total)))
-
-    spark.createDataFrame(timeList, schema)
+    ))
   }
 
 }

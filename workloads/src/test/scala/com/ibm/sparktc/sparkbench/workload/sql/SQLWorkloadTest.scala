@@ -1,8 +1,7 @@
-package com.ibm.sparktc.sparkbench.workload.exercise
+package com.ibm.sparktc.sparkbench.workload.sql
 
 import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
-import com.ibm.sparktc.sparkbench.workload.sql.{SQLWorkload, SQLWorkloadConf}
 
 class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   
@@ -27,15 +26,12 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   "Sql Queries over generated kmeans data" should "work" in {
-    val conf = SQLWorkloadConf(
-      name = "sql",
+
+    val workload = SQLWorkload(name = "sql",
       inputDir = Some(smallData),
       workloadResultsOutputDir = Some(resOutput),
       queryStr = "select `0` from input where `0` < -0.9",
-      cache = false
-    )
-
-    val workload = new SQLWorkload(conf, spark)
+      cache = false)
 
     workload.doWorkload(None, spark)
   }

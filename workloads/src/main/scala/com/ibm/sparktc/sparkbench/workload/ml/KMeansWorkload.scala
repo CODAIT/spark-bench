@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
-import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadConfig}
+import com.ibm.sparktc.sparkbench.workload.Workload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
@@ -27,33 +27,21 @@ import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
  * limitations under the License.
  */
 
-case class KMeansWorkloadConfig(
-                                 name: String,
-                                 inputDir: Option[String],
-                                 workloadResultsOutputDir: Option[String],
-                                 k: Int,
-                                 seed: Long,
-                                 maxIterations: Int
-                       ) extends WorkloadConfig {
 
-  def this(m: Map[String, Any], spark: SparkSession) = {
-    this(
-        name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
-        inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
-        workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-        k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
-        seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
-        maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION)
-      )
-  }
+case class KMeansWorkload(name: String,
+                          inputDir: Option[String],
+                          workloadResultsOutputDir: Option[String],
+                          k: Int,
+                          seed: Long,
+                          maxIterations: Int) extends Workload {
 
-  override def toMap(cc: AnyRef) = super.toMap(this)
-
-
-}
-
-
-class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Workload[KMeansWorkloadConfig](conf, spark){
+  def this(m: Map[String, Any]) = this(
+    name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
+    inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
+    seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
+    maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION))
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     val timestamp = System.currentTimeMillis()
@@ -61,7 +49,7 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
     val (loadtime, data) = loadToCache(df.get, spark) // Should fail loudly if df == None
     val (trainTime, model) = train(data, spark)
     val (testTime, _) = test(model, data, spark)
-    val (saveTime, _) = conf.workloadResultsOutputDir match {
+    val (saveTime, _) = workloadResultsOutputDir match {
       case Some(_) => save(data, model, spark)
       case _ => (null, Unit)
     }
@@ -93,8 +81,8 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
         row => {
           val range = 0 until row.size
           val doublez: Array[Double] = range.map(i => {
-              val x = row.getDouble(i)
-              x
+            val x = row.getDouble(i)
+            x
           }).toArray
           Vectors.dense(doublez)
         }
@@ -107,16 +95,16 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
     time {
       KMeans.train(
         data = df,
-        k = conf.k,
-        maxIterations = conf.maxIterations,
+        k = k,
+        maxIterations = maxIterations,
         initializationMode = KMeans.K_MEANS_PARALLEL,
-        seed = conf.seed )
+        seed = seed)
     }
   }
 
   //Within Sum of Squared Errors
-  def test(model: KMeansModel, df: RDD[Vector], spark: SparkSession): (Long, Double) = {
-    time{ model.computeCost(df) }
+  def test(model: KMeansModel, df: RDD[Vector], spark: SparkSession): (Long, Double) = time {
+    model.computeCost(df)
   }
 
   def save(ds: RDD[Vector], model: KMeansModel, spark: SparkSession): (Long, Unit) = {
@@ -127,10 +115,9 @@ class KMeansWorkload(conf: KMeansWorkloadConfig, spark: SparkSession) extends Wo
       }
       import spark.implicits._
       // Already performed the match one level up so these are guaranteed to be Some(something)
-      writeToDisk(conf.workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF(), spark = spark)
+      writeToDisk(workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF(), spark = spark)
     }
     ds.unpersist()
     res
   }
-
 }
