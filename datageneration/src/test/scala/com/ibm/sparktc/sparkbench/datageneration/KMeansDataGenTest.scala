@@ -1,27 +1,29 @@
-package com.ibm.sparktc.sparkbench
+package com.ibm.sparktc.sparkbench.datageneration
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
-import com.ibm.sparktc.sparkbench.datageneration.DataGenerationConf
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
-import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
+import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 import scala.io.Source
 
 class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
-  val fileName = s"/tmp/kmeans/${java.util.UUID.randomUUID.toString}.csv"
+  val cool = new BuildAndTeardownData("kmeans-data-gen")
+  
+  val fileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
   override def beforeEach() {
+    cool.deleteFolders()
+    cool.createFolders()
     file = new File(fileName)
   }
 
   override def afterEach() {
-    Utils.deleteRecursively(file)
+    cool.deleteFolders()
   }
 
   "KMeansDataGeneration" should "generate data correctly" in {

@@ -21,7 +21,7 @@ case class CacheTest(name: String,
   def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     import spark.implicits._
 
-    val cached= df.getOrElse(Seq.empty[(Int)].toDF).cache
+    val cached = df.getOrElse(Seq.empty[(Int)].toDF).cache
 
     val (resultTime1, _) = time(cached.count)
     Thread.sleep(sleepMs)

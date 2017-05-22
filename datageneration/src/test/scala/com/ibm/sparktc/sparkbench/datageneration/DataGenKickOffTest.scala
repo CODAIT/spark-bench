@@ -1,23 +1,24 @@
-package com.ibm.sparktc.sparkbench
+package com.ibm.sparktc.sparkbench.datageneration
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
-import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerationKickoff}
+import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach {
-  val filename = "whatever.csv"
+  val cool = new BuildAndTeardownData("data-gen-kickoff")
+  val filename = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
   override def beforeEach() {
+    cool.deleteFolders()
+    cool.createFolders()
     file = new File(filename)
-    Utils.deleteRecursively(file)
   }
 
   override def afterEach() {
-    Utils.deleteRecursively(file)
+    cool.deleteFolders()
   }
 
   "DataGenKickOff" should "throw an error if it doesn't recognize an input" in {

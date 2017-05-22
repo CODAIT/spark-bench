@@ -39,7 +39,7 @@ lazy val workloads = project
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps
   )
-  .dependsOn(utils)
+  .dependsOn(utils % "compile->compile;test->test")
 
 lazy val datageneration = project
   .settings(

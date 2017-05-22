@@ -20,6 +20,7 @@ object Configurator {
     sparkContextConfs.map( sparkContextConf =>
       SparkContextConf(
         master = sparkContextConf.getString("master"),
+        suitesParallel = Try(sparkContextConf.getBoolean("suites-parallel")).getOrElse(false),
         suites = getConfigListByName("suites", sparkContextConf).map(parseSuite)
       )
     )
