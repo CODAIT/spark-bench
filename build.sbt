@@ -59,6 +59,14 @@ lazy val cli = project
   )
   .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
 
+lazy val `spark-launch` = project
+  .settings(
+    commonSettings,
+    libraryDependencies ++= sparkDeps,
+    libraryDependencies ++= testDeps,
+    libraryDependencies ++= typesafe
+  )
+  .dependsOn(cli, utils % "compile->compile;test->test")
 
 /*
     *************************

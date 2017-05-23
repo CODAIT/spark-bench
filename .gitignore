@@ -24,3 +24,4 @@ spark-warehouse
 # Distribution Files
 /spark-bench_2.1.0-SNAPSHOT/
 /spark-bench_2.1.0-SNAPSHOT.tgz
+/spark-warehouse/
