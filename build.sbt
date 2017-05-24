@@ -91,7 +91,8 @@ dist := {
   s"cp -r bin $tmpFolder/".!
   s"cp target/scala-2.11/spark-bench-${version.value}.jar $tmpFolder/lib".!
   s"cp kmeans-example.sh $tmpFolder".!
-  s"cp example-configuration-file.conf $tmpFolder".!
+  s"cp multi-submit-example.sh $tmpFolder".!
+  s"cp multi-submit-sleep.conf $tmpFolder".!
 
   val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
   val artifactName = buildNum match {
