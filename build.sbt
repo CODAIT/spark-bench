@@ -19,11 +19,11 @@ lazy val root = (project in file("."))
     commonSettings,
     name := "spark-bench",
     scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
-    mainClass in assembly := Some("CLIKickoff"),
+    mainClass in assembly := Some("SparkLaunch"),
     assemblyJarName in assembly := s"spark-bench-${version.value}.jar"
   )
-  .aggregate(utils, workloads, datageneration, cli)
-  .dependsOn(utils % "compile->compile;test->test", workloads, datageneration, cli)
+  .aggregate(utils, workloads, datageneration, cli, `spark-launch`)
+  .dependsOn(utils % "compile->compile;test->test", workloads, datageneration, cli, `spark-launch`)
 
 lazy val utils = project
   .settings(
