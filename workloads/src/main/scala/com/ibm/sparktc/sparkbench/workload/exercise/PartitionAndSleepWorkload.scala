@@ -7,11 +7,11 @@ import com.ibm.sparktc.sparkbench.utils.TimedSleepDefaults
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
 
-case class TimedSleepWorkload(name: String,
-                              inputDir: Option[String] = None,
-                              workloadResultsOutputDir: Option[String] = None,
-                              partitions: Int,
-                              sleepMS: Long) extends Workload {
+case class PartitionAndSleepWorkload(name: String,
+                                     inputDir: Option[String] = None,
+                                     workloadResultsOutputDir: Option[String] = None,
+                                     partitions: Int,
+                                     sleepMS: Long) extends Workload {
 
   def this(m: Map[String, Any]) = this(
       verifyOrThrow(m, "name", "timedsleep", s"Required field name does not match"),
