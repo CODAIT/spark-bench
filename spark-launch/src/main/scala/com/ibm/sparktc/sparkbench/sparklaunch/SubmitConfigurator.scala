@@ -20,9 +20,7 @@ object SubmitConfigurator {
 
   def parseSparkContext(file: File, config: Config): List[SparkLaunchConf] = {
     val sparkContextConfs = getConfigListByName("spark-contexts", config)
-    sparkContextConfs.map( sparkContextConf => SparkLaunchConf(sparkContextConf, file.getPath)
-
-    )
+    sparkContextConfs.map( sparkContextConf => SparkLaunchConf(sparkContextConf, file.getPath))
   }
 
   private def getConfigListByName(name: String, config: Config): List[Config] = {

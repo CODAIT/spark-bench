@@ -16,6 +16,7 @@ object SparkLaunch extends App {
     val confSeqPar = confSeq.par
     //TODO address the concern that this could be confSeqPar.size threads for EACH member of ParSeq
     confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(confSeqPar.size))
+    //TODO nope, this needs to launch new JVMs instead of just calling the method in a new thread
     confSeqPar.foreach( conf => SparkSubmit.main(conf.toSparkArgs()))
 
   }
