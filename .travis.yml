@@ -8,10 +8,7 @@ jdk:
 - oraclejdk8
 sudo: false
 install:
-- cd /opt
-- wget https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
-- tar -xvzf spark-2.1.1-bin-hadoop2.7.tgz
-- export SPARK_HOME=/opt/spark-2.1.1-bin-hadoop2.7.tgz
+- sh travis-shell-scripts/install-spark.sh
 sbt_args:
 - "-Xmx1536M"
 - "-XX:+UseConcMarkSweepGC"
@@ -27,7 +24,7 @@ notifications:
     recipients:
     - ecurtin@us.ibm.com
 before_deploy:
-- sh set_tags.sh
+- sh travis-shell-scripts/set_tags.sh
 deploy:
   skip_cleanup: true
   provider: releases
