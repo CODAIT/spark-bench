@@ -4,6 +4,7 @@ import java.io.File
 import org.apache.spark.deploy.SparkSubmit
 import scala.sys.process._
 import scala.collection.parallel.ForkJoinTaskSupport
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 
 object SparkLaunch extends App {
 
@@ -12,7 +13,7 @@ object SparkLaunch extends App {
     val path = args.head
     val confSeq = SubmitConfigurator(new File(path))
 
-    val sparkHome = sys.env("SPARK_HOME")
+    val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"))
 
     val confSeqPar = confSeq.par
     //TODO address the concern that this could be confSeqPar.size threads for EACH member of ParSeq
@@ -20,7 +21,5 @@ object SparkLaunch extends App {
     //TODO nope, this needs to launch new JVMs instead of just calling the method in a new thread
     confSeqPar.foreach( conf =>  s"""$sparkHome/bin/spark-submit ${conf.toSparkArgs()}""".!)
 
-
   }
-
 }
