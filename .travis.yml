@@ -7,6 +7,8 @@ scala:
 jdk:
 - oraclejdk8
 sudo: false
+env:
+- SPARK_HOME=/home/travis/spark-2.1.1-bin-hadoop2.7
 # These directories are cached to S3 at the end of the build
 cache:
   directories:
@@ -18,8 +20,6 @@ before_cache:
 - find $HOME/.sbt        -name "*.lock"               -print -delete
 install:
 - sh -x travis-shell-scripts/install-spark.sh
-env:
-- SPARK_HOME=/home/travis/spark-2.1.1-bin-hadoop2.7
 sbt_args:
 - "-Xmx1536M"
 - "-XX:+UseConcMarkSweepGC"
