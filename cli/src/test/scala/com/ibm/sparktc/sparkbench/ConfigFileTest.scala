@@ -32,5 +32,4 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with
     val path = resource.getPath
     CLIKickoff.main(Array(path))
   }
-
 }

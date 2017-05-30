@@ -52,11 +52,12 @@ object ArgsParser {
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-
+    // TODO add parsing for spark confs on command line
 		SparkContextConf(
 			suites = Seq(suite),
 			suitesParallel = false,
-			master = master
+			master = master,
+			sparkConfs = Map.empty
 		)
 	}
 

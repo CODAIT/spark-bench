@@ -6,15 +6,17 @@ case class SparkContextConf(
                            //todo all the exec mem, cores, etc. will go here
                             master: String,
                             suitesParallel: Boolean,
-                            suites: Seq[Suite]
+                            suites: Seq[Suite],
+                            sparkConfs: Map[String, String]
                            ) {
 
   def createSparkContext(): SparkSession = {
-    SparkSession
-      .builder()
+    val builder = SparkSession.builder()
       .appName("spark-bench workload")
       .master(master)
-      .getOrCreate()
-  }
 
+    sparkConfs.foldLeft(builder) { case (b, (k, v)) => b.config(k, v) }
+
+    builder.getOrCreate()
+  }
 }
