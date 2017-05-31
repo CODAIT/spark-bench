@@ -17,13 +17,15 @@ object Configurator {
 
   def parseSparkContext(config: Config): List[SparkContextConf] = {
     val sparkContextConfs = getConfigListByName("spark-contexts", config)
-    sparkContextConfs.map( sparkContextConf =>
+    sparkContextConfs.map { sparkContextConf =>
+      val sparkConfs = Try(sparkContextConf.getObject("conf")).map(toStringMap).getOrElse(Map.empty)
+
       SparkContextConf(
         master = sparkContextConf.getString("master"),
         suitesParallel = Try(sparkContextConf.getBoolean("suites-parallel")).getOrElse(false),
-        suites = getConfigListByName("suites", sparkContextConf).map(parseSuite)
-      )
-    )
+        suites = getConfigListByName("suites", sparkContextConf).map(parseSuite),
+        sparkConfs = sparkConfs)
+    }
   }
 
   private def getConfigListByName(name: String, config: Config): List[Config] = {
@@ -58,4 +60,6 @@ object Configurator {
     stuff.map(kv => {kv._1 -> kv._2.toSeq})
   }
 
+  def toStringMap(co: ConfigObject): Map[String,String] =
+    co.asScala.toMap.mapValues(v => v.unwrapped.toString)
 }
