@@ -61,12 +61,12 @@ lazy val cli = project
 lazy val `spark-launch` = project
   .settings(
     commonSettings,
-
     name := "spark-bench-launch",
     scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
 //    assemblyJarName in assembly := s"spark-bench-launch-${version.value}.jar",
     assemblyOutputPath in assembly := new File(s"target/assembly/spark-bench-launch-${version.value}.jar"),
+    libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
   )
@@ -127,3 +127,8 @@ dist := (dist dependsOn rmDist).value
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist).value
+
+
+
+
+
