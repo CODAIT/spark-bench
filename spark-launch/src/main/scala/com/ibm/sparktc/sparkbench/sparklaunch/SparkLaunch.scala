@@ -1,7 +1,6 @@
 package com.ibm.sparktc.sparkbench.sparklaunch
 
 import java.io.File
-import org.apache.spark.deploy.SparkSubmit
 import scala.sys.process._
 import scala.collection.parallel.ForkJoinTaskSupport
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow

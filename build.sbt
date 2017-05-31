@@ -14,17 +14,6 @@ lazy val commonSettings = Seq(
   test in assembly := {}
 )
 
-lazy val root = (project in file("."))
-  .settings(
-    commonSettings,
-    name := "spark-bench",
-    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
-    mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
-    assemblyJarName in assembly := s"spark-bench-${version.value}.jar"
-  )
-  .aggregate(utils, workloads, datageneration, cli)
-  .dependsOn(utils % "compile->compile;test->test", workloads, datageneration, cli)
-
 lazy val utils = project
   .settings(
     commonSettings,
@@ -53,6 +42,11 @@ lazy val datageneration = project
 lazy val cli = project
   .settings(
     commonSettings,
+    name := "spark-bench",
+    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
+    mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff"),
+//    assemblyJarName in assembly := s"spark-bench-${version.value}.jar",
+    assemblyOutputPath in assembly := new File(s"target/assembly/spark-bench-${version.value}.jar"),
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe,
@@ -60,12 +54,19 @@ lazy val cli = project
 
   )
   .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
+  .aggregate(utils, workloads, datageneration)
+
 
 
 lazy val `spark-launch` = project
   .settings(
     commonSettings,
-    libraryDependencies ++= sparkDeps,
+
+    name := "spark-bench-launch",
+    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
+    mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
+//    assemblyJarName in assembly := s"spark-bench-launch-${version.value}.jar",
+    assemblyOutputPath in assembly := new File(s"target/assembly/spark-bench-launch-${version.value}.jar"),
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
   )
@@ -93,7 +94,7 @@ dist := {
 
   s"cp readme.md $tmpFolder".!
   s"cp -r bin $tmpFolder/".!
-  s"cp target/scala-2.11/spark-bench-${version.value}.jar $tmpFolder/lib".!
+  s"cp target/assembly/*.jar $tmpFolder/lib".!
   s"cp kmeans-example.sh $tmpFolder".!
   s"cp multi-submit-example.sh $tmpFolder".!
   s"cp multi-submit-sleep.conf $tmpFolder".!
