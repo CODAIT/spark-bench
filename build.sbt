@@ -1,9 +1,5 @@
 import Dependencies._
-//import Constants._
-
-logLevel := Level.Warn
-
-//def sparkBenchHomeDir(): String = baseDirectory.value.getPath
+import sbt.Keys.logLevel
 
 /*
     ****************************************************************
@@ -22,6 +18,8 @@ val sparklaunchTestResourcesJarsFile = settingKey[String]("folder where compiled
 //sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/spark-launch/src/test/resources/jars/"
 
 lazy val commonSettings = Seq(
+  logLevel := Level.Warn,
+    logLevel in assembly := Level.Warn,
   organization := "com.ibm.sparktc",
   scalaVersion := "2.11.8",
   parallelExecution in Test := false,
@@ -102,7 +100,7 @@ lazy val cli = project
   .settings(
     commonSettings,
     name := "spark-bench",
-    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
+//    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     cleanJars := {
       println("\tCleaning up jars before assembling")
       s"rm ${assemblyFile.value}/*.jar".!
@@ -149,7 +147,7 @@ lazy val `spark-launch` = project
     },
     commonSettings,
     name := "spark-bench-launch",
-    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
+//    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
 //    assemblyJarName in assembly := s"spark-bench-launch-${version.value}.jar",
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchLaunchJar.value}"),
