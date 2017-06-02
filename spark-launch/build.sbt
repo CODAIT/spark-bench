@@ -7,4 +7,4 @@ horrible := {
   "echo Okay I'm done being horrible......................................................................".!
 }
 
-test in Test <<= test in Test dependsOn horrible
+//test in Test <<= test in Test dependsOn (Keys.assembly in Compile)

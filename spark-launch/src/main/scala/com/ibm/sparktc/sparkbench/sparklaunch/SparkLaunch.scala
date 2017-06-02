@@ -23,7 +23,8 @@ object SparkLaunch extends App {
     confSeqPar.foreach( conf =>  {
       val argz: Array[String] = conf.toSparkArgs()
       println(s"argz are: ${argz.mkString(", ")}")
-      s"""$sparkHome/bin/spark-submit $argz""".!
+      val returnCode: Int = s"""$sparkHome/bin/spark-submit ${argz.mkString(" ")}""".!
+      if (returnCode != 0) throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${args.mkString(" ")}")
     })
 
   }

@@ -8,6 +8,7 @@ import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 import scala.util.Try
 
 case class SparkLaunchConf(
+                            `class`              : String,
                            master                 : String,
 //                           deployMode             : String,
 //                           executorMemory         : String,
@@ -25,7 +26,7 @@ case class SparkLaunchConf(
 //                           files                  : String,
 //                           pyFiles                : String,
 //                           archives               : String,
-                           `class`              : String,
+
 //                           primaryResource        : String,
 //                           name                   : String,
                            childArgs              : Array[String]
@@ -42,16 +43,35 @@ case class SparkLaunchConf(
       a + (f.getName -> f.get(cc))
     }
 
-  val thisJar = ClassLoader.getSystemClassLoader.getResource(".").getPath
+//  val thisJar = ClassLoader.getSystemClassLoader.getResource(".").getPath
+  val jar = {
+//    if(thisJar == null){
+//      println("AAAAAHHHH I DIDN'T FIND A JAR WHAT DO")
 
-  if(thisJar == null) println("AAAAAHHHH I DIDN'T FIND A JAR WHAT DO")
-  else println(s"THIS IS MY JAR AREN'T YOU PROUD: $thisJar")
+      val relativePath = "/jars"
+      val resource = getClass.getResource(relativePath)
+
+
+    val path = getClass.getResource(relativePath)
+    val folder = new File(path.getPath)
+    assert (folder.exists && folder.isDirectory)
+    val filez = folder.listFiles.toList
+    filez.foreach(file => println(file.getName))
+    filez.filter(file => file.getName.startsWith("spark-bench")).head.getPath
+
+//    }
+//    else{
+//      println(s"THIS IS MY JAR AREN'T YOU PROUD: $thisJar")
+//      val fileList = new File(thisJar).getParentFile.listFiles().toList.map(_.getPath)
+//       fileList.filter(_ == thisJar).head
+//    }
+  }
 
   def toSparkArgs(): Array[String] = {
-    val mm = toMap(this).filterNot(keyValuePair => keyValuePair._1 == "childArgs")
+    val mm = toMap(this).filterNot(keyValuePair => (keyValuePair._1 == "childArgs") || (keyValuePair._1 == "jar"))
     val m = mm.map(keyValue => keyValue._1 -> keyValue._2.asInstanceOf[String])
     val arr: Array[String] = m.flatMap(keyValuePair => Array(s"--${keyValuePair._1}", s"${keyValuePair._2}")).toArray
-    val arrCurried = Array("--verbose") ++ arr ++ Array(thisJar) ++ childArgs
+    val arrCurried = arr ++ Seq(jar) ++ childArgs
     arrCurried
   }
 }

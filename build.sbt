@@ -1,5 +1,39 @@
 import Dependencies._
+import Constants._
 
+logLevel := Level.Warn
+
+/*
+    ****************************************************************
+    * Accessory Methods (have to be up here for forward reference) *
+    ****************************************************************
+*/
+
+def cleanJars(): Unit = {
+  s"rm target/assembly/*.jar".!
+  s"rm spark-launch/src/test/resources/jars/*.jar".!
+}
+
+//def assembleJarForTest(): File = {
+//  val cool: File = (assembly in Compile in cli).value
+//  cool
+//}
+
+def moveJar(): Unit = {
+  s"mv target/assembly/*.jar spark-launch/src/test/resources/jars/".!
+}
+
+//def beforeTestInSparkLaunch(): Unit = {
+//  println("\tCleaning Jars....")
+//  cleanJars()
+//  println("\tDone")
+//  println("\tAssembling jar for test...")
+//  assembleJarForTest()
+//  println("\tDone")
+//  println("\tMoving jar to resources file...")
+//  moveJar()
+//  println("\tDone")
+//}
 
 /*
     ***************************
@@ -46,7 +80,7 @@ lazy val cli = project
     scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff"),
 //    assemblyJarName in assembly := s"spark-bench-${version.value}.jar",
-    assemblyOutputPath in assembly := new File(s"target/assembly/spark-bench-${version.value}.jar"),
+    assemblyOutputPath in assembly := new File(sparkBenchJar),
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe,
@@ -56,16 +90,30 @@ lazy val cli = project
   .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
   .aggregate(utils, workloads, datageneration)
 
-
+val beforeSparkLaunchTest = TaskKey[Unit]("beforeSparkLaunchTest", "things to do before running tests in spark-launch")
 
 lazy val `spark-launch` = project
   .settings(
+    beforeSparkLaunchTest := {
+      println("\tCleaning Jars....")
+      cleanJars()
+      println("\tDone")
+      println("\tAssembling jar for test...")
+      (assembly in Compile in cli)
+      println("\tDone")
+      println("\tMoving jar to resources file...")
+      moveJar()
+      println("\tDone")
+    },
+    test in Test := {
+      ((test in Test) dependsOn(beforeSparkLaunchTest)).value
+    },
     commonSettings,
     name := "spark-bench-launch",
     scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
 //    assemblyJarName in assembly := s"spark-bench-launch-${version.value}.jar",
-    assemblyOutputPath in assembly := new File(s"target/assembly/spark-bench-launch-${version.value}.jar"),
+    assemblyOutputPath in assembly := new File(sparkBenchLaunchJar),
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
@@ -127,8 +175,5 @@ dist := (dist dependsOn rmDist).value
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist).value
-
-
-
 
 
