@@ -36,10 +36,7 @@ sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/src/test/re
 )
 
 def cleanJarz(): Unit = {
-  println("\tCleaning up jars before assembling")
-  s"rm ./target/assembly/*.jar".!
-  s"rm ./spark-launch/src/test/resources/jars/*.jar".!
-  println("\tDone")
+
 
 }
 
@@ -107,7 +104,10 @@ lazy val cli = project
     name := "spark-bench",
     scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     cleanJars := {
-      cleanJarz()
+      println("\tCleaning up jars before assembling")
+      s"rm ${assemblyFile.value}/*.jar".!
+      s"rm ./spark-launch/src/test/resources/jars/*.jar".!
+      println("\tDone")
     },
     assembly in Compile := {
       ((assembly in Compile) dependsOn(cleanJars in Test)).value
