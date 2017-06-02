@@ -27,3 +27,4 @@ spark-warehouse
 
 spark-bench-test
 spark-bench-demo
+/spark-launch/src/test/resources/jars/*
