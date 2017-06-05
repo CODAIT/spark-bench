@@ -12,7 +12,7 @@ object SparkLaunch extends App {
     println(s"these are my argz: ${args.mkString(", ")}")
     assert(args.nonEmpty)
     val path = args.head
-    val confSeq = SubmitConfigurator(new File(path))
+    val confSeq: Seq[SparkLaunchConf] = SubmitConfigurator(new File(path))
 
     val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"))
 
@@ -21,7 +21,7 @@ object SparkLaunch extends App {
     confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(confSeqPar.size))
     //TODO nope, this needs to launch new JVMs instead of just calling the method in a new thread
     confSeqPar.foreach( conf =>  {
-      val argz: Array[String] = conf.toSparkArgs()
+      val argz: Array[String] = conf.toSparkArgs
       println(s"argz are: ${argz.mkString(", ")}")
       val returnCode: Int = s"""$sparkHome/bin/spark-submit ${argz.mkString(" ")}""".!
       if (returnCode != 0) throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${args.mkString(" ")}")

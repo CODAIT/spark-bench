@@ -1,14 +1,16 @@
 package com.ibm.sparktc.sparkbench.workload
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.SparkSession
 
-import scala.collection.parallel.{ForkJoinTaskSupport, ParSeq}
+import scala.collection.parallel.ForkJoinTaskSupport
 
-object SparkContextKickoff {
+//TODO this is probably the best place to kickoff the data generation suites and then the workloads
 
-  def run(seq: Seq[SparkContextConf]): Unit = {
+object MultipleSuiteKickoff {
+
+  def run(seq: Seq[MultiSuiteRunConfig]): Unit = {
     seq.foreach(contextConf => {
-      val spark = contextConf.createSparkContext()
+      val spark = createSparkContext()
       if(contextConf.suitesParallel) {
         runSuitesInParallel(contextConf.suites, spark)
       }
@@ -31,4 +33,7 @@ object SparkContextKickoff {
     })
   }
 
+  def createSparkContext(): SparkSession = {
+    SparkSession.builder().getOrCreate()
+  }
 }
