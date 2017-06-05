@@ -19,7 +19,7 @@ val sparklaunchTestResourcesJarsFile = settingKey[String]("folder where compiled
 
 lazy val commonSettings = Seq(
   logLevel := Level.Warn,
-    logLevel in assembly := Level.Warn,
+    logLevel in assembly := Level.Info,
   organization := "com.ibm.sparktc",
   scalaVersion := "2.11.8",
   parallelExecution in Test := false,
