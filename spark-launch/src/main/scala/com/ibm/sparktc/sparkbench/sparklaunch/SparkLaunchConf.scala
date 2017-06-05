@@ -14,11 +14,6 @@ case class SparkLaunchConf(
                           sparkConfs : Array[String],
                             childArgs             : Array[String]
                            ){
-//  def toMap(cc: AnyRef): Map[String, Any] =
-//    (Map[String, Any]() /: cc.getClass.getDeclaredFields) {(a, f) =>
-//      f.setAccessible(true)
-//      a + (f.getName -> f.get(cc))
-//    }
 
   def toSparkArgs: Array[String] = {
     Array(s"--class ${`class`}") ++ sparkConfs ++ Array(sparkBenchJar) ++ childArgs
@@ -36,7 +31,7 @@ object SparkLaunchConf {
     )
 
   def getSparkBenchJar: String = {
-    val thisJar = ClassLoader.getSystemClassLoader.getResource(".").getPath
+    val thisJar = ClassLoader.getSystemClassLoader.getResource(".")
     // If thisJar == null then assume we're doing sbt test
     if(thisJar == null) {
       val relativePath = "/jars"
@@ -50,8 +45,9 @@ object SparkLaunchConf {
     }
     // Else assume we're in a compiled jar
     else {
-      println(s"THIS IS MY JAR AREN'T YOU PROUD: $thisJar")
-      val fileList: Seq[String]  = new File(thisJar).getParentFile.listFiles().toList.map(_.getPath)
+      val path = thisJar.getPath
+      println(s"THIS IS MY JAR AREN'T YOU PROUD: $path")
+      val fileList: Seq[String]  = new File(path).getParentFile.listFiles().toList.map(_.getPath)
       fileList.filterNot(_ == thisJar).head
     }
   }
