@@ -1,5 +1,4 @@
 import Dependencies._
-import sbt.Keys.logLevel
 
 /*
     ****************************************************************
@@ -12,62 +11,22 @@ val sparkBenchLaunchJar = settingKey[String]("jar name and relative path for spa
 val assemblyFile = settingKey[String]("folder where assembled jars go")
 val sparklaunchTestResourcesJarsFile = settingKey[String]("folder where compiled jar goes")
 
-//sparkBenchJar := s"spark-bench-${version.value}.jar"
-//sparkBenchLaunchJar := s"spark-bench-launch-${version.value}.jar"
-//assemblyFile := s"${baseDirectory.value.getPath}/target/assembly/"
-//sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/spark-launch/src/test/resources/jars/"
-
 lazy val commonSettings = Seq(
-  logLevel := Level.Warn,
-    logLevel in assembly := Level.Info,
   organization := "com.ibm.sparktc",
   scalaVersion := "2.11.8",
   parallelExecution in Test := false,
   test in assembly := {},
   sparkBenchJar := s"spark-bench-${version.value}.jar",
-    sparkBenchLaunchJar := s"spark-bench-launch-${version.value}.jar",
-assemblyFile := s"${baseDirectory.value.getParent}/target/assembly",
-sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/src/test/resources/jars/"
-
-
-
+  sparkBenchLaunchJar := s"spark-bench-launch-${version.value}.jar",
+  assemblyFile := s"${baseDirectory.value.getParent}/target/assembly",
+  sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/src/test/resources/jars/"
 )
-
-def cleanJarz(): Unit = {
-
-
-}
-
-//def assembleJarForTest(): File = {
-//  val cool: File = (assembly in Compile in cli).value
-//  cool
-//}
-
-//def moveJarr(): Unit = {
-//  println("\tMoving assembled jar to resources folder for test")
-//  s"cp ./target/assembly/${sparkBenchJar.value} ./spark-launch/src/test/resources/jars/".!
-//  println("\tDone")
-//}
-
-//def beforeTestInSparkLaunch(): Unit = {
-//  println("\tCleaning Jars....")
-//  cleanJars()
-//  println("\tDone")
-//  println("\tAssembling jar for test...")
-//  assembleJarForTest()
-//  println("\tDone")
-//  println("\tMoving jar to resources file...")
-//  moveJar()
-//  println("\tDone")
-//}
 
 /*
     ***************************
     *       PROJECT           *
     ***************************
 */
-
-
 
 lazy val utils = project
   .settings(
@@ -100,7 +59,6 @@ lazy val cli = project
   .settings(
     commonSettings,
     name := "spark-bench",
-//    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     cleanJars := {
       println("\tCleaning up jars before assembling")
       s"rm ${assemblyFile.value}/*.jar".!
@@ -111,7 +69,6 @@ lazy val cli = project
       ((assembly in Compile) dependsOn(cleanJars in Test)).value
     },
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff"),
-//    assemblyJarName in assembly := s"spark-bench-${version.value}.jar",
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchJar.value}"),
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
@@ -122,16 +79,7 @@ lazy val cli = project
   .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
   .aggregate(utils, workloads, datageneration)
 
-//val beforeSparkLaunchTest = TaskKey[Unit]("beforeSparkLaunchTest", "things to do before running tests in spark-launch")
 val moveJar = TaskKey[Unit]("moveJars", "move the assembled jars for spark-launch test")
-
-/*
-cleanJars
-assembly in cli depends on cleanJars
-moveJar depends on assembly in cli
-test in test depends on moveJar
- */
-
 
 lazy val `spark-launch` = project
   .settings(
@@ -147,9 +95,7 @@ lazy val `spark-launch` = project
     },
     commonSettings,
     name := "spark-bench-launch",
-//    scalacOptions ++= Seq("-feature", "-Ylog-classpath"),
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
-//    assemblyJarName in assembly := s"spark-bench-launch-${version.value}.jar",
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchLaunchJar.value}"),
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
@@ -212,5 +158,4 @@ dist := (dist dependsOn rmDist).value
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist).value
-
 
