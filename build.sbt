@@ -5,6 +5,7 @@ import Dependencies._
     * Accessory Methods (have to be up here for forward reference) *
     ****************************************************************
 */
+testOptions in Test += Tests.Argument("-F")
 
 val sparkBenchJar = settingKey[String]("jar name and relative path for spark-bench")
 val sparkBenchLaunchJar = settingKey[String]("jar name and relative path for spark-bench-launch")
@@ -93,7 +94,6 @@ lazy val `spark-launch` = project
     test in Test := {
       ((test in Test) dependsOn(moveJar in Test)).value
     },
-    testOptions in Test += Tests.Argument("-F"),
     commonSettings,
     name := "spark-bench-launch",
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
