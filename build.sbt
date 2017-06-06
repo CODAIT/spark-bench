@@ -5,7 +5,6 @@ import Dependencies._
     * Accessory Methods (have to be up here for forward reference) *
     ****************************************************************
 */
-testOptions in Test += Tests.Argument("-F")
 
 val sparkBenchJar = settingKey[String]("jar name and relative path for spark-bench")
 val sparkBenchLaunchJar = settingKey[String]("jar name and relative path for spark-bench-launch")
@@ -20,7 +19,8 @@ lazy val commonSettings = Seq(
   sparkBenchJar := s"spark-bench-${version.value}.jar",
   sparkBenchLaunchJar := s"spark-bench-launch-${version.value}.jar",
   assemblyFile := s"${baseDirectory.value.getParent}/target/assembly",
-  sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/src/test/resources/jars/"
+  sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/src/test/resources/jars/",
+  testOptions in Test += Tests.Argument("-F")
 )
 
 /*
