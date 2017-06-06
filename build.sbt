@@ -93,6 +93,7 @@ lazy val `spark-launch` = project
     test in Test := {
       ((test in Test) dependsOn(moveJar in Test)).value
     },
+    testOptions in Test += Tests.Argument("-F"),
     commonSettings,
     name := "spark-bench-launch",
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
