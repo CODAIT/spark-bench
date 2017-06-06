@@ -20,7 +20,7 @@ lazy val commonSettings = Seq(
   sparkBenchLaunchJar := s"spark-bench-launch-${version.value}.jar",
   assemblyFile := s"${baseDirectory.value.getParent}/target/assembly",
   sparklaunchTestResourcesJarsFile := s"${baseDirectory.value.getPath}/src/test/resources/jars/",
-  testOptions in Test += Tests.Argument("-F")
+  testOptions in Test += Tests.Argument("-oF")
 )
 
 /*
