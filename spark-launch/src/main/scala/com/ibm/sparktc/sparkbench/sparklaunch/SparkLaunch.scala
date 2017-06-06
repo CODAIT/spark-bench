@@ -52,7 +52,8 @@ object SparkLaunch extends App {
     println(s"argz are: ${argz.mkString(", ")}")
     val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"))
     val returnCode: Int = s"""$sparkHome/bin/spark-submit ${argz.mkString(" ")}""".!
-    if (returnCode != 0)
-      throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${args.mkString(" ")}")
+    if (returnCode != 0) {
+      throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${argz.mkString(" ")}")
+    }
   }
 }
