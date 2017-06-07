@@ -3,7 +3,7 @@ package com.ibm.sparktc.sparkbench.workload
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.ibm.sparktc.sparkbench.workload.exercise.{CacheTest, PartitionAndSleepWorkload, Sleep, SparkPi}
-import com.ibm.sparktc.sparkbench.workload.ml.{KMeansWorkload, LogisticRegressionBenchmML}
+import com.ibm.sparktc.sparkbench.workload.ml.{KMeansWorkload, LogisticRegressionWorkload}
 import com.ibm.sparktc.sparkbench.workload.sql.SQLWorkload
 import org.apache.spark.sql.SparkSession
 
@@ -18,7 +18,7 @@ object ConfigCreator {
     name match {
       case "timedsleep" => new PartitionAndSleepWorkload(m)
       case "kmeans" => new KMeansWorkload(m)
-      case "lr-bml" => new LogisticRegressionBenchmML(m)
+      case "lr-bml" => new LogisticRegressionWorkload(m)
       case "cachetest" => new CacheTest(m)
       case "sql" => new SQLWorkload(m)
       case "sleep" => new Sleep(m)

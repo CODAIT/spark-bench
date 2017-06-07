@@ -13,7 +13,7 @@ import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType
 // https://github.com/szilard/benchm-ml/blob/master/1-linear/5-spark.txt
 // ¯\_(ツ)_/¯
 
-case class LogisticRegressionBenchmML(
+case class LogisticRegressionWorkload(
   name: String,
   inputDir: Option[String],
   workloadResultsOutputDir: Option[String],
@@ -71,8 +71,6 @@ case class LogisticRegressionBenchmML(
           trainCount,
           trainTime,
           testFile,
-          trainTime,
-          testTime,
           testCount,
           testTime,
           loadTime,
