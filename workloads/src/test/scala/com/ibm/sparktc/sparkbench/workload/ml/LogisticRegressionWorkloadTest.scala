@@ -1,10 +1,13 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
-import com.holdenkarau.spark.testing.DataFrameSuiteBase
+import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import com.ibm.sparktc.sparkbench.workload.ConfigCreator
 import org.scalatest.{FlatSpec, Matchers}
 
-class LogisticRegressionWorkloadTest extends FlatSpec with Matchers with DataFrameSuiteBase {
+class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
+
+  val spark = SparkSessionProvider.spark
+
   private val cfg = Map(
     "name" -> "lr-bml",
     "input" -> "workloads/src/test/resources/lr-bml",
