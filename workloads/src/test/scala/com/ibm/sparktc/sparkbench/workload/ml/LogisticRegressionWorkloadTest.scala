@@ -5,8 +5,7 @@ import com.ibm.sparktc.sparkbench.workload.ConfigCreator
 import org.scalatest.{FlatSpec, Matchers}
 
 class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
-
-  val spark = SparkSessionProvider.spark
+  private implicit val spark = SparkSessionProvider.spark
 
   private val cfg = Map(
     "name" -> "lr-bml",
@@ -32,56 +31,56 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
   }
 
   "LogisticRegressionWorkload" should "load training file" in {
-    val dtrain = lr.load(trainFile)(spark)
-    dtrain.count shouldBe 100
+    val dtrain = lr.load(trainFile)
+    dtrain.count shouldBe 10
   }
 
   it should "load the test file" in {
-    val dtest = lr.load(testFile)(spark)
+    val dtest = lr.load(testFile)
     dtest.count shouldBe 100
   }
 
   "the ld method" should "split into 32 partitions by default" in {
-    val (_, ds) = lr.ld(trainFile)(spark)
+    val (_, ds) = lr.ld(testFile)
     ds.rdd.getNumPartitions shouldBe 32
   }
 
   it should "partition accordingly" in {
     val ncfg = cfg ++ Map("numpartitions" -> 48)
     val workload = ConfigCreator.mapToConf(ncfg).asInstanceOf[LogisticRegressionWorkload]
-    val (_, ds) = workload.ld(trainFile)(spark)
+    val (_, ds) = workload.ld(testFile)
     ds.rdd.getNumPartitions shouldBe 48
   }
 
   it should "cache by default" in {
-    val (_, ds) = lr.ld(trainFile)(spark)
+    val (_, ds) = lr.ld(trainFile)
     ds.storageLevel.useMemory shouldBe true
   }
 
   it should "disable caching" in {
     val ncfg = cfg ++ Map("cacheenabled" -> false)
     val workload = ConfigCreator.mapToConf(ncfg).asInstanceOf[LogisticRegressionWorkload]
-    val (_, ds) = workload.ld(trainFile)(spark)
+    val (_, ds) = workload.ld(trainFile)
     ds.storageLevel.useMemory shouldBe false
   }
 
   it should "enable caching" in {
     val ncfg = cfg ++ Map("cacheenabled" -> true)
     val workload = ConfigCreator.mapToConf(ncfg).asInstanceOf[LogisticRegressionWorkload]
-    val (_, ds) = workload.ld(trainFile)(spark)
+    val (_, ds) = workload.ld(trainFile)
     ds.storageLevel.useMemory shouldBe true
   }
 
   "doWorkload" should "do just that" in {
-    val (_, ds) = lr.ld(trainFile)(spark)
+    val (_, ds) = lr.ld(trainFile)
     val odf = lr.doWorkload(Some(ds), spark)
     odf.count shouldBe 1
     val r = odf.head
     r.getAs[String]("name") shouldBe "lr-bml"
     r.getAs[String]("train_file") shouldBe "lr-train.csv"
     r.getAs[String]("test_file") shouldBe "lr-test.csv"
-    r.getAs[Long]("train_count") shouldBe 100L
+    r.getAs[Long]("train_count") shouldBe 10L
     r.getAs[Long]("test_count") shouldBe 100L
-    r.getAs[Double]("area_under_roc") shouldBe 0.99 +- 0.01
+    r.getAs[Double]("area_under_roc") shouldBe 0.615 +- 0.01
   }
 }
