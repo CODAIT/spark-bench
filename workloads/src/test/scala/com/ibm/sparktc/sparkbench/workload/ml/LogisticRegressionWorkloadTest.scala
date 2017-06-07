@@ -32,7 +32,7 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
 
   "LogisticRegressionWorkload" should "load training file" in {
     val dtrain = lr.load(trainFile)
-    dtrain.count shouldBe 100
+    dtrain.count shouldBe 10
   }
 
   it should "load the test file" in {
@@ -41,14 +41,14 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
   }
 
   "the ld method" should "split into 32 partitions by default" in {
-    val (_, ds) = lr.ld(trainFile)
+    val (_, ds) = lr.ld(testFile)
     ds.rdd.getNumPartitions shouldBe 32
   }
 
   it should "partition accordingly" in {
     val ncfg = cfg ++ Map("numpartitions" -> 48)
     val workload = ConfigCreator.mapToConf(ncfg).asInstanceOf[LogisticRegressionWorkload]
-    val (_, ds) = workload.ld(trainFile)
+    val (_, ds) = workload.ld(testFile)
     ds.rdd.getNumPartitions shouldBe 48
   }
 
@@ -79,8 +79,8 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
     r.getAs[String]("name") shouldBe "lr-bml"
     r.getAs[String]("train_file") shouldBe "lr-train.csv"
     r.getAs[String]("test_file") shouldBe "lr-test.csv"
-    r.getAs[Long]("train_count") shouldBe 100L
+    r.getAs[Long]("train_count") shouldBe 10L
     r.getAs[Long]("test_count") shouldBe 100L
-    r.getAs[Double]("area_under_roc") shouldBe 0.51 +- 0.01
+    r.getAs[Double]("area_under_roc") shouldBe 0.615 +- 0.01
   }
 }
