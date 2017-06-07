@@ -6,7 +6,7 @@ import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator => BCE}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
+import org.apache.spark.sql.types._
 
 // ¯\_(ツ)_/¯
 // the logic for this workload came from:
@@ -33,9 +33,7 @@ case class LogisticRegressionWorkload(
     cacheEnabled = getOrDefault(m, "cacheenabled", true)
   )
 
-  private
-
-  def load(filename: String)(implicit spark: SparkSession): DataFrame = {
+  private[ml] def load(filename: String)(implicit spark: SparkSession): DataFrame = {
     import spark.implicits._
     spark.sparkContext.textFile(filename)
       .map { line =>
@@ -46,10 +44,10 @@ case class LogisticRegressionWorkload(
       }.toDF("label", "features")
   }
 
-  private def ld(fn: String)(implicit spark: SparkSession) = time {
-    val rdd = load(s"${inputDir.get}/$trainFile")(spark).repartition(numPartitions)
-    if (cacheEnabled) rdd.cache()
-    rdd
+  private[ml] def ld(fn: String)(implicit spark: SparkSession) = time {
+    val ds = load(s"${inputDir.get}/$trainFile")(spark).repartition(numPartitions)
+    if (cacheEnabled) ds.cache()
+    ds
   }
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
@@ -58,7 +56,7 @@ case class LogisticRegressionWorkload(
     val (ltestTime, d_test) = ld(s"${inputDir.get}/$testFile")(spark)
     val (countTime, (trainCount, testCount)) = time { (d_train.count(), d_test.count()) }
     val (trainTime, model) = time(new LogisticRegression().setTol(1e-4).fit(d_train))
-    val (testTime, _) = time(new BCE().setMetricName("areaUnderROC").evaluate(model.transform(d_test)))
+    val (testTime, areaUnderROC) = time(new BCE().setMetricName("areaUnderROC").evaluate(model.transform(d_test)))
 
     val loadTime = ltrainTime + ltestTime
     val timeList = spark.sparkContext.parallelize(
@@ -75,7 +73,8 @@ case class LogisticRegressionWorkload(
           testTime,
           loadTime,
           countTime,
-          loadTime + trainTime + testTime
+          loadTime + trainTime + testTime,
+          areaUnderROC
         )
       )
     )
@@ -94,7 +93,8 @@ case class LogisticRegressionWorkload(
           StructField("test_time", LongType, nullable = false),
           StructField("load_time", LongType, nullable = false),
           StructField("count_time", LongType, nullable = false),
-          StructField("total_runtime", LongType, nullable = false)
+          StructField("total_runtime", LongType, nullable = false),
+          StructField("area_under_roc", DoubleType, nullable = false)
         )
       )
     )
