@@ -69,6 +69,16 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
       val sleepMS = opt[List[Long]](short = 't', default = Some(List(TimedSleepDefaults.SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
     }
     addSubcommand(timedsleep)
+
+    // LOGISTIC REGRESSION
+    val lrStr: String = "lr-bml"
+    val lr = new SuiteArgs(lrStr){
+      val trainfile = opt[List[String]](short = 't', default = None)
+      val testfile = opt[List[String]](short = 'r', default = None)
+      val numpartitions = opt[List[Int]](short = 'p', default = Some(List(32)))
+    }
+    addSubcommand(lr)
+
   }
 
   addSubcommand(workload)
