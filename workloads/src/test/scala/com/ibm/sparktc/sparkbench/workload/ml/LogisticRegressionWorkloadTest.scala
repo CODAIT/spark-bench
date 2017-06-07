@@ -81,6 +81,6 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
     r.getAs[String]("test_file") shouldBe "lr-test.csv"
     r.getAs[Long]("train_count") shouldBe 100L
     r.getAs[Long]("test_count") shouldBe 100L
-    r.getAs[Double]("area_under_roc") shouldBe 0.99 +- 0.01
+    r.getAs[Double]("area_under_roc") shouldBe 0.51 +- 0.01
   }
 }

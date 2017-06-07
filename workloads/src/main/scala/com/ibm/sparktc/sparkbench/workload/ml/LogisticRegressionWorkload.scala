@@ -45,8 +45,8 @@ case class LogisticRegressionWorkload(
   }
 
   private[ml] def ld(fn: String)(implicit spark: SparkSession) = time {
-    val ds = load(s"${inputDir.get}/$trainFile")(spark).repartition(numPartitions)
-    if (cacheEnabled) ds.cache()
+    val ds = load(fn)(spark).repartition(numPartitions)
+    if (cacheEnabled) ds.cache
     ds
   }
 
