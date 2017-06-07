@@ -27,7 +27,7 @@ case class PartitionAndSleepWorkload(name: String,
 
     val cool: RDD[(Int, Int)] = stuff.map { i =>
       Thread.sleep(ms)
-      (scala.util.Random.nextInt(10), scala.util.Random.nextInt(10))
+      (i % 10, i + 42)
     }
 
     val yeah = cool.reduceByKey(_ + _)
