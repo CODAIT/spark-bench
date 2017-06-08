@@ -5,7 +5,7 @@ Contributions welcome!
 ## Build Structure of spark-bench
 
 spark-bench is a multi-project SBT build. The build is mainly defined in [build.sbt](../build.sbt) and dependencies
-are defined in <../project/Dependecies.scala>.
+are defined in [Dependencies.scala](../project/Dependecies.scala).
 
 ## Adding a New Data Generator
 
