@@ -4,7 +4,7 @@ Contributions welcome!
 
 ## Build Structure of spark-bench
 
-spark-bench is a multi-project SBT build. The build is mainly defined in <../build.sbt> and dependencies
+spark-bench is a multi-project SBT build. The build is mainly defined in [build.sbt](../build.sbt) and dependencies
 are defined in <../project/Dependecies.scala>.
 
 ## Adding a New Data Generator
@@ -17,7 +17,7 @@ Pretty useful, right?
 We probably want a default string for the FooGenerator to output. Let's make a defaults file. This should
 go in the `utils` project because defaults may need to be accessed in multiple projects.
 
-Defaults are defined in <../utils/src/main/scala/com/ibm/sparktc/sparkbench/utils/Defaults.scala>
+Defaults are defined in [Defaults.scala](../utils/src/main/scala/com/ibm/sparktc/sparkbench/utils/Defaults.scala)
 
 ```scala
 package com.ibm.sparktc.sparkbench.utils
