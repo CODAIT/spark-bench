@@ -140,7 +140,7 @@ There are infinite variations on classic benchmarking. A common one might be run
 ```hocon
 spark-bench = {
 
-  spark-contexts-parallel = false
+  spark-contexts-parallel = true //since this is going against two different clusters, may as well run them in parallel!
   spark-contexts = [{
     spark-args = {
       master = "spark://10.0.0.1:7077"
