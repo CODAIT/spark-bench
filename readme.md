@@ -33,6 +33,16 @@
 
 Alternatively, you can also clone this repo and build using `sbt dist`, then set the environment variables as above.
 
+
+## Hello World (Hello KMeans)
+
+The `spark-bench` distribution comes bundled with an example that is ready to run.
+ 
+From the unzipped spark-bench folder, run 
+```
+
+```
+
 ## Usage
 
 ### Terms
