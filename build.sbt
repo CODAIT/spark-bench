@@ -113,12 +113,13 @@ lazy val `spark-launch` = project
 
 val dist = TaskKey[Unit]("dist", "Makes the distribution file for release")
 dist := {
+
+  (assembly in Compile).value
+
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
 
   val tmpFolder = s"./${name.value}_${version.value}"
-
-  s"rm -rf $tmpFolder"
 
   s"echo Making tmpFolder".!
   s"mkdir $tmpFolder".!
@@ -126,10 +127,8 @@ dist := {
 
   s"cp readme.md $tmpFolder".!
   s"cp -r bin $tmpFolder/".!
-  s"cp target/assembly/*.jar $tmpFolder/lib".!
-  s"cp kmeans-example.sh $tmpFolder".!
-  s"cp multi-submit-example.sh $tmpFolder".!
-  s"cp multi-submit-sleep.conf $tmpFolder".!
+  s"cp -r target/assembly/ $tmpFolder/lib".!
+  s"cp -r examples/ $tmpFolder".!
 
   val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
   val artifactName = buildNum match {
@@ -155,7 +154,7 @@ rmDist := {
 
 }
 
-dist := (dist dependsOn rmDist).value
+//dist := (dist dependsOn rmDist).value
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist).value
