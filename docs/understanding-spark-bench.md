@@ -2,12 +2,25 @@
 
 `spark-bench` is a flexible system for benchmarking and simulating Spark jobs. 
 
+## Summary
+
+`spark-bench` can do two main things:
+1. Run workloads in a highly configurable fashion
+2. Generate data
+
+When running workloads in `spark-bench`, you can launch one or many `spark-context`s that will contain one or many `suites`
+which are logical groupings of one or many `workloads`.
+
 ## Data Generation
+
+Data generation sits outside of the `spark-context` -> `suite` -> `workload` tree, so let's briefly discuss it first.
 
 `spark-bench` has the capability to generate data according to many different configurable generators. 
 Generated data can be written to any storage addressable by Spark, including local files, hdfs, S3, etc.
 
-In the current version of 
+In the current version of `spark-bench`, users can run data generators through the `spark-bench` cli. 
+https://github.com/ecurtin/spark-bench/issues/47 tracks the work needed to add data generation capability 
+to the config file.
  
 ## Workloads
 
@@ -46,9 +59,24 @@ Paths for ***workloadresultsoutput*** paths are set in the workloads.
 
 ## Suites
 
+Suites are collections of one or more workloads. The workloads in a suite can be run serially or in parallel.
 
+Suites serve the following functions:
+- collect the benchmark output info from each run of each workload and write in one common file (or in the console)
+- control whether workloads are run serially or kicked off in parallel from a thread pool
+- control how many times each workload is run. Many times it is advantageous to run a workload multiple times, particularly for benchmarking. Suites let you do that all in one place.
 
-
+Suites themselves can be run serially or in parallel.
 
 ## Spark-Contexts
 
+`spark-bench` allows you to launch multiple spark-contexts by creating and launching multiple spark-submit scripts.
+This can be advantageous in a number of situations. To name just a few:
+
+- Comparing benchmark times of the same workloads with different Spark settings
+- Simulating multiple batch applications hitting the same cluster at once.
+- Comparing benchmark times against two different Spark clusters!
+
+Just like suites and workloads, spark-contexts can be launched serially or in parallel.
+
+## Levels of Parallelization
