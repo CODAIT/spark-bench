@@ -79,4 +79,101 @@ This can be advantageous in a number of situations. To name just a few:
 
 Just like suites and workloads, spark-contexts can be launched serially or in parallel.
 
-## Levels of Parallelization
+## Levels and Combinations of Parallelism
+
+There are many, many different ways of controlling parallelism in `spark-bench`. 
+Users can launch one or many spark-contexts serially or in parallel, 
+each containing one or many suites run serially or parallel,
+each containing one or many workloads run serially or in parallel.
+
+Here, we'll highlight a few key use cases as a way of illustrating different options.
+
+### Classic Benchmarking
+
+Classic benchmarking involves running of collection of methods in order to get timing numbers on each. To have statistically significant results, 
+it's best to run each method several times and analyze the results.
+
+For classic benchmarking, users will probably want one spark context containing one suite that runs single instances of different workloads serially. 
+
+```hocon
+spark-bench = {
+
+  spark-contexts-parallel = false
+  spark-contexts = [{
+    spark-args = {
+      master = "yarn"
+    }
+    suites-parallel = false
+    suites = [
+      {
+        descr = "Classic benchmarking"
+        parallel = false
+        repeat = 10 // lots of repeating here because we want statistically valid results 
+        benchmark-output = "console"
+        workloads = [
+          {
+            name = ["kmeans"]
+            input = ["tmp/spark-bench-test/kmeans-data.parquet"]
+            // not specifying any kmeans arguments as we want the defaults for benchmarking
+          },
+          {
+            name = ["logisticregression"]
+            input = ["tmp/spark-bench-test/logistic-regression.parquet"]
+            // again, not specifying arguments
+          },
+          // ...more workloads
+        ]
+      }
+    ]
+  }]
+}
+```
+
+Running workloads in parallel here would compromise the integrity of the timings. 
+Similarly, running multiple suites in parallel, even if the workloads were serial, would result in two sets of serial
+workloads being run in parallel. 
+
+### Classic Benchmarking Across Systems
+
+There are infinite variations on classic benchmarking. A common one might be running the same benchmarks against two different clusters.
+
+```hocon
+spark-bench = {
+
+  spark-contexts-parallel = false
+  spark-contexts = [{
+    spark-args = {
+      master = "spark://10.0.0.1:7077"
+    }
+    suites-parallel = false
+    suites = [
+      {
+        descr = "Classic benchmarking across systems"
+        parallel = false
+        repeat = 10 
+        benchmark-output = "console"
+        workloads = [
+          // workloads...
+        ]
+      }
+    ]
+  },
+  {
+    spark-args = {
+      master = "spark://10.0.0.2:7077" // different cluster!
+    }
+    suites-parallel = false
+    suites = [
+    {
+      descr = "Classic benchmarking across systems"
+      parallel = false
+      repeat = 10 
+      benchmark-output = "console"
+      workloads = [
+        // workloads...
+      ]
+    }]
+  }]
+}
+```
+
