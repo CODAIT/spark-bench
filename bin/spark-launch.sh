@@ -24,12 +24,12 @@ SPARK_BENCH_CLASSPATH+=${SPARK_BENCH_JAR}
 
 if [ -d ${SPARK_HOME}/lib ]; then
 echo Found lib
-SPARK_BENCH_CLASSPATH+=:${SPARK_HOME}/lib/*
+SPARK_BENCH_CLASSPATH+=`:${SPARK_HOME}/lib/*`
 fi
 
 if [ -d ${SPARK_HOME}/jars ]; then
 echo Found jars
-SPARK_BENCH_CLASSPATH+=:${SPARK_HOME}/jars/*
+SPARK_BENCH_CLASSPATH+=`:${SPARK_HOME}/jars/*`
 fi
 
 echo ----------------------
