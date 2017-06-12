@@ -1,4 +1,8 @@
 import Dependencies._
+import java.io.File
+import java.nio.file.{Files, Path}
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+
 
 /*
     ****************************************************************
@@ -116,6 +120,10 @@ lazy val `spark-launch` = project
 
 val dist = TaskKey[Unit]("dist", "Makes the distribution file for release")
 dist := {
+
+//  val x = (sparkBenchJar in Compile).value
+//  val y = (sparkBenchLaunchJar in Compile).value
+
   val log = streams.value.log
   log.info("Creating distribution...")
   log.info("Assembling spark-bench jar...")
@@ -139,7 +147,16 @@ dist := {
   log.info("...copying bin/")
   s"cp -r bin $tmpFolder/".!
   log.info("...copying contents of target/assembly/")
-  s"cp -r target/assembly/ $tmpFolder/lib/".!
+  // this is so stupid. cp works differently in bash and bourne shell, thanks Apple
+
+  val folder = new File(s"${baseDirectory.value.getPath}/target/assembly")
+  val files = folder.listFiles()
+  println(files.foreach(f => println(f.getPath)))
+  files.map( fyle => Files.move(fyle.toPath, new File(s"${baseDirectory.value.getPath}/$tmpFolder/lib/${fyle.toPath.getFileName}").toPath, REPLACE_EXISTING))
+
+//
+//  s"cp target/assembly/$x $tmpFolder/lib/".!
+//  s"cp target/assembly/$y $tmpFolder/lib/".!
   log.info("...copying examples")
   s"cp -r examples/ $tmpFolder".!
   log.info("Done copying files.")
