@@ -61,10 +61,11 @@ lazy val cli = project
     commonSettings,
     name := "spark-bench",
     cleanJars := {
-      println("\tCleaning up jars before assembling")
+      val log = streams.value.log
+      log.info("Cleaning up jars before assembling")
       s"rm ${assemblyFile.value}/*.jar".!
       s"rm ./spark-launch/src/test/resources/jars/*.jar".!
-      println("\tDone")
+      log.info("Done cleaning jars.")
     },
     assembly in Compile := {
       ((assembly in Compile) dependsOn(cleanJars in Test)).value
@@ -86,10 +87,12 @@ lazy val `spark-launch` = project
   .settings(
 
     moveJar in Test := {
+      val log = streams.value.log
+      log.info("Assembling spark-bench jar...")
       (assembly in Compile in cli).value
-      println("\tMoving assembled jar to resources folder for test")
+      log.info("Moving assembled spark-bench jar to resources folder for test")
       s"cp ${assemblyFile.value}/${sparkBenchJar.value} ${sparklaunchTestResourcesJarsFile.value}".!
-      println("\tDone")
+      log.info("Done moving files.")
     },
     test in Test := {
       ((test in Test) dependsOn(moveJar in Test)).value
@@ -113,22 +116,33 @@ lazy val `spark-launch` = project
 
 val dist = TaskKey[Unit]("dist", "Makes the distribution file for release")
 dist := {
-
-  (assembly in Compile).value
+  val log = streams.value.log
+  log.info("Creating distribution...")
+  log.info("Assembling spark-bench jar...")
+  dependsOn((assembly in Compile in cli).value)
+  log.info("Assembling spark-bench-launch jar...")
+  dependsOn((assembly in Compile in `spark-launch`).value)
+  log.info("Done assembling jars")
 
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
-
   val tmpFolder = s"./${name.value}_${version.value}"
 
-  s"echo Making tmpFolder".!
+  log.info(s"Creating folder $tmpFolder")
   s"mkdir $tmpFolder".!
+  log.info(s"Creating folder $tmpFolder/lib")
   s"mkdir $tmpFolder/lib".!
 
+  log.info("Copying files:")
+  log.info("...copying README.md")
   s"cp readme.md $tmpFolder".!
+  log.info("...copying bin/")
   s"cp -r bin $tmpFolder/".!
-  s"cp -r target/assembly/ $tmpFolder/lib".!
+  log.info("...copying contents of target/assembly/")
+  s"cp -r target/assembly/ $tmpFolder/lib/".!
+  log.info("...copying examples")
   s"cp -r examples/ $tmpFolder".!
+  log.info("Done copying files.")
 
   val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
   val artifactName = buildNum match {
@@ -136,25 +150,29 @@ dist := {
     case Some(bn) => s"${name.value}_${version.value}_$bn.tgz"
   }
 
+  log.info(s"Creating tar file: $artifactName")
   s"tar -zcf ./$artifactName $tmpFolder".!
-
+  log.info("Done creating tar file")
+  log.info(s"Distribution created: $artifactName")
 }
+
 
 val rmDist = TaskKey[Unit]("rmDist", "removes all the dist files")
 rmDist := {
+  val log = streams.value.log
+
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
 
   val tmpFolder = s"./${name.value}_${version.value}"
-  s"echo Removing $tmpFolder".!
+  log.info(s"Removing $tmpFolder...")
   s"rm -rf $tmpFolder".!
-  s"echo Removing $tmpFolder.tgz".!
+  log.info(s"Removing $tmpFolder.tgz...")
   s"""rm -f spark-bench*.tgz""".!
-  s"echo rmDist Complete!".!
-
+  log.info("Distribution files removed.")
 }
 
-//dist := (dist dependsOn rmDist).value
+
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist).value
