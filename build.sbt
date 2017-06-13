@@ -1,8 +1,7 @@
 import Dependencies._
 import java.io.File
-import java.nio.file.{Files, Path}
+import java.nio.file.{Files}
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-
 
 /*
     ****************************************************************
@@ -80,7 +79,6 @@ lazy val cli = project
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe,
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff")
-
   )
   .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
   .aggregate(utils, workloads, datageneration)
@@ -111,7 +109,6 @@ lazy val `spark-launch` = project
   )
   .dependsOn(utils % "compile->compile;test->test")
 
-
 /*
     *************************
     *       TASKS           *
@@ -120,10 +117,6 @@ lazy val `spark-launch` = project
 
 val dist = TaskKey[Unit]("dist", "Makes the distribution file for release")
 dist := {
-
-//  val x = (sparkBenchJar in Compile).value
-//  val y = (sparkBenchLaunchJar in Compile).value
-
   val log = streams.value.log
   log.info("Creating distribution...")
   log.info("Assembling spark-bench jar...")
@@ -145,20 +138,45 @@ dist := {
   log.info("...copying README.md")
   s"cp readme.md $tmpFolder".!
   log.info("...copying bin/")
-  s"cp -r bin $tmpFolder/".!
-  log.info("...copying contents of target/assembly/")
-  // this is so stupid. cp works differently in bash and bourne shell, thanks Apple
 
+  val binFolder = new File(s"${baseDirectory.value.getPath}/bin")
+
+  Files.copy(
+    binFolder.toPath,
+    new File(s"${baseDirectory.value.getPath}/$tmpFolder/bin/").toPath)
+  val binFiles = binFolder.listFiles()
+  binFiles.map( fyle =>
+    Files.copy(
+      fyle.toPath,
+      new File(s"${baseDirectory.value.getPath}/$tmpFolder/bin/${fyle.toPath.getFileName}").toPath,
+      REPLACE_EXISTING))
+
+  log.info("...copying contents of target/assembly/")
+
+  // this is so stupid. cp works differently in bash and bourne shell, thanks Apple
   val folder = new File(s"${baseDirectory.value.getPath}/target/assembly")
   val files = folder.listFiles()
   println(files.foreach(f => println(f.getPath)))
-  files.map( fyle => Files.move(fyle.toPath, new File(s"${baseDirectory.value.getPath}/$tmpFolder/lib/${fyle.toPath.getFileName}").toPath, REPLACE_EXISTING))
+  files.map( fyle =>
+    Files.copy(
+      fyle.toPath,
+      new File(s"${baseDirectory.value.getPath}/$tmpFolder/lib/${fyle.toPath.getFileName}").toPath,
+      REPLACE_EXISTING))
 
-//
-//  s"cp target/assembly/$x $tmpFolder/lib/".!
-//  s"cp target/assembly/$y $tmpFolder/lib/".!
   log.info("...copying examples")
-  s"cp -r examples/ $tmpFolder".!
+
+  val examplesFolder = new File(s"${baseDirectory.value.getPath}/examples")
+
+  Files.copy(
+    examplesFolder.toPath,
+    new File(s"${baseDirectory.value.getPath}/$tmpFolder/examples/").toPath)
+  val exampleFiles = examplesFolder.listFiles()
+  exampleFiles.map( fyle =>
+    Files.copy(
+      fyle.toPath,
+      new File(s"${baseDirectory.value.getPath}/$tmpFolder/examples/${fyle.toPath.getFileName}").toPath,
+      REPLACE_EXISTING))
+
   log.info("Done copying files.")
 
   val buildNum = sys.env.get("TRAVIS_BUILD_NUMBER")
@@ -172,7 +190,6 @@ dist := {
   log.info("Done creating tar file")
   log.info(s"Distribution created: $artifactName")
 }
-
 
 val rmDist = TaskKey[Unit]("rmDist", "removes all the dist files")
 rmDist := {
@@ -189,8 +206,6 @@ rmDist := {
   log.info("Distribution files removed.")
 }
 
-
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist).value
-
