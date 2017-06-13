@@ -21,6 +21,6 @@ WHEREILIVE=$(realpath $0)
 BASEDIR=$(dirname $WHEREILIVE)
 PARENTDIR="$(dirname "${BASEDIR}")"
 
-SB_JAR=`ls ${PARENTDIR}/lib/`
+SB_JAR=`ls ${PARENTDIR}/lib/ | grep spark-bench-[0-9]`
 
 export SPARK_BENCH_JAR=${PARENTDIR}/lib/${SB_JAR}

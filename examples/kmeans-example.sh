@@ -45,4 +45,4 @@ bin/spark-bench.sh workload kmeans -i /tmp/spark-bench-demo/kmeans-dataset-1.csv
 # ------------------------------
 
 # Runs spark-bench from example-configuration-file.conf
-bin/spark-bench.sh example-configuration-file.conf
+bin/spark-bench.sh ./example-configuration-file.conf
