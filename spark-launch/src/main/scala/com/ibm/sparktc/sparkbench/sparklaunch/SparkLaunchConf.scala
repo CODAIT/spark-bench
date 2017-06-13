@@ -2,9 +2,10 @@ package com.ibm.sparktc.sparkbench.sparklaunch
 
 import java.io.File
 
+import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.typesafe.config.{Config, ConfigObject}
-import scala.collection.JavaConverters._
 
+import scala.collection.JavaConverters._
 import scala.util.Try
 
 case class SparkLaunchConf(
@@ -32,38 +33,44 @@ object SparkLaunchConf {
     )
   }
 
-  def getSparkBenchClass(sparkContextConf: Config): String =
+  def getSparkBenchClass(sparkContextConf: Config): String = {
     Try(sparkContextConf.getString("class")).toOption.getOrElse("com.ibm.sparktc.sparkbench.cli.CLIKickoff")
+  }
 
   def getSparkArgs(sparkContextConf: Config): Array[String] = {
     val sparkConfMaps = Try(sparkContextConf.getObject("spark-args")).map(toStringMap).getOrElse(Map.empty)
     sparkConfMaps.foldLeft(Array[String]()) { case (arr, (k, v)) => arr ++ Array(s"--$k $v") }
   }
 
-  def getSparkBenchJar(sparkContextConf: Config): String =
-    Try(sparkContextConf.getString("class")).toOption match {
-      case Some(str) => str
-      case _ => {
-        val thisJar = ClassLoader.getSystemClassLoader.getResource(".")
-        // If thisJar == null or if the path doesn't end with a .jar extension,
-        // then assume we're doing sbt test
-        if (thisJar == null || !thisJar.getPath.endsWith(".jar")) {
-          val relativePath = "/jars"
-          val path = getClass.getResource(relativePath)
-          val folder = new File(path.getPath)
-          assert(folder.exists && folder.isDirectory)
-          val filez = folder.listFiles.toList
-          filez.foreach(file => println(file.getName))
-          filez.filter(file => file.getName.startsWith("spark-bench")).head.getPath
-        }
-        // Else assume we're in a compiled jar
-        else {
-          val path = thisJar.getPath
-          println(s"THIS IS MY JAR AREN'T YOU PROUD: $path")
-          val fileList: Seq[String] = new File(path).getParentFile.listFiles().toList.map(_.getPath)
-          fileList.filterNot(_ == thisJar).head
-        }
-      }
+  def getSparkBenchJar(sparkContextConf: Config): String = {
+
+    val whereIAm = this.getClass.getProtectionDomain.getCodeSource.getLocation.getFile
+    println(s"I'M HERE::: $whereIAm")
+
+    if(whereIAm.endsWith(".jar")) {
+      /*
+          If this condition is satisfied, then we're working from a distribution that has compiled jars.
+          We're going to just dig around in the same parent dir as this jar to find the spark-bench jar
+          because the user hasn't told us otherwise.
+       */
+      val fileList: Seq[String] = new File(whereIAm).getParentFile.listFiles().toList.map(_.getPath)
+      fileList.filterNot(_ == whereIAm).head
+    }
+    else if(whereIAm.isEmpty) {
+      throw new SparkBenchException("Could not determine location for necessary spark-bench jars."); null
+    }
+    else {
+      /* Assume here that we're in a testing environment. When `sbt test` runs for spark-launch, it'll
+         first assemble the spark-bench jar and then copy it to spark-launch/test/resources/jars/spark-bench...jar.
+         We reference that folder by just "/jars" because of relative paths. */
+      val relativePath = "/jars"
+      val path = getClass.getResource(relativePath)
+      val folder = new File(path.getPath)
+      assert(folder.exists && folder.isDirectory)
+      val filez = folder.listFiles.toList.filterNot(file => file.getName.startsWith("spark-bench-launch"))
+      filez.foreach(file => println(file.getName))
+      filez.filter(file => file.getName.startsWith("spark-bench")).head.getPath
+    }
   }
 
   def getSparkConfs(conf: Config): Array[String] = {
