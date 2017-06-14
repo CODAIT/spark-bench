@@ -153,7 +153,7 @@ dist := {
 
   log.info("...copying contents of target/assembly/")
 
-  // this is so stupid. cp works differently in bash and bourne shell, thanks Apple
+  // this is so stupid. cp works differently between the GNU and BSD versions. >:(
   val folder = new File(s"${baseDirectory.value.getPath}/target/assembly")
   val files = folder.listFiles()
   println(files.foreach(f => println(f.getPath)))
