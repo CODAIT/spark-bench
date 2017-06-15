@@ -54,6 +54,4 @@ object ConfigWrangler {
     workloadObjs.map(_.toConfig).toList
   }
 
-
-
 }
