@@ -9,12 +9,6 @@ import scala.sys.process._
 import scala.util.Try
 
 object SparkLaunch extends App {
-  private def rmTmpFiles(fns: Seq[String]): Unit = fns.foreach { fn =>
-    try {
-      val f = new File(fn)
-      if (f.exists) f.delete
-    } catch { case e: Throwable => println(s"failed to delete $fn", e) }
-  }
 
   override def main(args: Array[String]): Unit = {
     println("lol")
@@ -58,5 +52,12 @@ object SparkLaunch extends App {
     if (returnCode != 0) {
       throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${argz.mkString(" ")}")
     }
+  }
+
+  private def rmTmpFiles(fns: Seq[String]): Unit = fns.foreach { fn =>
+    try {
+      val f = new File(fn)
+      if (f.exists) f.delete
+    } catch { case e: Throwable => println(s"failed to delete $fn", e) }
   }
 }

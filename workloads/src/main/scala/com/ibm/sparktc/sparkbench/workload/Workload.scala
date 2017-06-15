@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, addConfToResults}
 import org.apache.spark.sql.functions.lit
 
 trait Workload {
@@ -33,17 +33,7 @@ trait Workload {
     addConfToResults(res, toMap)
   }
 
-  def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
-    def dealWithNones(a: Any): Any = a match {
-      case None => ""
-      case Some(b) => b
-      case _ => a
-    }
 
-    var ddf: DataFrame = df
-    m.foreach( keyValue => ddf = ddf.withColumn(keyValue._1, lit(dealWithNones(keyValue._2))) )
-    ddf
-  }
 
   def toMap: Map[String, Any] =
     (Map[String, Any]() /: this.getClass.getDeclaredFields) { (a, f) =>

@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload
 
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{writeToDisk, addConfToResults}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions.{col, lit}
 
@@ -25,9 +25,15 @@ object SuiteKickoff {
       dfSeqFromOneRun.map(_.withColumn("run", lit(i)))
     }
 
+    //TODO this is where you should add spark and system conf
+
+    val strSparkConfs = spark.conf.getAll
+
     val singleDF = joinDataFrames(dataframes, spark)
     s.description.foreach(println)
-    writeToDisk(s.benchmarkOutput, singleDF, spark)
+    val plusSparkConf = addConfToResults(singleDF, strSparkConfs)
+    val plusDescription = addConfToResults(plusSparkConf, Map("description" -> s.description))
+    writeToDisk(s.benchmarkOutput, plusDescription, spark)
   }
 
   def joinDataFrames(seq: Seq[DataFrame], spark: SparkSession): DataFrame = {
@@ -49,5 +55,4 @@ object SuiteKickoff {
     // Nevarr Evarr do this to legit dataframes that are all like big and stuff
     seqFixedDfs.foldLeft(spark.createDataFrame(spark.sparkContext.emptyRDD[Row], seqFixedDfs.head.schema))( _ union _ )
   }
-
 }
