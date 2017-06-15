@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload
 
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{writeToDisk, addConfToResults}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions.{col, lit}
 
@@ -55,17 +55,4 @@ object SuiteKickoff {
     // Nevarr Evarr do this to legit dataframes that are all like big and stuff
     seqFixedDfs.foldLeft(spark.createDataFrame(spark.sparkContext.emptyRDD[Row], seqFixedDfs.head.schema))( _ union _ )
   }
-
-  def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
-    def dealWithNones(a: Any): Any = a match {
-      case None => ""
-      case Some(b) => b
-      case _ => a
-    }
-
-    var ddf: DataFrame = df
-    m.foreach( keyValue => ddf = ddf.withColumn(keyValue._1, lit(dealWithNones(keyValue._2))) )
-    ddf
-  }
-
 }
