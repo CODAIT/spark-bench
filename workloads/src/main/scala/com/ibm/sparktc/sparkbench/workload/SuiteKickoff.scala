@@ -26,6 +26,7 @@ object SuiteKickoff {
     }
 
     val singleDF = joinDataFrames(dataframes, spark)
+    s.description.foreach(println)
     writeToDisk(s.benchmarkOutput, singleDF, spark)
   }
 

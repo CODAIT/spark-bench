@@ -18,7 +18,7 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val resource = new File(getClass.getResource(relativePath).toURI)
 //    val source = scala.io.Source.fromFile(resource)
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
-    val conf1 = sparkContextConfs.head
+    val conf1 = sparkContextConfs.head._1
 
     val expectedSparkConfs = Array(
       "--conf spark.shuffle.service.enabled=false",
@@ -38,7 +38,7 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val relativePath = "/etc/testConfFile1.conf"
     val resource = new File(getClass.getResource(relativePath).toURI)
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
-    val conf2 = sparkContextConfs.head
+    val conf2 = sparkContextConfs.head._1
 
     conf2.sparkConfs.isEmpty shouldBe true
 

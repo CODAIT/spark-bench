@@ -1,15 +1,13 @@
 package com.ibm.sparktc.sparkbench.sparklaunch
 
-import java.io.{BufferedWriter, File, FileWriter}
-import java.nio.file.{Files, Path}
-
-import java.nio.file.Paths
+import java.io.File
+import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
-import com.typesafe.config.{Config, ConfigFactory, ConfigObject, ConfigRenderOptions}
+import com.typesafe.config._
+import com.typesafe.config.ConfigRenderOptions.concise
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable
 
 /*
           _oo____oo_
@@ -32,23 +30,23 @@ object ConfigWrangler {
     * @param path
     * @return a Seq of paths to the created files.
     */
-  def apply(path: File): Seq[SparkLaunchConf] = {
+  def apply(path: File): Seq[(SparkLaunchConf, String)] = {
     val config: Config = ConfigFactory.parseFile(path)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
     val sparkContextConfs = getConfigListByName("spark-contexts", sparkBenchConfig)
 
-    val tmpDir = Files.createTempDirectory("spark-bench-tempfiles-")
-    val tmpFiles: Seq[Path] = sparkContextConfs.indices.map(_ => Files.createTempFile(tmpDir, "spark-bench-", ".conf"))
-
-    sparkContextConfs.indices.map( i =>
-    {
+    sparkContextConfs.map { conf =>
+      val tmpFile = Files.createTempFile("spark-bench-", ".conf")
       // Write this particular spark-context to a separate file on disk.
-      val output = sparkContextConfs(i).root().render(ConfigRenderOptions.defaults())
-      val str = s"spark-bench : {\nspark-contexts : [$output]\n}"
-      Files.write(tmpFiles(i), str.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+      val newConf = sparkBenchConfig
+        .withoutPath("spark-contexts")
+        .withValue("spark-contexts", ConfigValueFactory.fromIterable(Iterable(conf.root).asJava))
+      val sbConf = ConfigFactory.empty.withValue("spark-bench", newConf.root)
+      val output = sbConf.root.render(concise.setJson(false))
+      Files.write(tmpFile, output.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
       // Now create the SparkLaunchConfs
-      SparkLaunchConf(sparkContextConfs(i), tmpFiles(i).toString)
-    })
+      (SparkLaunchConf(conf, tmpFile.toString), tmpFile.toString)
+    }
   }
 
   private def getConfigListByName(name: String, config: Config): List[Config] = {
