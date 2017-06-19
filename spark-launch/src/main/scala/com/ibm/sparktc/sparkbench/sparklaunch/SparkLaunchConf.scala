@@ -65,6 +65,7 @@ object SparkLaunchConf {
          We reference that folder by just "/jars" because of relative paths. */
       val relativePath = "/jars"
       val path = getClass.getResource(relativePath)
+      assert(path != null)
       val folder = new File(path.getPath)
       assert(folder.exists && folder.isDirectory)
       val filez = folder.listFiles.toList.filterNot(file => file.getName.startsWith("spark-bench-launch"))
