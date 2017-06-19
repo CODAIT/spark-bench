@@ -24,7 +24,7 @@ object SparkLaunch extends App {
     val config: Config = ConfigFactory.parseFile(file)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
     val confs: Seq[(SparkLaunchConf, String)] = ConfigWrangler(file)
-    val parallel = Try(sparkBenchConfig.getBoolean("spark-contexts-parallel")).getOrElse(false)
+    val parallel = Try(sparkBenchConfig.getBoolean("spark-submit-parallel")).getOrElse(false)
     (confs, parallel)
   }
 

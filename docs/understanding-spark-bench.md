@@ -68,21 +68,21 @@ Suites serve the following functions:
 
 Suites themselves can be run serially or in parallel.
 
-## Spark-Contexts
+## Spark-Submit-Configs
 
-`spark-bench` allows you to launch multiple spark-contexts by creating and launching multiple spark-submit scripts.
+`spark-bench` allows you to launch multiple spark-submit commands by creating and launching multiple spark-submit scripts.
 This can be advantageous in a number of situations. To name just a few:
 
 - Comparing benchmark times of the same workloads with different Spark settings
 - Simulating multiple batch applications hitting the same cluster at once.
 - Comparing benchmark times against two different Spark clusters!
 
-Just like suites and workloads, spark-contexts can be launched serially or in parallel.
+Just like suites and workloads, spark-submit-config can be launched serially or in parallel.
 
 ## Levels and Combinations of Parallelism
 
 There are many, many different ways of controlling parallelism in `spark-bench`. 
-Users can launch one or many spark-contexts serially or in parallel, 
+Users can launch one or many spark-submit-config serially or in parallel, 
 each containing one or many suites run serially or parallel,
 each containing one or many workloads run serially or in parallel.
 
@@ -98,8 +98,8 @@ For classic benchmarking, users will probably want one spark context containing 
 ```hocon
 spark-bench = {
 
-  spark-contexts-parallel = false
-  spark-contexts = [{
+  spark-submit-parallel = false
+  spark-submit-config = [{
     spark-args = {
       master = "yarn"
     }
@@ -140,8 +140,8 @@ There are infinite variations on classic benchmarking. A common one might be run
 ```hocon
 spark-bench = {
 
-  spark-contexts-parallel = true //since this is going against two different clusters, may as well run them in parallel!
-  spark-contexts = [{
+  spark-submit-parallel = true //since this is going against two different clusters, may as well run them in parallel!
+  spark-submit-config = [{
     spark-args = {
       master = "spark://10.0.0.1:7077"
     }

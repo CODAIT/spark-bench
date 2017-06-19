@@ -33,14 +33,14 @@ object ConfigWrangler {
   def apply(path: File): Seq[(SparkLaunchConf, String)] = {
     val config: Config = ConfigFactory.parseFile(path)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
-    val sparkContextConfs = getConfigListByName("spark-contexts", sparkBenchConfig)
+    val sparkContextConfs = getConfigListByName("spark-submit-config", sparkBenchConfig)
 
     sparkContextConfs.map { conf =>
       val tmpFile = Files.createTempFile("spark-bench-", ".conf")
       // Write this particular spark-context to a separate file on disk.
       val newConf = sparkBenchConfig
-        .withoutPath("spark-contexts")
-        .withValue("spark-contexts", ConfigValueFactory.fromIterable(Iterable(conf.root).asJava))
+        .withoutPath("spark-submit-config")
+        .withValue("spark-submit-config", ConfigValueFactory.fromIterable(Iterable(conf.root).asJava))
       val sbConf = ConfigFactory.empty.withValue("spark-bench", newConf.root)
       val output = sbConf.root.render(concise.setJson(false))
       Files.write(tmpFile, output.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)

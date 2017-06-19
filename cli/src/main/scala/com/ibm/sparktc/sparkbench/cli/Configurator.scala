@@ -20,7 +20,7 @@ object Configurator {
   }
 
   private def parseSparkBenchRunConfig(config: Config): Seq[MultiSuiteRunConfig] = {
-    val sparkContextConfs = getConfigListByName("spark-contexts", config)
+    val sparkContextConfs = getConfigListByName("spark-submit-config", config)
     sparkContextConfs.map { sparkContextConf =>
       val sparkConfs = Try(sparkContextConf.getObject("conf")).map(toStringMap).getOrElse(Map.empty)
 
