@@ -41,9 +41,12 @@ object SparkLaunchConf {
   def getSparkArgs(sparkContextConf: Config): Array[String] = {
     val sparkConfMaps = Try(sparkContextConf.getObject("spark-args")).map(toStringMap).getOrElse(Map.empty)
 
-    if(!sparkConfMaps.contains("master")) {
-      val envMaster = getOrThrow(sys.env.get("SPARK_MASTER_HOST"))
-      sparkConfMaps ++ Map("master" -> envMaster)
+    val correctedSparkConf = {
+      if(!sparkConfMaps.contains("master")) {
+        val envMaster = getOrThrow(sys.env.get("SPARK_MASTER_HOST"))
+        sparkConfMaps ++ Map("master" -> envMaster)
+      }
+      else sparkConfMaps
     }
 
     assert(sparkConfMaps.contains("master"))
