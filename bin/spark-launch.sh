@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 WHEREILIVE=$(realpath $0)
 BASEDIR=$(dirname ${WHEREILIVE})
 PARENTDIR="$(dirname "${BASEDIR}")"
@@ -36,10 +34,3 @@ echo SPARK_BENCH_CLASSPATH is $SPARK_BENCH_CLASSPATH
 echo MAIN_CLASS is $MAIN_CLASS
 
 java -cp "$SPARK_BENCH_CLASSPATH" "$MAIN_CLASS" "$@"
-
-
-
-# java -cp /opt/spark-2.1.1-bin-hadoop2.7/jars/*:/Users/ecurtin/git/spark-bench/spark-bench_2.1.1-0.0.1-SNAPSHOT/lib/spark-bench-2.1.1-0.0.1-SNAPSHOT.jar com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch
-
-#java -cp /Users/ecurtin/git/spark-bench/spark-bench_2.1.1-0.0.1-SNAPSHOT/lib/spark-bench-2.1.1-0.0.1-SNAPSHOT.jar:/opt/spark-2.1.1-bin-hadoop2.7/jars/* com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch multi-submit-sleep.conf
-#java -cp /Users/ecurtin/git/spark-bench/spark-bench_2.1.1-0.0.1-SNAPSHOT/lib/spark-bench-2.1.1-0.0.1-SNAPSHOT.jar:/opt/spark-2.1.1-bin-hadoop2.7/jars/* com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch
