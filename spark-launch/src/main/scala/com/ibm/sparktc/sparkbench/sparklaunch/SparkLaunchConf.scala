@@ -49,9 +49,9 @@ object SparkLaunchConf {
       else sparkConfMaps
     }
 
-    assert(sparkConfMaps.contains("master"))
+    assert(correctedSparkConf.contains("master"))
 
-    sparkConfMaps.foldLeft(Array[String]()) { case (arr, (k, v)) => arr ++ Array(s"--$k $v") }
+    correctedSparkConf.foldLeft(Array[String]()) { case (arr, (k, v)) => arr ++ Array(s"--$k $v") }
   }
 
   def getSparkBenchJar(sparkContextConf: Config): String = {
