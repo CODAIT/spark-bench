@@ -1,7 +1,10 @@
 #!/bin/bash
 
-rm -rf /tmp/spark-bench-demo/kmeans-dataset-1
-rm -rf /tmp/spark-bench-demo/kmeans-dataset-2
+WHEREILIVE=$(realpath $0)
+BASEDIR=$(dirname ${WHEREILIVE})
+
+rm -rf /tmp/spark-bench-demo/kmeans-dataset-1.csv
+rm -rf /tmp/spark-bench-demo/kmeans-dataset-2.parquet
 rm -rf /tmp/spark-bench-demo/test-results.csv
 rm -rf /tmp/spark-bench-demo/test-results1.csv
 rm -rf /tmp/spark-bench-demo/test-results2.csv
@@ -45,4 +48,4 @@ bin/spark-bench.sh workload kmeans -i /tmp/spark-bench-demo/kmeans-dataset-1.csv
 # ------------------------------
 
 # Runs spark-bench from example-configuration-file.conf
-bin/spark-bench.sh ./example-configuration-file.conf
+bin/spark-bench.sh ${BASEDIR}/example-configuration-file.conf
