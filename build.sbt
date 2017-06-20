@@ -198,7 +198,7 @@ rmDist := {
   log.info(s"Removing $tmpFolder...")
   s"rm -rf $tmpFolder".!
   log.info(s"Removing $tmpFolder.tgz...")
-  s"""rm -f spark-bench*.tgz""".!
+  s"""rm -f $tmpFolder.tgz""".!
   log.info("Distribution files removed.")
 }
 
