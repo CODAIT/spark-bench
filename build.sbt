@@ -1,12 +1,12 @@
 import Dependencies._
 import java.io.File
-import java.nio.file.{Files}
+import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 /*
-    ****************************************************************
-    * Accessory Methods (have to be up here for forward reference) *
-    ****************************************************************
+    **********************************************************************************
+    * Common Settings and val Definitions (have to be up here for forward reference) *
+    **********************************************************************************
 */
 
 val sparkBenchJar = settingKey[String]("jar name and relative path for spark-bench")
@@ -28,7 +28,7 @@ lazy val commonSettings = Seq(
 
 /*
     ***************************
-    *       PROJECT           *
+    *       PROJECTS          *
     ***************************
 */
 
@@ -57,6 +57,12 @@ lazy val datageneration = project
   )
   .dependsOn(utils % "compile->compile;test->test")
 
+
+/*
+    There's some extra code here to clean up any created jars before assembly.
+    Assembly is called by regular sbt assembly and by sbt spark-launch/test.
+    See note below about why spark-launch/test calls cli/assembly.
+ */
 val cleanJars = TaskKey[Unit]("cleanJars", "remove jars before assembling jar for spark-launch test")
 
 lazy val cli = project
@@ -83,6 +89,13 @@ lazy val cli = project
   .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
   .aggregate(utils, workloads, datageneration)
 
+
+
+/*
+    spark-launch relies on having the cli uber jar to launch through spark-submit. So
+    in order to test spark-launch, we have to assemble the cli jar and move it into a folder
+    that's accessible to the test code for spark-launch.
+ */
 val moveJar = TaskKey[Unit]("moveJars", "move the assembled jars for spark-launch test")
 
 lazy val `spark-launch` = project
@@ -110,9 +123,9 @@ lazy val `spark-launch` = project
   .dependsOn(utils % "compile->compile;test->test")
 
 /*
-    *************************
-    *       TASKS           *
-    *************************
+    *******************************
+    *      CUSTOM TASKS           *
+    *******************************
 */
 
 val dist = TaskKey[Unit]("dist", "Makes the distribution file for release")
@@ -139,21 +152,12 @@ dist := {
   s"cp readme.md $tmpFolder".!
   log.info("...copying bin/")
 
-  val binFolder = new File(s"${baseDirectory.value.getPath}/bin")
-
-  Files.copy(
-    binFolder.toPath,
-    new File(s"${baseDirectory.value.getPath}/$tmpFolder/bin/").toPath)
-  val binFiles = binFolder.listFiles()
-  binFiles.map( fyle =>
-    Files.copy(
-      fyle.toPath,
-      new File(s"${baseDirectory.value.getPath}/$tmpFolder/bin/${fyle.toPath.getFileName}").toPath,
-      REPLACE_EXISTING))
-
+  // MAKE SURE YOU DON'T PUT TRAILING SLASHES ON THESE FILES!! It changes behavior between GNU cp and BSD cp
+  val binFolder = s"${baseDirectory.value.getPath}/bin"
+  s"cp -r $binFolder $tmpFolder".!
   log.info("...copying contents of target/assembly/")
 
-  // this is so stupid. cp works differently between the GNU and BSD versions. >:(
+  // Reverting to java API here because cp works differently between the GNU and BSD versions. >:(
   val folder = new File(s"${baseDirectory.value.getPath}/target/assembly")
   val files = folder.listFiles()
   println(files.foreach(f => println(f.getPath)))
@@ -163,19 +167,11 @@ dist := {
       new File(s"${baseDirectory.value.getPath}/$tmpFolder/lib/${fyle.toPath.getFileName}").toPath,
       REPLACE_EXISTING))
 
-  log.info("...copying examples")
+  log.info("...copying examples/")
 
-  val examplesFolder = new File(s"${baseDirectory.value.getPath}/examples")
-
-  Files.copy(
-    examplesFolder.toPath,
-    new File(s"${baseDirectory.value.getPath}/$tmpFolder/examples/").toPath)
-  val exampleFiles = examplesFolder.listFiles()
-  exampleFiles.map( fyle =>
-    Files.copy(
-      fyle.toPath,
-      new File(s"${baseDirectory.value.getPath}/$tmpFolder/examples/${fyle.toPath.getFileName}").toPath,
-      REPLACE_EXISTING))
+  // MAKE SURE YOU DON'T PUT TRAILING SLASHES ON THESE FILES!! It changes behavior between GNU cp and BSD cp
+  val examplesFolder = s"${baseDirectory.value.getPath}/examples"
+  s"cp -r $examplesFolder $tmpFolder".!
 
   log.info("Done copying files.")
 
