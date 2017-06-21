@@ -3,6 +3,7 @@ package com.ibm.sparktc.sparkbench.sparklaunch
 import java.io.File
 
 import com.ibm.sparktc.sparkbench.utils.SparkBenchException
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import com.typesafe.config.{Config, ConfigObject}
 
 import scala.collection.JavaConverters._
@@ -39,7 +40,18 @@ object SparkLaunchConf {
 
   def getSparkArgs(sparkContextConf: Config): Array[String] = {
     val sparkConfMaps = Try(sparkContextConf.getObject("spark-args")).map(toStringMap).getOrElse(Map.empty)
-    sparkConfMaps.foldLeft(Array[String]()) { case (arr, (k, v)) => arr ++ Array(s"--$k $v") }
+
+    val correctedSparkConf = {
+      if(!sparkConfMaps.contains("master")) {
+        val envMaster = getOrThrow(sys.env.get("SPARK_MASTER_HOST"))
+        sparkConfMaps ++ Map("master" -> envMaster)
+      }
+      else sparkConfMaps
+    }
+
+    assert(correctedSparkConf.contains("master"))
+
+    correctedSparkConf.foldLeft(Array[String]()) { case (arr, (k, v)) => arr ++ Array(s"--$k $v") }
   }
 
   def getSparkBenchJar(sparkContextConf: Config): String = {
