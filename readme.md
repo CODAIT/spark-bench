@@ -23,7 +23,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Installation
+## Installation 
 
 1. Grab the latest release from here: <https://github.com/ecurtin/spark-bench/releases/latest>.
 2. Unpack the tarball using `tar -xvzf`.
@@ -31,8 +31,26 @@
 4. Modify `SPARK_HOME` and `SPARK_MASTER_HOST` in `bin/spark-bench-env.sh` to reflect your environment. 
 5. Start using spark-bench!
 
-Alternatively, you can also clone this repo and build using `sbt dist`, then set the environment variables as above.
 
+## Building It Yourself
+
+Alternatively, you can also clone this repo and build it yourself. 
+
+```bash
+# Clone this repo
+git clone https://github.com/ecurtin/spark-bench.git
+cd spark-bench/
+# The latest changes will always be on develop, the stable version is master.
+# Optionally check out develop here, or skip this step to stay on master.
+git checkout develop
+# Building spark-bench takes more heap space than the default provided by SBT.
+# There are several ways to set these options for SBT, this is just one. I recommend adding the following line to your bash_profile
+export SBT_OPTS="-Xmx1536M -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss2M"
+# Now you're ready to test spark-bench, if you so desire
+sbt test
+# And to build the distribution tar file
+sbt dist
+```
 
 ## Hello World (Hello KMeans)
 
