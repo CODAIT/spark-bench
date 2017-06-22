@@ -12,6 +12,11 @@
 # Table of Contents
 
 - [Installation](#installation)
+- [Building It Yourself](#building-it-yourself)
+- [Running the Examples From The Distribution](#running-the-examples-from-the-distribution)
+    - [Creating the Distribution Folder](#creating-the-distribution-folder)
+    - [Setting Environment Variables](#setting-environment-variables)
+    - [Running the Examples](#running-the-examples)
 - [Usage](#usage)
   - [Terms](#terms)
   - [Command Line Usage](#command-line-usage)
@@ -52,14 +57,38 @@ sbt test
 sbt dist
 ```
 
-## Hello World (Hello KMeans)
+## Running the Examples From The Distribution
 
-The `spark-bench` distribution comes bundled with an example that is ready to run.
- 
-From the unzipped spark-bench folder, run 
+The spark-bench distribution comes bundled with example scripts and configuration files that should run out out the box
+with only very limited setup.
+
+#### Creating the Distribution Folder
+If you installed spark-bench by unpacking the tar file, you're ready to go. If you cloned the repo, first run
+`sbt dist` and then change into that generated folder.
+
+#### Setting Environment Variables
+Inside the `bin` folder is a file called `spark-bench-env.sh`. In this folder are two environment variables
+that you will be required to set. The first is `SPARK_HOME` which is simple the full path to the top level of your
+Spark installation on your laptop or cluster. The second is SPARK_MASTER_HOST which is the same as what you
+would enter as `-master` in a spark submit script for this environment. This might be `local[2]` on your laptop,
+`yarn` on a Yarn cluster, an IP address and port if you're running in standalone mode, you get the idea!
+
+You can set those environment variables in your bash profile or by uncommenting the lines in `spark-bench-env.sh`
+and filling them out in place.
+
+#### Running the Examples
+From the spark-bench distribution file, simple run:
+```bash
+./examples/kmeans-example/kmeans-example.sh
+```
+and/or
+```bash
+./examples/multi-submit-sparkpi/multi-submit-example.sh
 ```
 
-```
+The example scripts and associated configuration files are a great starting point for learning spark-bench by example.
+The kmeans example shows some examples of using the spark-bench CLI while the multi-submit example shows more
+thorough usage of a configuration file.
 
 ## Usage
 
