@@ -5,12 +5,10 @@ import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
-
   val dataStuff = new BuildAndTeardownData("output-test")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    dataStuff.deleteFolders()
     dataStuff.createFolders()
     dataStuff.generateKMeansData(1000, 5, dataStuff.kmeansFile)
   }

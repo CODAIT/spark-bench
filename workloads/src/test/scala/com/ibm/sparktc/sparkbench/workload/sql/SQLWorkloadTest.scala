@@ -4,7 +4,6 @@ import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessi
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
-  
   val ioStuff = new BuildAndTeardownData("sql-workload")
   
   val spark = SparkSessionProvider.spark
@@ -14,15 +13,13 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    ioStuff.deleteFolders()
     ioStuff.createFolders()
-//    ioStuff.deleteFilesStr(Seq(smallData))
     ioStuff.generateKMeansData(1000, 10, smallData)
   }
 
   override def afterAll(): Unit = {
-    super.afterAll()
     ioStuff.deleteFolders()
+    super.afterAll()
   }
 
   "Sql Queries over generated kmeans data" should "work" in {
@@ -35,6 +32,4 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     workload.doWorkload(None, spark)
   }
-
-
 }

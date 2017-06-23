@@ -15,7 +15,6 @@ class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEac
   var file: File = _
 
   override def beforeEach() {
-    cool.deleteFolders()
     file = new File(fileName)
     cool.createFolders()
   }

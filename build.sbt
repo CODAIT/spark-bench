@@ -202,6 +202,13 @@ rmDist := {
   log.info("Distribution files removed.")
 }
 
+val rmTemp = TaskKey[Unit]("rmTemp", "removes temporary testing files")
+rmTemp := {
+  val tmpFolder = "/tmp/spark-bench-scalatest"
+  streams.value.log.info(s"Removing $tmpFolder...")
+  s"rm -rf $tmpFolder".!
+}
+
 dist := (dist dependsOn assembly).value
 
-clean := (clean dependsOn rmDist).value
+clean := (clean dependsOn rmDist dependsOn rmTemp).value

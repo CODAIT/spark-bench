@@ -8,7 +8,6 @@ class SparkLaunchOneSparkContextPerRunTest extends FlatSpec with Matchers with B
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    dataShiznit.deleteFolders()
     dataShiznit.createFolders()
     dataShiznit.generateKMeansData(1000, 5, dataShiznit.kmeansFile)
   }
