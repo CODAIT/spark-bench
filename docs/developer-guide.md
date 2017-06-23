@@ -82,3 +82,10 @@ class FooDataGen(conf: DataGenerationConf, spark: SparkSession) extends DataGene
 ```
 
 Now create that infrastructure for taking in the argument to ScallopArgs in the `cli` project.
+
+## Adding a New Workload
+
+This section needs more fleshing out.
+
+The TL;DR is that while there are plans in the roadmap to add the ability to use custom workloads on the fly, we're not there yet. 
+In the meantime, you have to add your workload inside of the `workloads` project just like the existing ones.
