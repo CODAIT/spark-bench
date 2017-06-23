@@ -3,15 +3,6 @@
 
 `spark-bench` is a flexible system for benchmarking and simulating Spark jobs. 
 
-## Summary
-
-`spark-bench` can do two main things:
-1. Run workloads in a highly configurable fashion
-2. Generate data
-
-When running workloads in `spark-bench`, you can launch one or many `spark-submit-config`s that will contain one or many `suites`
-which are logical groupings of one or many `workloads`.
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -31,6 +22,14 @@ which are logical groupings of one or many `workloads`.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Summary
+
+`spark-bench` can do two main things:
+1. Run workloads in a highly configurable fashion
+2. Generate data
+
+When running workloads in `spark-bench`, you can launch one or many `spark-submit-config`s that will contain one or many `suites`
+which are logical groupings of one or many `workloads`.
 
 ## Data Generation
 
