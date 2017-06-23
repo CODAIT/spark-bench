@@ -1,3 +1,4 @@
+
 # Understanding `spark-bench`
 
 `spark-bench` is a flexible system for benchmarking and simulating Spark jobs. 
@@ -8,12 +9,32 @@
 1. Run workloads in a highly configurable fashion
 2. Generate data
 
-When running workloads in `spark-bench`, you can launch one or many `spark-context`s that will contain one or many `suites`
+When running workloads in `spark-bench`, you can launch one or many `spark-submit-config`s that will contain one or many `suites`
 which are logical groupings of one or many `workloads`.
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Data Generation](#data-generation)
+- [Workloads](#workloads)
+  - [Types of Workloads](#types-of-workloads)
+  - [Custom Workloads](#custom-workloads)
+  - [Parameters](#parameters)
+  - [Output vs. WorkloadResultsOutput](#output-vs-workloadresultsoutput)
+- [Suites](#suites)
+- [Spark-Submit-Configs](#spark-submit-configs)
+- [Levels and Combinations of Parallelism](#levels-and-combinations-of-parallelism)
+  - [Classic Benchmarking](#classic-benchmarking)
+  - [Classic Benchmarking Across Systems](#classic-benchmarking-across-systems)
+  - [Same Algorithm, Different Spark Settings](#same-algorithm-different-spark-settings)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## Data Generation
 
-Data generation sits outside of the `spark-context` -> `suite` -> `workload` tree, so let's briefly discuss it first.
+Data generation sits outside of the `spark-submit-config` -> `suite` -> `workload` tree, so let's briefly discuss it first.
 
 `spark-bench` has the capability to generate data according to many different configurable generators. 
 Generated data can be written to any storage addressable by Spark, including local files, hdfs, S3, etc.
@@ -179,5 +200,49 @@ spark-bench = {
 
 ### Same Algorithm, Different Spark Settings
 
+```hocon
+spark-bench = {
 
-SBT_OPTS="-Xmx1536M -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss2M"
+  spark-submit-parallel = false
+  spark-submit-config = [{
+    spark-args = {
+      master = "spark://10.0.0.1:7077"
+      executor-mem = "128M"
+    }
+    suites-parallel = false
+    suites = [
+    {
+      descr = "Spark Pi at 128M executor-mem"
+      parallel = false
+      repeat = 10 // lots of repeating here because we want statistically valid results 
+      benchmark-output = "console"
+      workloads = [
+        {
+          name = ["sparkpi"]
+          slices = [10, 100, 1000]
+        }
+      ]
+    }]
+  },
+  {
+    spark-args = {
+      master = "spark://10.0.0.1:7077"
+      executor-mem = "8G"
+    }
+    suites-parallel = false
+    suites = [
+    {
+      descr = "SparkPi at 8G executor-mem"
+      parallel = false
+      repeat = 10 // lots of repeating here because we want statistically valid results 
+      benchmark-output = "console"
+      workloads = [
+        {
+          name = ["sparkpi"]
+          slices = [10, 100, 1000]
+        }
+      ]
+    }]
+  }]
+}
+```
