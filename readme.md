@@ -41,21 +41,31 @@
 
 Alternatively, you can also clone this repo and build it yourself. 
 
+First, install SBT according to the instructions for your system: <http://www.scala-sbt.org/0.13/docs/Setup.html>
+
+Clone this repo.
 ```bash
-# Clone this repo
 git clone https://github.com/ecurtin/spark-bench.git
 cd spark-bench/
-# The latest changes will always be on develop, the stable version is master.
-# Optionally check out develop here, or skip this step to stay on master.
+```
+The latest changes will always be on develop, the stable version is master. Optionally check out develop here, or skip this step to stay on master.
+```bash
 git checkout develop
-# Building spark-bench takes more heap space than the default provided by SBT.
-# There are several ways to set these options for SBT, this is just one. I recommend adding the following line to your bash_profile
+```
+Building spark-bench takes more heap space than the default provided by SBT. There are several ways to set these options for SBT, 
+this is just one. I recommend adding the following line to your bash_profile:
+```bash
 export SBT_OPTS="-Xmx1536M -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss2M"
-# Now you're ready to test spark-bench, if you so desire
+```
+Now you're ready to test spark-bench, if you so desire.
+```bash
 sbt test
-# And to build the distribution tar file
+```
+And finally to build the distribution folder and associated tar file.
+```bash
 sbt dist
 ```
+
 
 ## Running the Examples From The Distribution
 
