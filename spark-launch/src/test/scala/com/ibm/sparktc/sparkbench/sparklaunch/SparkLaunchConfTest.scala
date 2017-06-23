@@ -28,6 +28,8 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
 
     conf1.sparkConfs shouldBe expectedSparkConfs
 
+    SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
+
 //    val resultConf = conf1.createSparkContext().sparkContext.getConf
 //    resultConf.getBoolean("spark.dynamicAllocation.enabled", defaultValue = true) shouldBe false
 //    resultConf.getBoolean("spark.shuffle.service.enabled", defaultValue = true) shouldBe false
@@ -42,6 +44,7 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
 
     conf2.sparkConfs.isEmpty shouldBe true
 
+    SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
   }
 
 }

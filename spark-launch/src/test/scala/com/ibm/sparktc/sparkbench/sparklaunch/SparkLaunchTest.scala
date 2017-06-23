@@ -8,7 +8,6 @@ class SparkLaunchTest extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    dataShiznit.deleteFolders()
     dataShiznit.createFolders()
     dataShiznit.generateKMeansData(1000, 5, dataShiznit.kmeansFile)
   }

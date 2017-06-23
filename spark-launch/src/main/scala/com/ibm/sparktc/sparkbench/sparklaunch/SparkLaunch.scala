@@ -54,7 +54,7 @@ object SparkLaunch extends App {
     }
   }
 
-  private def rmTmpFiles(fns: Seq[String]): Unit = fns.foreach { fn =>
+  private[sparklaunch] def rmTmpFiles(fns: Seq[String]): Unit = fns.foreach { fn =>
     try {
       val f = new File(fn)
       if (f.exists) f.delete
