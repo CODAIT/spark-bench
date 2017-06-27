@@ -77,7 +77,7 @@ If you installed spark-bench by unpacking the tar file, you're ready to go. If y
 
 ### Setting Environment Variables
 Inside the `bin` folder is a file called `spark-bench-env.sh`. In this folder are two environment variables
-that you will be required to set. The first is `SPARK_HOME` which is simple the full path to the top level of your
+that you will be required to set. The first is `SPARK_HOME` which is simply the full path to the top level of your
 Spark installation on your laptop or cluster. The second is SPARK_MASTER_HOST which is the same as what you
 would enter as `--master` in a spark submit script for this environment. This might be `local[2]` on your laptop,
 `yarn` on a Yarn cluster, an IP address and port if you're running in standalone mode, you get the idea!
@@ -86,7 +86,7 @@ You can set those environment variables in your bash profile or by uncommenting 
 and filling them out in place.
 
 ### Running the Examples
-From the spark-bench distribution file, simple run:
+From the spark-bench distribution file, simply run:
 ```bash
 ./examples/kmeans-example/kmeans-example.sh
 ```
