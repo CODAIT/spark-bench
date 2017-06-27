@@ -2,7 +2,6 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, addConfToResults}
-import org.apache.spark.sql.functions.lit
 
 trait Workload {
   val name: String
@@ -16,24 +15,11 @@ trait Workload {
    */
   def reconcileSchema(dataFrame: DataFrame): DataFrame = dataFrame
 
+  /**
+    * Actually run the workload.  Takes an optional DataFrame as input if the user
+    * supplies an inputDir, and returns the generated results DataFrame.
+    */
   def doWorkload(df: Option[DataFrame], sparkSession: SparkSession): DataFrame
-
-  def run(spark: SparkSession): DataFrame = {
-
-    val df = inputDir match {
-      case None => None
-      case Some(input) => {
-        val rawDF = load(spark, inputDir.get)
-        Some(reconcileSchema(rawDF))
-      }
-    }
-
-    val res = doWorkload(df, spark)
-    res.coalesce(1)
-    addConfToResults(res, toMap)
-  }
-
-
 
   def toMap: Map[String, Any] =
     (Map[String, Any]() /: this.getClass.getDeclaredFields) { (a, f) =>
@@ -41,4 +27,9 @@ trait Workload {
       a + (f.getName -> f.get(this))
     }
 
+  final def run(spark: SparkSession): DataFrame = {
+    val df = inputDir.flatMap(input => Some(reconcileSchema(load(spark, input))))
+    val res = doWorkload(df, spark).coalesce(1) // TODO Why do we coalesce to 1?
+    addConfToResults(res, toMap)
+  }
 }

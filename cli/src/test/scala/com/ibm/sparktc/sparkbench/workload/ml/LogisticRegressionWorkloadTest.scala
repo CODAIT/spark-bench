@@ -9,7 +9,7 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
 
   private val cfg = Map(
     "name" -> "lr-bml",
-    "input" -> "workloads/src/test/resources/lr-bml",
+    "input" -> "cli/src/test/resources/lr-bml",
     "trainfile" -> "lr-train.csv",
     "testfile" -> "lr-test.csv"
   )
