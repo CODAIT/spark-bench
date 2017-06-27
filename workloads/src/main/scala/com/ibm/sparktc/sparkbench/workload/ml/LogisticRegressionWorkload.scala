@@ -17,7 +17,7 @@ case class LogisticRegressionResult(
                                      name: String,
                                      appid: String,
                                      start_time: Long,
-                                     train_file: String,
+                                     input: String,
                                      train_count: Long,
                                      train_time: Long,
                                      test_file: String,
@@ -33,7 +33,6 @@ case class LogisticRegressionWorkload(
                                        name: String,
                                        input: Option[String],
                                        workloadResultsOutputDir: Option[String],
-                                       trainFile: String,
                                        testFile: String,
                                        numPartitions: Int,
                                        cacheEnabled: Boolean
@@ -43,7 +42,6 @@ case class LogisticRegressionWorkload(
     name = verifyOrThrow(m, "name", "lr-bml", s"Required field name does not match"),
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    trainFile = getOrThrow(m, "trainfile").asInstanceOf[String],
     testFile = getOrThrow(m, "testfile").asInstanceOf[String],
     numPartitions = getOrDefault(m, "numpartitions", 32),
     cacheEnabled = getOrDefault(m, "cacheenabled", true)
@@ -68,8 +66,8 @@ case class LogisticRegressionWorkload(
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     val startTime = System.currentTimeMillis
-    val (ltrainTime, d_train) = ld(s"${input.get}/$trainFile")(spark)
-    val (ltestTime, d_test) = ld(s"${input.get}/$testFile")(spark)
+    val (ltrainTime, d_train) = ld(s"${input.get}")(spark)
+    val (ltestTime, d_test) = ld(s"$testFile")(spark)
     val (countTime, (trainCount, testCount)) = time { (d_train.count(), d_test.count()) }
     val (trainTime, model) = time(new LogisticRegression().setTol(1e-4).fit(d_train))
     val (testTime, areaUnderROC) = time(new BCE().setMetricName("areaUnderROC").evaluate(model.transform(d_test)))
@@ -82,7 +80,7 @@ case class LogisticRegressionWorkload(
       name = "lr-bml",
       appid = spark.sparkContext.applicationId,
       startTime,
-      trainFile,
+      input.get,
       train_count = trainCount,
       trainTime,
       testFile,
