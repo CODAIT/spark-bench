@@ -1,20 +1,21 @@
+# spark-bench Developer's Guide
+
+Contributions welcome!
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+## Table of Contents
 
 - [Build Structure of spark-bench](#build-structure-of-spark-bench)
 - [Adding a New Data Generator](#adding-a-new-data-generator)
+- [Adding a New Workload](#adding-a-new-workload)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-#spark-bench Developer's Guide
-
-Contributions welcome!
 
 ## Build Structure of spark-bench
 
 spark-bench is a multi-project SBT build. The build is mainly defined in [build.sbt](../build.sbt) and dependencies
-are defined in [Dependencies.scala](../project/Dependecies.scala).
+are defined in [Dependencies.scala](../project/Dependencies.scala).
 
 ## Adding a New Data Generator
 
