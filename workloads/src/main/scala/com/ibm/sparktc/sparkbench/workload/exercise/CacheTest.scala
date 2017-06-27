@@ -7,13 +7,13 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 case class CacheTestResult(name: String, timestamp: Long, runTime1: Long, runTime2: Long, runTime3: Long)
 
 case class CacheTest(name: String,
-                    inputDir: Option[String],
-                    workloadResultsOutputDir: Option[String],
-                    sleepMs: Long) extends Workload {
+                     input: Option[String],
+                     workloadResultsOutputDir: Option[String],
+                     sleepMs: Long) extends Workload {
 
   def this(m: Map[String, Any]) =
     this(name = getOrDefault(m, "name", "cachetest"),
-      inputDir = m.get("input").map(_.asInstanceOf[String]),
+      input = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
       sleepMs = getOrDefault(m, "sleepMs", 1000L))
 

@@ -6,7 +6,7 @@ import org.apache.spark.sql.functions.lit
 
 trait Workload {
   val name: String
-  val inputDir: Option[String]
+  val input: Option[String]
   val workloadResultsOutputDir: Option[String]
 
   /**
@@ -20,10 +20,10 @@ trait Workload {
 
   def run(spark: SparkSession): DataFrame = {
 
-    val df = inputDir match {
+    val df = input match {
       case None => None
-      case Some(input) => {
-        val rawDF = load(spark, inputDir.get)
+      case Some(in) => {
+        val rawDF = load(spark, in)
         Some(reconcileSchema(rawDF))
       }
     }
