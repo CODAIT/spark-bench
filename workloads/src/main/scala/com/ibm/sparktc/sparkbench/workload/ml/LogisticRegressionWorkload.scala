@@ -14,18 +14,18 @@ import org.apache.spark.sql.types._
 // ¯\_(ツ)_/¯
 
 case class LogisticRegressionWorkload(
-  name: String,
-  inputDir: Option[String],
-  workloadResultsOutputDir: Option[String],
-  trainFile: String = "spark-train-1m.csv",
-  testFile: String = "spark-test-1m.csv",
-  numPartitions: Int = 32,
-  cacheEnabled: Boolean = true
+                                       name: String,
+                                       input: Option[String],
+                                       workloadResultsOutputDir: Option[String],
+                                       trainFile: String = "spark-train-1m.csv",
+                                       testFile: String = "spark-test-1m.csv",
+                                       numPartitions: Int = 32,
+                                       cacheEnabled: Boolean = true
   ) extends Workload {
 
   def this(m: Map[String, Any]) = this(
     name = verifyOrThrow(m, "name", "lr-bml", s"Required field name does not match"),
-    inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     trainFile = getOrThrow(m, "trainfile").asInstanceOf[String],
     testFile = getOrThrow(m, "testfile").asInstanceOf[String],
@@ -52,8 +52,8 @@ case class LogisticRegressionWorkload(
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     val startTime = System.currentTimeMillis
-    val (ltrainTime, d_train) = ld(s"${inputDir.get}/$trainFile")(spark)
-    val (ltestTime, d_test) = ld(s"${inputDir.get}/$testFile")(spark)
+    val (ltrainTime, d_train) = ld(s"${input.get}/$trainFile")(spark)
+    val (ltestTime, d_test) = ld(s"${input.get}/$testFile")(spark)
     val (countTime, (trainCount, testCount)) = time { (d_train.count(), d_test.count()) }
     val (trainTime, model) = time(new LogisticRegression().setTol(1e-4).fit(d_train))
     val (testTime, areaUnderROC) = time(new BCE().setMetricName("areaUnderROC").evaluate(model.transform(d_test)))

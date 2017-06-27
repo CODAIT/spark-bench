@@ -23,7 +23,7 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
     workload shouldBe a [LogisticRegressionWorkload]
     lr = workload.asInstanceOf[LogisticRegressionWorkload]
     lr.name shouldBe cfg("name")
-    lr.inputDir shouldBe cfg.get("input")
+    lr.input shouldBe cfg.get("input")
     lr.trainFile shouldBe cfg("trainfile")
     lr.testFile shouldBe cfg("testfile")
     lr.cacheEnabled shouldBe true
