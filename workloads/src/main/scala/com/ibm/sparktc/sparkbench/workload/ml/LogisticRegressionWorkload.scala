@@ -13,6 +13,22 @@ import org.apache.spark.sql.types._
 // https://github.com/szilard/benchm-ml/blob/master/1-linear/5-spark.txt
 // ¯\_(ツ)_/¯
 
+case class LogisticRegressionResult(
+                                     name: String,
+                                     appid: String,
+                                     start_time: Long,
+                                     train_file: String,
+                                     train_count: Long,
+                                     train_time: Long,
+                                     test_file: String,
+                                     test_count: Long,
+                                     test_time: Long,
+                                     load_time: Long,
+                                     count_time: Long,
+                                     total_runtime: Long,
+                                     area_under_roc: Double
+                                   )
+
 case class LogisticRegressionWorkload(
                                        name: String,
                                        input: Option[String],
@@ -59,44 +75,23 @@ case class LogisticRegressionWorkload(
     val (testTime, areaUnderROC) = time(new BCE().setMetricName("areaUnderROC").evaluate(model.transform(d_test)))
 
     val loadTime = ltrainTime + ltestTime
-    val timeList = spark.sparkContext.parallelize(
-      Seq(
-        Row(
-          name,
-          spark.sparkContext.applicationId,
-          startTime,
-          trainFile,
-          trainCount,
-          trainTime,
-          testFile,
-          testCount,
-          testTime,
-          loadTime,
-          countTime,
-          loadTime + trainTime + testTime,
-          areaUnderROC
-        )
-      )
-    )
 
-    spark.createDataFrame(timeList,
-      StructType(
-        List(
-          StructField("name", StringType, nullable = false),
-          StructField("appid", StringType, nullable = false),
-          StructField("start_time", LongType, nullable = false),
-          StructField("train_file", StringType, nullable = false),
-          StructField("train_count", LongType, nullable = false),
-          StructField("train_time", LongType, nullable = false),
-          StructField("test_file", StringType, nullable = false),
-          StructField("test_count", LongType, nullable = false),
-          StructField("test_time", LongType, nullable = false),
-          StructField("load_time", LongType, nullable = false),
-          StructField("count_time", LongType, nullable = false),
-          StructField("total_runtime", LongType, nullable = false),
-          StructField("area_under_roc", DoubleType, nullable = false)
-        )
-      )
-    )
+    //spark.createDataFrame(Seq(SleepResult("sleep", timestamp, t)))
+
+    spark.createDataFrame(Seq(LogisticRegressionResult(
+      name = "lr-bml",
+      appid = spark.sparkContext.applicationId,
+      startTime,
+      trainFile,
+      train_count = trainCount,
+      trainTime,
+      testFile,
+      test_count = testCount,
+      testTime,
+      loadTime,
+      countTime,
+      loadTime + trainTime + testTime,
+      areaUnderROC
+    )))
   }
 }
