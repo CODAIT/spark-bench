@@ -17,10 +17,10 @@ case class LogisticRegressionWorkload(
                                        name: String,
                                        input: Option[String],
                                        workloadResultsOutputDir: Option[String],
-                                       trainFile: String = "spark-train-1m.csv",
-                                       testFile: String = "spark-test-1m.csv",
-                                       numPartitions: Int = 32,
-                                       cacheEnabled: Boolean = true
+                                       trainFile: String,
+                                       testFile: String,
+                                       numPartitions: Int,
+                                       cacheEnabled: Boolean
   ) extends Workload {
 
   def this(m: Map[String, Any]) = this(
