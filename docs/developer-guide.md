@@ -24,10 +24,50 @@ All the data generators live in the data generator project. Let's add a new data
 The FooGenerator is going to output however many rows and columns of the string you specify, over and over again.
 Pretty useful, right?
 
-We probably want a default string for the FooGenerator to output. Let's make a defaults file. This should
-go in the `utils` project because defaults may need to be accessed in multiple projects.
+Let's put this in `datageneration/src/main/scala/com/ibm/sparktc/sparkbench/datageneration/utilgenerators`.
 
-Defaults are defined in [Defaults.scala](../utils/src/main/scala/com/ibm/sparktc/sparkbench/utils/Defaults.scala)
+```scala
+package com.ibm.sparktc.sparkbench.datageneration.utilgenerators
+
+import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerator}
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+
+object ExampleDefaults {
+  val DEFAULT_STR = "foo"
+}
+
+class ExampleGenerator(conf: DataGenerationConf, spark: SparkSession) extends DataGenerator(conf, spark) {
+
+  import ExampleDefaults._ //this is the file we created in the `utils` project, all the wiring to get the project dependencies talking is already in place!
+
+  val m = conf.generatorSpecific //convenience
+  val str: String = getOrDefault[String](m, "str", DEFAULT_STR)
+
+  override def generateData(spark: SparkSession): DataFrame = {
+
+    val oneRow = Seq.fill(conf.numCols)(str).mkString(",")
+
+    val dataset: Seq[String] = for (i <- 0 until conf.numRows) yield oneRow
+    val strrdd: RDD[String] = spark.sparkContext.parallelize(dataset)
+    val rdd = strrdd.map(str => str.split(","))
+    val schemaString = rdd.first().indices.map(_.toString).mkString(" ")
+    val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, StringType, nullable = false))
+    val schema = StructType(fields)
+    val rowRDD: RDD[Row] = rdd.map(arr => Row(arr:_*))
+    
+    spark.createDataFrame(rowRDD, schema)
+  }
+}
+```
+
+Notice that I included the ExampleDefaults object within this file. Sometimes it's better to store defaults that might be used in multiple places in the
+`utils` project.
+
+These defaults are defined in [Defaults.scala](../utils/src/main/scala/com/ibm/sparktc/sparkbench/utils/Defaults.scala). If we were
+to refactor our generator with an external default object, we'd put it in Defaults like this:
 
 ```scala
 package com.ibm.sparktc.sparkbench.utils
@@ -42,43 +82,6 @@ object LinearRegressionDefaults {
 
 object FooDefaults {
   val DEFAULT_STR = "foo"
-}
-```
-
-Now let's actually write our generator! Let's put this in `datageneration/src/main/scala/com/ibm/sparktc/sparkbench/datageneration/utilgenerators`.
-
-```scala
-package com.ibm.sparktc.sparkbench.datageneration.utilgenerators
-
-import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerator}
-import com.ibm.sparktc.sparkbench.utils.FooDefaults
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
-
-import org.apache.spark.mllib.util.KMeansDataGenerator
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.types.{StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-
-class FooDataGen(conf: DataGenerationConf, spark: SparkSession) extends DataGenerator(conf, spark) {
-
-  import FooDefaults._ //this is the file we created in the `utils` project, all the wiring to get the project dependencies talking is already in place!
-
-  val m = conf.generatorSpecific //convenience
-  val str: Int = getOrDefault[Int](m, "str", DEFAULT_STR)
-
-  override def generateData(spark: SparkSession): DataFrame = {
-
-    val oneRow = (0..conf.numCols).map(i => str).toSeq
-    val dataset = (0..conf.numRows).map(i => oneRow).toSeq
-    spark.sparkContext.parallelize(dataset)
-
-    val schemaString = data.first().indices.map(_.toString).mkString(" ")
-    val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, StringType, nullable = false))
-    val schema = StructType(fields)
-    val rowRDD = data.map(arr => Row(arr:_*))
-
-    spark.createDataFrame(rowRDD, schema)
-  }
 }
 ```
 
