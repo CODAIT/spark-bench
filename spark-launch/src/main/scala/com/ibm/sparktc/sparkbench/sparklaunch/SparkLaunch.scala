@@ -11,8 +11,6 @@ import scala.util.Try
 object SparkLaunch extends App {
 
   override def main(args: Array[String]): Unit = {
-    println("lol")
-    println(s"these are my argz: ${args.mkString(", ")}")
     assert(args.nonEmpty)
     val path = args.head
     val (confSeq: Seq[(SparkLaunchConf, String)], parallel: Boolean) = mkConfs(new File(path))
@@ -44,7 +42,6 @@ object SparkLaunch extends App {
 
   def launch(conf: SparkLaunchConf): Unit = {
     val argz: Array[String] = conf.toSparkArgs
-    println(s"argz are: ${argz.mkString(", ")}")
     val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"))
     val submitCmd = s"""$sparkHome/bin/spark-submit ${argz.mkString(" ")}"""
     println(s" *** SPARK-SUBMIT: $submitCmd")
