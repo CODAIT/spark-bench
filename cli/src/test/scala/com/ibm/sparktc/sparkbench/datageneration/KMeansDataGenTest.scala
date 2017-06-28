@@ -2,9 +2,9 @@ package com.ibm.sparktc.sparkbench.datageneration
 
 import java.io.File
 
-import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
 import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 import scala.io.Source
@@ -72,7 +72,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
 
     val generator = new KMeansDataGen(x, SparkSessionProvider.spark)
 
-    generator.numPar shouldBe KMeansDefaults.NUM_OF_PARTITIONS
+    generator.numPar shouldBe KMeansWorkload.NUM_OF_PARTITIONS
   }
 
 }

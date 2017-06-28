@@ -2,6 +2,7 @@ package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
 
+import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import com.ibm.sparktc.sparkbench.workload.{MultiSuiteRunConfig, Suite}
 
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
@@ -38,16 +39,18 @@ object ArgsParser {
 		// Workload ARG PARSING, ONE FOR EACH workload
 		val suite: Suite = sArgs.subcommands match {
 			// KMEANS
-			case List(sArgs.workload, sArgs.workload.kmeans) => sArgs.workload.kmeans.parseWorkoadArgs()(Map(
+			case List(sArgs.workload, sArgs.workload.kmeans) => sArgs.workload.kmeans.parseWorkoadArgs(Map(
 					"k"	-> sArgs.workload.kmeans.k.apply(),
 					"maxIterations" -> sArgs.workload.kmeans.maxIterations.apply(),
 					"seed" -> sArgs.workload.kmeans.seed.apply()
 				))
 			// TIMED SLEEP
-			case List(sArgs.workload, sArgs.workload.timedsleep) => sArgs.workload.timedsleep.parseWorkoadArgs()(Map (
+			case List(sArgs.workload, sArgs.workload.timedsleep) => sArgs.workload.timedsleep.parseWorkoadArgs(Map (
 					"partitions"	-> sArgs.workload.timedsleep.partitions.apply(),
 					"sleepms" -> sArgs.workload.timedsleep.sleepMS.apply()
 				))
+			/*case List(sArgs.workload, KMeansWorkload.subcommand) =>
+				KMeansWorkload.parseArgs*/
 			// OTHER
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}

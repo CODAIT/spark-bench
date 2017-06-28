@@ -17,7 +17,7 @@
 package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
 import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerator}
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
 
 import org.apache.spark.mllib.util.KMeansDataGenerator
@@ -28,7 +28,7 @@ import org.apache.spark.sql.types._
 
 class KMeansDataGen(conf: DataGenerationConf, spark: SparkSession) extends DataGenerator(conf, spark) {
 
-  import KMeansDefaults._
+  import KMeansWorkload._
 
   val m = conf.generatorSpecific //convenience
 

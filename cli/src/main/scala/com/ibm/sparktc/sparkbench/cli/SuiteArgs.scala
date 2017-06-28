@@ -22,7 +22,7 @@ class SuiteArgs(name: String*) extends Subcommand(name:_*) {
 //  println(s"nameName is: $nameName")
 //  println(s"nameName class is: ${nameName.getClass}")
 
-  def parseWorkoadArgs()(workloadArgLists: Map[String, Seq[Any]]): Suite = {
+  def parseWorkoadArgs(workloadArgLists: Map[String, Seq[Any]]): Suite = {
     val workloadSpecificArgs: Map[String, Seq[Any]] = Map(
       "name" -> Seq(nameName),
       "input" -> inputDir.apply(),

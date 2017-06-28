@@ -1,9 +1,10 @@
 package com.ibm.sparktc.sparkbench.cli
 
-import com.ibm.sparktc.sparkbench.utils.{KMeansDefaults, TimedSleepDefaults}
+import com.ibm.sparktc.sparkbench.workload.ml._
 import org.rogach.scallop._
 import java.io.File
 
+import com.ibm.sparktc.sparkbench.workload.exercise.PartitionAndSleepWorkload
 import org.rogach.scallop.exceptions._
 
 class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
@@ -37,9 +38,9 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
   val datagen = new Subcommand("generate-data") {
     // DATAGEN
     val kmeans = new DataGeneratorArgs("kmeans"){
-      val k = opt[Int](short = 'k', default = Some(KMeansDefaults.NUM_OF_CLUSTERS))
-      val scaling = opt[Double](short = 's', default = Some(KMeansDefaults.SCALING))
-      val partitions = opt[Int](short = 'p', default = Some(KMeansDefaults.NUM_OF_PARTITIONS))
+      val k = opt[Int](short = 'k', default = Some(KMeansWorkload.NUM_OF_CLUSTERS))
+      val scaling = opt[Double](short = 's', default = Some(KMeansWorkload.SCALING))
+      val partitions = opt[Int](short = 'p', default = Some(KMeansWorkload.NUM_OF_PARTITIONS))
     }
     addSubcommand(kmeans)
   }
@@ -53,47 +54,27 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
    * *****************
    */
   val workload = new Subcommand("workload") {
-
-    // KMEANS
-    val kmeansStr: String = "kmeans"
-    val kmeans = new SuiteArgs(kmeansStr){
-      val k = opt[List[Int]](short = 'k', default = Some(List(KMeansDefaults.NUM_OF_CLUSTERS)))
-      val maxIterations = opt[List[Int]](short = 'm', default = Some(List(KMeansDefaults.MAX_ITERATION)))
-      val seed = opt[List[Long]](short = 'e', default = Some(List(KMeansDefaults.SEED)))
-    }
+    val kmeans = KMeansWorkload.subcommand
     addSubcommand(kmeans)
-
-    // TIMED SLEEP
-    val timedsleep = new SuiteArgs("timedsleep"){
-      val partitions = opt[List[Int]](short = 'p', default = Some(List(TimedSleepDefaults.PARTITIONS)), descr = "how many partitions to spawn")
-      val sleepMS = opt[List[Long]](short = 't', default = Some(List(TimedSleepDefaults.SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
-    }
+    val timedsleep = PartitionAndSleepWorkload.subcommand
     addSubcommand(timedsleep)
-
-    // LOGISTIC REGRESSION
-    val lrStr: String = "lr-bml"
-    val lr = new SuiteArgs(lrStr){
-      val trainfile = opt[List[String]](short = 't', default = None)
-      val testfile = opt[List[String]](short = 'r', default = None)
-      val numpartitions = opt[List[Int]](short = 'p', default = Some(List(32)))
-    }
+    val lr = LogisticRegressionWorkload.subcommand
     addSubcommand(lr)
+}
 
-  }
+addSubcommand(workload)
 
-  addSubcommand(workload)
-
-  override def onError(e: Throwable): Unit = e match {
-    case ScallopException(message) => throw e
-    case _ => super.onError(e)
-  }
+override def onError(e: Throwable): Unit = e match {
+case ScallopException(message) => throw e
+case _ => super.onError(e)
+}
 
 //
 //  override def printHelp(): Unit = {
 //
 //  }
 
-  validateFileExists(confFile)
-  validateFileIsFile(confFile)
-  verify()
+validateFileExists(confFile)
+validateFileIsFile(confFile)
+verify()
 }

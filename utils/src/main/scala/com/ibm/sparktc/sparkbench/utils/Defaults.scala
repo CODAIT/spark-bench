@@ -22,9 +22,3 @@ object LinearRegressionDefaults {
   val MAX_ITERATION: Int = 3
 //  val SPARK_STORAGE_MEMORYFRACTION = 0.5
 }
-
-object TimedSleepDefaults {
-  val PARTITIONS: Int = 48
-  val SLEEPMS: Long = 12000L
-
-}

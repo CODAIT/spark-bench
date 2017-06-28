@@ -1,7 +1,8 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
+import com.ibm.sparktc.sparkbench.cli.SuiteArgs
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator => BCE}
@@ -13,8 +14,16 @@ import org.apache.spark.sql.types._
 // https://github.com/szilard/benchm-ml/blob/master/1-linear/5-spark.txt
 // ¯\_(ツ)_/¯
 
+object LogisticRegressionWorkload extends WorkloadDefaults {
+  val name = "lr-bml"
+  override val subcommand = new SuiteArgs(name){
+    val trainfile = opt[List[String]](short = 't', default = None)
+    val testfile = opt[List[String]](short = 'r', default = None)
+    val numpartitions = opt[List[Int]](short = 'p', default = Some(List(32)))
+  }
+}
+
 case class LogisticRegressionWorkload(
-  name: String,
   inputDir: Option[String],
   workloadResultsOutputDir: Option[String],
   trainFile: String = "spark-train-1m.csv",
@@ -24,7 +33,6 @@ case class LogisticRegressionWorkload(
   ) extends Workload {
 
   def this(m: Map[String, Any]) = this(
-    name = verifyOrThrow(m, "name", "lr-bml", s"Required field name does not match"),
     inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     trainFile = getOrThrow(m, "trainfile").asInstanceOf[String],
@@ -62,7 +70,7 @@ case class LogisticRegressionWorkload(
     val timeList = spark.sparkContext.parallelize(
       Seq(
         Row(
-          name,
+          LogisticRegressionWorkload.name,
           spark.sparkContext.applicationId,
           startTime,
           trainFile,

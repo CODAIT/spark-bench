@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.workload.sql
 
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 case class SQLWorkloadResult(
@@ -14,16 +14,17 @@ case class SQLWorkloadResult(
                             total_Runtime: Long
                             )
 
-case class SQLWorkload (name: String,
-                                   inputDir: Option[String],
-                                   workloadResultsOutputDir: Option[String] = None,
-                                   queryStr: String,
-                                   cache: Boolean) extends Workload {
+object SQLWorkload extends WorkloadDefaults {
+  val name = "sql"
+}
+
+case class SQLWorkload (inputDir: Option[String],
+                       workloadResultsOutputDir: Option[String] = None,
+                       queryStr: String,
+                       cache: Boolean) extends Workload {
 
   def this(m: Map[String, Any]) =
-  this(
-    name = verifyOrThrow(m, "name", "sql", "Incorrect or missing workload name."),
-    inputDir = m.get("input").map(_.asInstanceOf[String]),
+  this(inputDir = m.get("input").map(_.asInstanceOf[String]),
     workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
     queryStr = getOrThrow(m, "query").asInstanceOf[String],
     cache = getOrDefault(m, "cache", false)

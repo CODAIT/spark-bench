@@ -1,8 +1,8 @@
 package com.ibm.sparktc.sparkbench.workload.exercise
 
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import org.apache.spark.sql.{DataFrame,  SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 case class SleepResult(
                       name: String,
@@ -10,16 +10,18 @@ case class SleepResult(
                       total_runtime: Long
                       )
 
+object Sleep extends WorkloadDefaults {
+  val name = "sleep"
+}
+
 case class Sleep(
-                                          name: String,
-                                          inputDir: Option[String] = None,
-                                          workloadResultsOutputDir: Option[String] = None,
-                                          sleepMS: Long
-                                        ) extends Workload {
+                inputDir: Option[String] = None,
+                workloadResultsOutputDir: Option[String] = None,
+                sleepMS: Long
+              ) extends Workload {
 
   def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "cachetest"),
-      inputDir = m.get("input").map(_.asInstanceOf[String]),
+    this(inputDir = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {
         case (Some(l), _) => any2Int2Long(l)

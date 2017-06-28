@@ -16,11 +16,11 @@ object ConfigCreator {
   def mapToConf(m: Map[String, Any]): Workload = {
     val name = getOrThrow(m, "name").asInstanceOf[String].toLowerCase
     name match {
-      case "timedsleep" => new PartitionAndSleepWorkload(m)
-      case "kmeans" => new KMeansWorkload(m)
-      case "lr-bml" => new LogisticRegressionWorkload(m)
-      case "cachetest" => new CacheTest(m)
-      case "sql" => new SQLWorkload(m)
+      case PartitionAndSleepWorkload.name => new PartitionAndSleepWorkload(m)
+      case KMeansWorkload.name => new KMeansWorkload(m)
+      case LogisticRegressionWorkload.name => new LogisticRegressionWorkload(m)
+      case CacheTest.name => new CacheTest(m)
+      case SQLWorkload.name => new SQLWorkload(m)
       case "sleep" => new Sleep(m)
       case "sparkpi" => new SparkPi(m)
       case _ => throw SparkBenchException(s"Unrecognized or implemented workload name: $name")
