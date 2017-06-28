@@ -157,6 +157,9 @@ computer scientists and like things to be 0-indexed.
 - **Other Spark Settings:** Because I didn't specify any options in the config, these came from my default settings in my Spark installation. 
 If I had specified, say, a different driver port in the config, that would have overridden the default.
 
+I am not specifying any parallelism settings at any level of my config, not that it would matter if I was because there's only one way to run one workload one time.
+The default setting for all parallelism options is `false`, meaning that it will not be parallel.
+
 ### Classic Benchmarking
 
 Classic benchmarking involves running of collection of methods in order to get timing numbers on each. To have statistically significant results, 
