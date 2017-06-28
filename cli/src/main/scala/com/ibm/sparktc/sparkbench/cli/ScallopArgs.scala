@@ -24,7 +24,7 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
   footer("\nSee the README and project wiki for more documentation.")
 
-  val confFile = trailArg[File](required = false, descr = "Path to a spark-bench configuration file. See README and examples for more on configuration files.")
+  val confFile = trailArg[File](required = false, descr = "[WARNGING] FOR USE WITH SPARK-LAUNCH ONLY. DIRECT USE WILL IGNORE YOUR SPARK SETTINGS AND GIVE YOU WEIRD RESULTS.")
 
   val dryRun = opt[Boolean](required = false, default = Some(false), descr = "[EXPERIMENTAL] Prints the configuration of each workload that will run but does not actually run them.")
 
