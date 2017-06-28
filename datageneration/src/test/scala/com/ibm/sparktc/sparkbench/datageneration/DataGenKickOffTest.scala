@@ -12,7 +12,6 @@ class DataGenKickOffTest extends FlatSpec with Matchers with BeforeAndAfterEach 
   var file: File = _
 
   override def beforeEach() {
-    cool.deleteFolders()
     cool.createFolders()
     file = new File(filename)
   }

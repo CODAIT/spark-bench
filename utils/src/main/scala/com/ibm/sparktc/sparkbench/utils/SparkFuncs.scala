@@ -1,5 +1,6 @@
 package com.ibm.sparktc.sparkbench.utils
 
+import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object SparkFuncs {
@@ -50,6 +51,18 @@ object SparkFuncs {
     val fs = org.apache.hadoop.fs.FileSystem.get(conf)
     if ( ! fs.exists(new org.apache.hadoop.fs.Path(path))) { path } // "It is true that this file does not exist"
     else { throw SparkBenchException(errorMessage) }
+  }
+
+  def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
+    def dealWithNones(a: Any): Any = a match {
+      case None => ""
+      case Some(b) => b
+      case _ => a
+    }
+
+    var ddf: DataFrame = df
+    m.foreach( keyValue => ddf = ddf.withColumn(keyValue._1, lit(dealWithNones(keyValue._2))) )
+    ddf
   }
 
 }

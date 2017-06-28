@@ -1,29 +1,34 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
+
 import scala.collection.JavaConverters._
-import com.ibm.sparktc.sparkbench.workload.{SparkContextConf, Suite}
+import com.ibm.sparktc.sparkbench.workload.{MultiSuiteRunConfig, Suite}
 import com.typesafe.config.{Config, ConfigFactory, ConfigObject}
+
 import scala.util.Try
+
+
 
 object Configurator {
 
-  def apply(file: File): Seq[SparkContextConf] = {
+  def apply(file: File): Seq[MultiSuiteRunConfig] = {
     val config: Config = ConfigFactory.parseFile(file)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
-    val sparkContextConfs = parseSparkContext(sparkBenchConfig)
+    val sparkContextConfs = parseSparkBenchRunConfig(sparkBenchConfig)
     sparkContextConfs
   }
 
-  def parseSparkContext(config: Config): List[SparkContextConf] = {
-    val sparkContextConfs = getConfigListByName("spark-contexts", config)
-    sparkContextConfs.map( sparkContextConf =>
-      SparkContextConf(
-        master = sparkContextConf.getString("master"),
+  private def parseSparkBenchRunConfig(config: Config): Seq[MultiSuiteRunConfig] = {
+    val sparkContextConfs = getConfigListByName("spark-submit-config", config)
+    sparkContextConfs.map { sparkContextConf =>
+      val sparkConfs = Try(sparkContextConf.getObject("conf")).map(toStringMap).getOrElse(Map.empty)
+
+      MultiSuiteRunConfig(
         suitesParallel = Try(sparkContextConf.getBoolean("suites-parallel")).getOrElse(false),
         suites = getConfigListByName("suites", sparkContextConf).map(parseSuite)
       )
-    )
+    }
   }
 
   private def getConfigListByName(name: String, config: Config): List[Config] = {
@@ -58,4 +63,6 @@ object Configurator {
     stuff.map(kv => {kv._1 -> kv._2.toSeq})
   }
 
+  def toStringMap(co: ConfigObject): Map[String,String] =
+    co.asScala.toMap.mapValues(v => v.unwrapped.toString)
 }

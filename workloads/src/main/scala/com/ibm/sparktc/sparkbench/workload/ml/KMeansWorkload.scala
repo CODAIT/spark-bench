@@ -29,7 +29,7 @@ import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 
 
 case class KMeansWorkload(name: String,
-                          inputDir: Option[String],
+                          input: Option[String],
                           workloadResultsOutputDir: Option[String],
                           k: Int,
                           seed: Long,
@@ -37,7 +37,7 @@ case class KMeansWorkload(name: String,
 
   def this(m: Map[String, Any]) = this(
     name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
-    inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
     seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),

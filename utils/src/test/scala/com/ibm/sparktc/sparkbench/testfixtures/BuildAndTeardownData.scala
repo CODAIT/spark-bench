@@ -10,9 +10,10 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
 
-class BuildAndTeardownData(prefix: String) {
+class BuildAndTeardownData(dirname: String = System.currentTimeMillis.toString) {
+  val prefix = "/tmp/spark-bench-scalatest/" + dirname
   val sparkBenchTestFolder = s"$prefix/spark-bench-test"
-  val kmeansFile = s"${sparkBenchTestFolder}/kmeans-data.parquet"
+  val kmeansFile = s"$sparkBenchTestFolder/kmeans-data.parquet"
   val sparkBenchDemoFolder = s"$prefix/spark-bench-demo"
   val spark = SparkSessionProvider.spark
 
@@ -22,8 +23,6 @@ class BuildAndTeardownData(prefix: String) {
   }
 
   def deleteFolders(): Unit = {
-//    val fileSeq = Seq(new File(sparkBenchTestFolder), new File(sparkBenchDemoFolder))
-//    fileSeq.foreach(folder => Utils.deleteRecursively(folder))
     Utils.deleteRecursively(new File(prefix))
   }
 
@@ -48,5 +47,4 @@ class BuildAndTeardownData(prefix: String) {
 
     writeToDisk(outputFile, df, spark)
   }
-
 }

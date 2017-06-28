@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench.utils.test
+package com.ibm.sparktc.sparkbench.testfixtures
 
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 

@@ -1,7 +1,7 @@
 package com.ibm.sparktc.sparkbench
 
 import com.ibm.sparktc.sparkbench.cli.ScallopArgs
-import com.ibm.sparktc.sparkbench.utils.test.UnitSpec
+import com.ibm.sparktc.sparkbench.testfixtures.UnitSpec
 
 class ScallopArgsTest extends UnitSpec with Capturing {
 

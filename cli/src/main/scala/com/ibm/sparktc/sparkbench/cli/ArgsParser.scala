@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
 
-import com.ibm.sparktc.sparkbench.workload.{SparkContextConf, Suite}
+import com.ibm.sparktc.sparkbench.workload.{MultiSuiteRunConfig, Suite}
 
 import scala.language.reflectiveCalls // Making SBT hush about the feature warnings
 
@@ -30,10 +30,10 @@ object ArgsParser {
 		m
 	}
 
-  def parseWorkload(sArgs: ScallopArgs): SparkContextConf = {
+  def parseWorkload(sArgs: ScallopArgs): MultiSuiteRunConfig = {
 //		val subcommand: SuiteArgs = sArgs.workload.subcommand.get.asInstanceOf[SuiteArgs] //TODO
 //		val parseWorkloadSpecificArgs = subcommand.parseWorkloadArgs()
-		val master = sys.env.getOrElse("SPARK_MASTER_HOST", "")
+//		val master = sys.env.getOrElse("SPARK_MASTER_HOST", "")
 
 		// Workload ARG PARSING, ONE FOR EACH workload
 		val suite: Suite = sArgs.subcommands match {
@@ -52,15 +52,14 @@ object ArgsParser {
 			case _ => throw new Exception(s"Unknown or unimplemented generator: ${sArgs.datagen}")
 		}
 
-
-		SparkContextConf(
+    // TODO add parsing for spark confs on command line
+		MultiSuiteRunConfig(
 			suites = Seq(suite),
-			suitesParallel = false,
-			master = master
+			suitesParallel = false
 		)
 	}
 
-	def parseConfFile(sArgs: ScallopArgs): Seq[SparkContextConf] = {
+	def parseConfFile(sArgs: ScallopArgs): Seq[MultiSuiteRunConfig] = {
 		val path: File = sArgs.confFile.apply()
 		Configurator(path)
 	}

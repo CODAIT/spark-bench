@@ -15,22 +15,22 @@ case class SQLWorkloadResult(
                             )
 
 case class SQLWorkload (name: String,
-                                   inputDir: Option[String],
-                                   workloadResultsOutputDir: Option[String] = None,
-                                   queryStr: String,
-                                   cache: Boolean) extends Workload {
+                        input: Option[String],
+                        workloadResultsOutputDir: Option[String] = None,
+                        queryStr: String,
+                        cache: Boolean) extends Workload {
 
   def this(m: Map[String, Any]) =
   this(
     name = verifyOrThrow(m, "name", "sql", "Incorrect or missing workload name."),
-    inputDir = m.get("input").map(_.asInstanceOf[String]),
+    input = m.get("input").map(_.asInstanceOf[String]),
     workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
     queryStr = getOrThrow(m, "query").asInstanceOf[String],
     cache = getOrDefault(m, "cache", false)
   )
 
   def loadFromDisk(spark: SparkSession): (Long, DataFrame) = time {
-    val df = load(spark, inputDir.get)
+    val df = load(spark, input.get)
     if(cache) df.cache()
     df
   }

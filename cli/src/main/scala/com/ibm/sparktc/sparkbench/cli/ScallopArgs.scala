@@ -24,7 +24,7 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
 
   footer("\nSee the README and project wiki for more documentation.")
 
-  val confFile = trailArg[File](required = false, descr = "Path to a spark-bench configuration file. See README and examples for more on configuration files.")
+  val confFile = trailArg[File](required = false, descr = "[WARNGING] FOR USE WITH SPARK-LAUNCH ONLY. DIRECT USE WILL IGNORE YOUR SPARK SETTINGS AND GIVE YOU WEIRD RESULTS.")
 
   val dryRun = opt[Boolean](required = false, default = Some(false), descr = "[EXPERIMENTAL] Prints the configuration of each workload that will run but does not actually run them.")
 
@@ -69,6 +69,21 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
       val sleepMS = opt[List[Long]](short = 't', default = Some(List(TimedSleepDefaults.SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
     }
     addSubcommand(timedsleep)
+
+    // LOGISTIC REGRESSION
+    val lrStr: String = "lr-bml"
+    val lr = new SuiteArgs(lrStr){
+      val trainfile = opt[List[String]](short = 't', default = None)
+      val testfile = opt[List[String]](short = 'r', default = None)
+      val numpartitions = opt[List[Int]](short = 'p', default = Some(List(32)))
+    }
+    addSubcommand(lr)
+
+    // STRING RETURNER
+    val helloString = new SuiteArgs("hellostring") {
+      val str = opt[List[String]](short = 's', default = Some(List("Hello, World!")), required = true)
+    }
+    addSubcommand(helloString)
   }
 
   addSubcommand(workload)
