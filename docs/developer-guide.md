@@ -165,3 +165,44 @@ case class HelloString(
 }
 
 ```
+Now that we have our amazing workload written, we're reading to tie it into the rest of the framework.
+
+In [ConfigCreator](../workloads/src/main/scala/com/ibm/sparktc/sparkbench/workload/ConfigCreator.scala)
+add your workload to the match statement in mapToConf().
+
+```scala
+  def mapToConf(m: Map[String, Any]): Workload = {
+    val name = getOrThrow(m, "name").asInstanceOf[String].toLowerCase
+    name match {
+      case "timedsleep" => new PartitionAndSleepWorkload(m)
+      case "kmeans" => new KMeansWorkload(m)
+      case "lr-bml" => new LogisticRegressionWorkload(m)
+      case "cachetest" => new CacheTest(m)
+      case "sql" => new SQLWorkload(m)
+      case "sleep" => new Sleep(m)
+      case "sparkpi" => new SparkPi(m)
+      case "hellostring" => new HelloString(m) // <--- TA-DA!!
+      case _ => throw SparkBenchException(s"Unrecognized or implemented workload name: $name")
+    }
+  }
+```
+
+Now your workload will work through a config file! Let's also make sure it works through
+the CLI.
+
+In the cli project, add your arguments to [ScallopArgs](../cli/src/main/scala/com/ibm/sparktc/sparkbench/cli/ScallopArgs.scala).
+Scallop is weird and cool and weird, you can read more about it here: <https://github.com/scallop/scallop/wiki>
+We're going to make our new arguments a subclass of SuiteArgs, which means that name, input, and workloadResultsOutput
+are already defined for us, we just have to add any extra stuff for our particular workload.
+
+Finally, we add our subcommand to the workload subcommand. Yeah, I know, Scallop is weird and cool and weird.
+
+```scala
+    // STRING RETURNER
+    val helloString = new SuiteArgs("hellostring") {
+      val str = opt[List[String]](short = 's', default = Some(List("Hello, World!")), required = true)
+    }
+    addSubcommand(helloString)
+```
+
+And that's it! Now your new workload is good to go!

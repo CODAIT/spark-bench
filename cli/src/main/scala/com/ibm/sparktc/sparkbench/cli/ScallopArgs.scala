@@ -79,6 +79,11 @@ class ScallopArgs(arguments: Array[String]) extends ScallopConf(arguments){
     }
     addSubcommand(lr)
 
+    // STRING RETURNER
+    val helloString = new SuiteArgs("hellostring") {
+      val str = opt[List[String]](short = 's', default = Some(List("Hello, World!")), required = true)
+    }
+    addSubcommand(helloString)
   }
 
   addSubcommand(workload)
