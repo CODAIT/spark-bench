@@ -29,8 +29,9 @@
 1. Run workloads in a highly configurable fashion
 2. Generate data
 
-When running workloads in `spark-bench`, you can launch one or many `spark-submit-config`s that will contain one or many `suites`
-which are logical groupings of one or many `workloads`.
+Users can interact with spark-bench through a CLI (with limited functionality) or a configuration (with full functionality). 
+
+Users configure the way their jobs run by defining `spark-submits`, `suites`, and `workloads` in a nested structure.
 
 ## Data Generation
 
