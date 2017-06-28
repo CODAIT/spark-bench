@@ -104,12 +104,58 @@ Just like suites and workloads, spark-submit-config can be launched serially or 
 
 ## Levels and Combinations of Parallelism
 
-There are many, many different ways of controlling parallelism in `spark-bench`. 
-Users can launch one or many spark-submit-config serially or in parallel, 
-each containing one or many suites run serially or parallel,
-each containing one or many workloads run serially or in parallel.
+There are many, many different ways of controlling parallelism in `spark-bench`.
 
-Here, we'll highlight a few key use cases as a way of illustrating different options.
+You can control parallelism at the level of the spark-submit-config, and/or the suite, and/or the workload.
+
+This is a not the easiest thing to understand, so let's try to understand by example. Here, we'll highlight a few key use cases as a way of illustrating different options.
+
+### Minimal spark-bench Config File
+
+A spark-bench config file only needs one workload defined to work, but it must also have the other structures as well.
+
+```hocon
+spark-bench = {
+  spark-submit-config = [{
+    suites = [
+      {
+        descr = "One run of SparkPi and that's it!"
+        benchmark-output = "console"
+        workloads = [
+          {
+            name = ["sparkpi"]
+            slices = [10]
+          }
+        ]
+      }
+    ]
+  }]
+}
+```
+
+When I run `./bin/spark-bench.sh examples/from-docs/minimal-example.conf` from my spark-bench distribution file, I get the following output in my terminal: 
+
+```
+One run of SparkPi and that's it!                                               
++-------+-------------+-------------+-----------------+-----+------------------------+------+---+-----------------+-----------------+----------------------------+--------------------+--------------------+-----------------+-----------------------+------------+-------------------+--------------------+
+|   name|    timestamp|total_runtime|   pi_approximate|input|workloadResultsOutputDir|slices|run|spark.driver.host|spark.driver.port|hive.metastore.warehouse.dir|          spark.jars|      spark.app.name|spark.executor.id|spark.submit.deployMode|spark.master|       spark.app.id|         description|
++-------+-------------+-------------+-----------------+-----+------------------------+------+---+-----------------+-----------------+----------------------------+--------------------+--------------------+-----------------+-----------------------+------------+-------------------+--------------------+
+|sparkpi|1498683099328|   1032871662|3.141851141851142|     |                        |    10|  0|     10.200.22.54|            61657|        file:/Users/ecurt...|file:/Users/ecurt...|com.ibm.sparktc.s...|           driver|                 client|    local[2]|local-1498683099078|One run of SparkP...|
++-------+-------------+-------------+-----------------+-----+------------------------+------+---+-----------------+-----------------+----------------------------+--------------------+--------------------+-----------------+-----------------------+------------+-------------------+--------------------+
+```
+
+Where did all these output fields come from? Let's break them down.
+
+- **`name`, `input`, `workloadResultsOutputDir`, `slices`, `description`:** These are parameters from our configuration 
+file. `input` and `workloadResultsOutputDir` came from the defaults define for SparkPi, which are None and None as SparkPi doesn't require any input and only has one number as a result.
+- **`timestamp`, `total_runtime`, `pi_approximate`:** These are output fields from SparkPi. The timestamp is the start 
+time when actual workload began. The total runtime is how long the workload took. In some workloads, the total runtime 
+will be a composite of other runtime numbers; in the case of SparkPi, it's just one.
+- **`run`:** The index of the run. In this case, we only ran SparkPi once, so this one-run is run #0, because we're good
+computer scientists and like things to be 0-indexed.
+- **`spark.master`** Because I didn't define a master in my configuration file, this came from the environment variable SPARK_MASTER_HOST.
+- **Other Spark Settings:** Because I didn't specify any options in the config, these came from my default settings in my Spark installation. 
+If I had specified, say, a different driver port in the config, that would have overridden the default.
 
 ### Classic Benchmarking
 
