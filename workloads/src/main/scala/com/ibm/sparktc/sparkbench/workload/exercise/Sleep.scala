@@ -18,7 +18,7 @@ case class Sleep(
                                         ) extends Workload {
 
   def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "cachetest"),
+    this(name = getOrDefault(m, "name", "sleep"),
       input = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {

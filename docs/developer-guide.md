@@ -89,7 +89,79 @@ Now create that infrastructure for taking in the argument to ScallopArgs in the 
 
 ## Adding a New Workload
 
-This section needs more fleshing out.
+The spark-bench developers are actively working on features that will enable users to dynamically load their own workloads built against the Workload abstract class.
 
-The TL;DR is that while there are plans in the roadmap to add the ability to use custom workloads on the fly, we're not there yet. 
-In the meantime, you have to add your workload inside of the `workloads` project just like the existing ones.
+In the meantime, users will need to add their workloads into the codebase of spark-bench itself. Let's build an example that just returns a string. That's it.
+We're going to make sure that our clusters are super performant when it comes to returning strings.
+
+Here's the code:
+
+```scala
+package com.ibm.sparktc.sparkbench.workload.exercise
+
+import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import org.apache.spark.sql.{DataFrame,  SparkSession}
+
+// Create a case class with a member for each field we want to return in the results.
+case class HelloStringResult(
+                        name: String,
+                        timestamp: Long,
+                        total_runtime: Long,
+                        str: String
+                      )
+/*
+  We're going to structure the main workload as a case class that inherits from abstract class Workload.
+  Name, input, and workloadResultsOutputDir are required to be members of our case class, anything else
+  depends on the workload. Here, we're taking in a string that we will be returning in our workload.
+*/
+case class HelloString(
+                  name: String,
+                  input: Option[String] = None,
+                  workloadResultsOutputDir: Option[String] = None,
+                  str: String
+                ) extends Workload {
+
+/*
+  Override the constructor for your case class to take in a Map[String, Any]. This will 
+  be the form you receive your parameters in from the spark-bench infrastructure. Example:
+  Map(
+    "name" -> "hellostring",
+    "workloadresultsoutputdir" -> None,
+    "str" -> "Hi I'm an Example"
+  )
+  
+  Keep in mind that the keys in your map have been toLowerCase()'d for consistency.
+*/
+  def this(m: Map[String, Any]) =
+    this(name = getOrDefault(m, "name", "hellostring"),
+      input = m.get("input").map(_.asInstanceOf[String]),
+      workloadResultsOutputDir = None,
+      str = getOrDefault(m, "str", "Hello, World!")
+    )
+
+/*
+  doWorkload is an abstract method from Workload. It may or may not take input data, and it will
+    output a one-row DataFrame made from the results case class we defined above.
+*/
+  override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
+    // Every workload returns a timestamp from the start of its doWorkload() method
+    val timestamp = System.currentTimeMillis()
+    /*
+      The time {} function returns a tuple of the start-to-finish time of whatever function
+      or block you are measuring, and the results of that code. Here, it's going to return a tuple
+      of the time and the string that's being returned. If we don't care about the results, we can assign it to _.
+      Here I've assigned the results to returnedString just for clarity.
+    */
+    val (t, returnedString) = time {
+      str
+    }
+    
+    /*
+      And now we have everything we need to construct our results case class and create a DataFrame!
+    */
+    spark.createDataFrame(Seq(HelloStringResult(name, timestamp, t, returnedString)))
+  }
+}
+
+```
