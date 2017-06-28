@@ -8,7 +8,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
 
 case class PartitionAndSleepWorkload(name: String,
-                                     inputDir: Option[String] = None,
+                                     input: Option[String] = None,
                                      workloadResultsOutputDir: Option[String] = None,
                                      partitions: Int,
                                      sleepMS: Long) extends Workload {

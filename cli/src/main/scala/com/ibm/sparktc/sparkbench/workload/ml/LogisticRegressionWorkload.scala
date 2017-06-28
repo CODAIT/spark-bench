@@ -13,21 +13,35 @@ import org.apache.spark.sql.types._
 // https://github.com/szilard/benchm-ml/blob/master/1-linear/5-spark.txt
 // ¯\_(ツ)_/¯
 
+case class LogisticRegressionResult(
+                                     name: String,
+                                     appid: String,
+                                     start_time: Long,
+                                     input: String,
+                                     train_count: Long,
+                                     train_time: Long,
+                                     test_file: String,
+                                     test_count: Long,
+                                     test_time: Long,
+                                     load_time: Long,
+                                     count_time: Long,
+                                     total_runtime: Long,
+                                     area_under_roc: Double
+                                   )
+
 case class LogisticRegressionWorkload(
-  name: String,
-  inputDir: Option[String],
-  workloadResultsOutputDir: Option[String],
-  trainFile: String = "spark-train-1m.csv",
-  testFile: String = "spark-test-1m.csv",
-  numPartitions: Int = 32,
-  cacheEnabled: Boolean = true
+                                       name: String,
+                                       input: Option[String],
+                                       workloadResultsOutputDir: Option[String],
+                                       testFile: String,
+                                       numPartitions: Int,
+                                       cacheEnabled: Boolean
   ) extends Workload {
 
   def this(m: Map[String, Any]) = this(
     name = verifyOrThrow(m, "name", "lr-bml", s"Required field name does not match"),
-    inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    trainFile = getOrThrow(m, "trainfile").asInstanceOf[String],
     testFile = getOrThrow(m, "testfile").asInstanceOf[String],
     numPartitions = getOrDefault(m, "numpartitions", 32),
     cacheEnabled = getOrDefault(m, "cacheenabled", true)
@@ -52,51 +66,30 @@ case class LogisticRegressionWorkload(
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     val startTime = System.currentTimeMillis
-    val (ltrainTime, d_train) = ld(s"${inputDir.get}/$trainFile")(spark)
-    val (ltestTime, d_test) = ld(s"${inputDir.get}/$testFile")(spark)
+    val (ltrainTime, d_train) = ld(s"${input.get}")(spark)
+    val (ltestTime, d_test) = ld(s"$testFile")(spark)
     val (countTime, (trainCount, testCount)) = time { (d_train.count(), d_test.count()) }
     val (trainTime, model) = time(new LogisticRegression().setTol(1e-4).fit(d_train))
     val (testTime, areaUnderROC) = time(new BCE().setMetricName("areaUnderROC").evaluate(model.transform(d_test)))
 
     val loadTime = ltrainTime + ltestTime
-    val timeList = spark.sparkContext.parallelize(
-      Seq(
-        Row(
-          name,
-          spark.sparkContext.applicationId,
-          startTime,
-          trainFile,
-          trainCount,
-          trainTime,
-          testFile,
-          testCount,
-          testTime,
-          loadTime,
-          countTime,
-          loadTime + trainTime + testTime,
-          areaUnderROC
-        )
-      )
-    )
 
-    spark.createDataFrame(timeList,
-      StructType(
-        List(
-          StructField("name", StringType, nullable = false),
-          StructField("appid", StringType, nullable = false),
-          StructField("start_time", LongType, nullable = false),
-          StructField("train_file", StringType, nullable = false),
-          StructField("train_count", LongType, nullable = false),
-          StructField("train_time", LongType, nullable = false),
-          StructField("test_file", StringType, nullable = false),
-          StructField("test_count", LongType, nullable = false),
-          StructField("test_time", LongType, nullable = false),
-          StructField("load_time", LongType, nullable = false),
-          StructField("count_time", LongType, nullable = false),
-          StructField("total_runtime", LongType, nullable = false),
-          StructField("area_under_roc", DoubleType, nullable = false)
-        )
-      )
-    )
+    //spark.createDataFrame(Seq(SleepResult("sleep", timestamp, t)))
+
+    spark.createDataFrame(Seq(LogisticRegressionResult(
+      name = "lr-bml",
+      appid = spark.sparkContext.applicationId,
+      startTime,
+      input.get,
+      train_count = trainCount,
+      trainTime,
+      testFile,
+      test_count = testCount,
+      testTime,
+      loadTime,
+      countTime,
+      loadTime + trainTime + testTime,
+      areaUnderROC
+    )))
   }
 }

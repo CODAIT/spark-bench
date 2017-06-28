@@ -47,14 +47,4 @@ bin/spark-bench-cli.sh workload kmeans -i /tmp/spark-bench-demo/kmeans-dataset-1
 # Four workload configs, run at the same time in parallel on one SparkSession, that parallel "set" is run 5 times
 bin/spark-bench-cli.sh workload kmeans -i /tmp/spark-bench-demo/kmeans-dataset-1.csv /tmp/spark-bench-demo/kmeans-dataset-2.parquet -o /tmp/spark-bench-demo/test-results5.csv --parallel -n 5 -k 2 32
 
-
-echo Running workloads from configuration file...
-
-# ------------------------------
-# Run from a configuration file
-# ------------------------------
-
-# Runs spark-bench from example-configuration-file.conf
-bin/spark-bench-cli.sh ${BASEDIR}/example-configuration-file.conf
-
 echo Done!
