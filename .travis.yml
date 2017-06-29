@@ -27,13 +27,13 @@ script:
 - sbt clean coverage test coverageReport
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- sbt clean dist
 notifications:
   email:
     recipients:
     - ecurtin@us.ibm.com
 before_deploy:
 - sh travis-shell-scripts/set_tags.sh
+- sbt dist
 deploy:
   skip_cleanup: true
   provider: releases
