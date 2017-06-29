@@ -5,7 +5,7 @@ import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
-  val dataStuff = new BuildAndTeardownData("output-test")
+  /*val dataStuff = new BuildAndTeardownData("output-test")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -32,5 +32,5 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
         "--parallel", "-n", "5", "-k", "2", "32", "-e", "127", "1093"))
     )
     println(out)
-  }
+  }*/
 }

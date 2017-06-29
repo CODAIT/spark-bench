@@ -13,6 +13,6 @@ class SparkPiTest extends FlatSpec with Matchers with BeforeAndAfterEach {
     val row = res(0)
     row.length shouldBe 4
     row.getAs[String]("name") shouldBe "sparkpi"
-    row.getAs[Double]("pi_approximate") shouldBe 3.14 +- 0.2
+    row.getAs[Double]("pi_approximate") shouldBe 3.14 +- 1
   }
 }
