@@ -5,7 +5,7 @@ import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
-  /*val dataStuff = new BuildAndTeardownData("output-test")
+  val dataStuff = new BuildAndTeardownData("output-test")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -19,18 +19,13 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
   }
 
   "Specifying Console output" should "work" in {
-    val (out) = captureOutput(CLIKickoff.main(
-      Array("bin/spark-bench.sh", "workload", "kmeans", "-i", dataStuff.kmeansFile, "-o", "console", "-n", "5", "-k", "2"))
-    )
+    val (out) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile3.conf").getPath)))
     println(out)
   }
 
 
   "Want to see configuration added to results when there's crazy stuff" should "work" in {
-    val (out) = captureOutput(CLIKickoff.main(
-      Array("bin/spark-bench.sh", "workload", "kmeans", "-i", dataStuff.kmeansFile, "-o", s"${dataStuff.sparkBenchDemoFolder}/test-results5.csv",
-        "--parallel", "-n", "5", "-k", "2", "32", "-e", "127", "1093"))
-    )
+    val (out) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile4.conf").getPath)))
     println(out)
-  }*/
+  }
 }
