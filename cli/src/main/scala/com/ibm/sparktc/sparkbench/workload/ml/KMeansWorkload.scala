@@ -39,7 +39,7 @@ case class KMeansWorkload(name: String,
     name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    k = getOrDefault(m, "k", KMeansDefaults.NUM_OF_CLUSTERS),
+    k = getOrDefault(m, "k", KMeansDefaults.K),
     seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
     maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION))
 

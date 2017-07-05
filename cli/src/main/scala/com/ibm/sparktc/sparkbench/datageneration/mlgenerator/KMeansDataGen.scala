@@ -16,36 +16,46 @@
 
 package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
-import com.ibm.sparktc.sparkbench.datageneration.{DataGenerationConf, DataGenerator}
+import com.ibm.sparktc.sparkbench.datageneration.DataGenerator
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrDefault
-
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, _}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
-class KMeansDataGen(conf: DataGenerationConf, spark: SparkSession) extends DataGenerator(conf, spark) {
+case class KMeansDataGen(
+                          generatorName: String,
+                          numRows: Int,
+                          numCols: Int,
+                          output: String,
+                          k: Int,
+                          scaling: Double,
+                          numPartitions: Int
+                        ) extends DataGenerator {
 
   import KMeansDefaults._
 
-  val m = conf.generatorSpecific //convenience
-
-  val numCluster: Int = getOrDefault[Int](m, "clusters", NUM_OF_CLUSTERS)
-  val numDim: Int = conf.numCols
-  val scaling: Double = getOrDefault[Double](m, "scaling", SCALING)
-  val numPar: Int = getOrDefault[Int](m, "partitions", NUM_OF_PARTITIONS)
+  def this(m: Map[String, Any]) = this(
+    generatorName = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
+    numRows = getOrThrow(m, "rows"),
+    numCols = getOrThrow(m, "cols"),
+    output = getOrThrow(m, "output"),
+    k = getOrDefault[Int](m, "k", K),
+    scaling = getOrDefault[Double](m, "scaling", SCALING),
+    numPartitions = getOrDefault[Int](m, "partitions", NUM_OF_PARTITIONS)
+  )
 
   override def generateData(spark: SparkSession): DataFrame = {
 
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
       spark.sparkContext,
-      conf.numRows,
-      numCluster,
-      numDim,
+      numRows,
+      k,
+      numCols,
       scaling,
-      numPar
+      numPartitions
     )
 
     val schemaString = data.first().indices.map(_.toString).mkString(" ")

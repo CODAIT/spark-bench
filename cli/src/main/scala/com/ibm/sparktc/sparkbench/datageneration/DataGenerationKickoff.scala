@@ -5,17 +5,15 @@ import org.apache.spark.sql.SparkSession
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 
 object DataGenerationKickoff {
+
+  private def createSparkContext(): SparkSession = SparkSession.builder.getOrCreate
+
   val spark = createSparkContext()
 
-  def createSparkContext(): SparkSession = {
-    SparkSession
-      .builder()
-      .appName("spark-bench workload")
-      .master(sys.env.getOrElse("SPARK_MASTER_HOST", ""))
-      .getOrCreate()
-  }
+  def apply(mapSeq: Seq[Map[String, Any]]): Unit = {
 
-  def apply(conf: DataGenerationConf): Unit = {
+    mapSeq.map(m => DataGenConfigCreator(m))
+
     conf.generatorName.toLowerCase match {
       case "kmeans" => new KMeansDataGen(conf, spark).run()
       case "linear-regression" => new LinearRegressionDataGen(conf, spark).run()
@@ -23,4 +21,7 @@ object DataGenerationKickoff {
     }
   }
 
+    def run(seq: Seq[DataGenerator]): Unit = {
+      seq.foreach { gen => gen.run(spark) }
+    }
 }
