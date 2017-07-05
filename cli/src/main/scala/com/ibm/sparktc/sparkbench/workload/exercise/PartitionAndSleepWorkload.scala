@@ -23,7 +23,7 @@ case class PartitionAndSleepWorkload(name: String,
   def doStuff(spark: SparkSession): (Long, Unit) = time {
 
     val ms = sleepMS
-    val stuff: RDD[Int] = spark.sparkContext.parallelize(0 until partitions, partitions)
+    val stuff: RDD[Int] = spark.sparkContext.parallelize(0 until partitions * 100, partitions)
 
     val cool: RDD[(Int, Int)] = stuff.map { i =>
       Thread.sleep(ms)
