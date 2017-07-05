@@ -52,14 +52,14 @@ object KMeansWorkload extends WorkloadDefaults {
   )
 }
 
-case class KMeansWorkload(inputDir: Option[String],
+case class KMeansWorkload(input: Option[String],
                           workloadResultsOutputDir: Option[String],
                           k: Int,
                           seed: Long,
                           maxIterations: Int) extends Workload {
 
   def this(m: Map[String, Any]) = this(
-    inputDir = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     k = getOrDefault(m, "k", KMeansWorkload.NUM_OF_CLUSTERS),
     seed = getOrDefault(m, "seed", KMeansWorkload.SEED, any2Int2Long),

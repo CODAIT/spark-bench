@@ -14,7 +14,7 @@ trait WorkloadDefaults {
 }
 
 trait Workload {
-  val inputDir: Option[String]
+  val input: Option[String]
   val workloadResultsOutputDir: Option[String]
 
   /**
@@ -30,15 +30,23 @@ trait Workload {
     */
   def doWorkload(df: Option[DataFrame], sparkSession: SparkSession): DataFrame
 
+  def run(spark: SparkSession): DataFrame = {
+
+    val df = input match {
+      case None => None
+      case Some(in) => {
+        val rawDF = load(spark, in)
+        Some(reconcileSchema(rawDF))
+      }
+    }
+
+    val res = doWorkload(df, spark).coalesce(1)
+    addConfToResults(res, toMap)
+  }
+
   def toMap: Map[String, Any] =
     (Map[String, Any]() /: this.getClass.getDeclaredFields) { (a, f) =>
       f.setAccessible(true)
       a + (f.getName -> f.get(this))
     }
-
-  final def run(spark: SparkSession): DataFrame = {
-    val df = inputDir.flatMap(input => Some(reconcileSchema(load(spark, input))))
-    val res = doWorkload(df, spark).coalesce(1) // TODO Why do we coalesce to 1?
-    addConfToResults(res, toMap)
-  }
 }

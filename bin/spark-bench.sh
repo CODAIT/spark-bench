@@ -4,10 +4,14 @@ WHEREILIVE=$(realpath $0)
 BASEDIR=$(dirname ${WHEREILIVE})
 PARENTDIR="$(dirname "${BASEDIR}")"
 
-source ${BASEDIR}/spark-bench-env.sh
+if [ -f ${BASEDIR}/spark-bench-env.sh ]; then
+    source ${BASEDIR}/spark-bench-env.sh
+else
+    echo "[ERROR] Please create bin/spark-bench-env.sh from the provide bin/spark-bench-env.sh.template and set SPARK_HOME and SPARK_MASTER_HOME" && exit 1
+fi
 
-[ -z "$SPARK_HOME" ] && echo "Please set the environment variable SPARK_HOME in bin/spark-bench-env.sh" && exit 1;
-[ -z "$SPARK_MASTER_HOST" ] && echo "Please set the environment variable SPARK_MASTER_HOST in bin/spark-bench-env.sh" && exit 1;
+[ -z "$SPARK_HOME" ] && echo "[ERROR] Please set the environment variable SPARK_HOME in bin/spark-bench-env.sh" && exit 1;
+[ -z "$SPARK_MASTER_HOST" ] && echo "[ERROR] Please set the environment variable SPARK_MASTER_HOST in bin/spark-bench-env.sh" && exit 1;
 
 if [ -f $SPARK_HOME/conf/spark-env.sh ]; then
     source $SPARK_HOME/conf/spark-env.sh

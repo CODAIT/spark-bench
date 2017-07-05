@@ -15,7 +15,7 @@ case class SparkPiResult(
 
 case class SparkPi(
                     name: String,
-                    inputDir: Option[String] = None,
+                    input: Option[String] = None,
                     workloadResultsOutputDir: Option[String] = None,
                     slices: Int
                   ) extends Workload {
@@ -23,8 +23,8 @@ case class SparkPi(
 
 
   def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "cachetest"),
-      inputDir = m.get("input").map(_.asInstanceOf[String]),
+    this(name = getOrDefault(m, "name", "sparkpi"),
+      input = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = None,
       slices = getOrDefault(m, "slices", 2)
 

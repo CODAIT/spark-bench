@@ -10,12 +10,12 @@ object CacheTest extends WorkloadDefaults {
   val name = "cachetest"
 }
 
-case class CacheTest(inputDir: Option[String],
+case class CacheTest(input: Option[String],
                     workloadResultsOutputDir: Option[String],
                     sleepMs: Long) extends Workload {
 
   def this(m: Map[String, Any]) =
-    this(inputDir = m.get("input").map(_.asInstanceOf[String]),
+    this(input = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
       sleepMs = getOrDefault(m, "sleepMs", 1000L))
 

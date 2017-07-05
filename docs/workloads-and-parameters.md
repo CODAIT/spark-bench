@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+- [Spark-Bench Built-In Workloads](#spark-bench-built-in-workloads)
+  - [Common Parameters For All Workloads](#common-parameters-for-all-workloads)
+  - [Exercise](#exercise)
+    - [SparkPi](#sparkpi)
+    - [Sleep](#sleep)
+  - [Machine Learning and Statistics](#machine-learning-and-statistics)
+    - [KMeans](#kmeans)
+    - [LogisticRegression](#logisticregression)
+  - [SQL](#sql)
+    - [SQL Workload](#sql-workload)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Spark-Bench Built-In Workloads
 
 ## Common Parameters For All Workloads
@@ -60,14 +77,17 @@ Runs the KMeans algorithm over the input dataset. `input` from the common parame
 
 Runs LogisticRegression over the input datasets. `input` from the common parameters is required.
 
+`input` in this case is the training dataset. The test dataset is specified by `testfile`.
+
 **Parameters**
 | Name        | Required (y/n)| Default  | Description |
 | ----------- |---------------| ---------| ------------|
-| trainfile     | yes | -- | training dataset |
-| testfile  | yes | -- | testing dataset |
-| numpartitions  | no | 32 | number of partitions |
-| cacheenabled  | no | false | whether or not the datasets are cached after being read from disk |
+| testfile       | yes | --    | testing dataset |
+| numpartitions  | no  | 32    | number of partitions |
+| cacheenabled   | no  | false | whether or not the datasets are cached after being read from disk |
 
+
+## SQL 
 
 ### SQL Workload
 Runs a SQL query over the input dataset. `input` from the common parameters is required.
@@ -80,6 +100,6 @@ select * from input where SomeNumericField < 15
 **Parameters**
 | Name        | Required (y/n)| Default  | Description |
 | ----------- |---------------| ---------| ------------|
-| queryStr     | yes | -- | the sql query to perform |
-| cache  | no | false | whether the dataset should be cached after being read from disk |
+| queryStr     | yes          | --    | the sql query to perform |
+| cache        | no           | false | whether the dataset should be cached after being read from disk |
 

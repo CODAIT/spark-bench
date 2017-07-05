@@ -15,13 +15,13 @@ object Sleep extends WorkloadDefaults {
 }
 
 case class Sleep(
-                inputDir: Option[String] = None,
+                input: Option[String] = None,
                 workloadResultsOutputDir: Option[String] = None,
                 sleepMS: Long
               ) extends Workload {
 
   def this(m: Map[String, Any]) =
-    this(inputDir = m.get("input").map(_.asInstanceOf[String]),
+    this(input = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {
         case (Some(l), _) => any2Int2Long(l)
