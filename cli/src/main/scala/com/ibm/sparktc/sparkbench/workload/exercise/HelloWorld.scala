@@ -1,8 +1,8 @@
 package com.ibm.sparktc.sparkbench.workload.exercise
 
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import org.apache.spark.sql.{DataFrame,  SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 // Create a quick case class with a member for each field we want to return in the results.
 case class HelloStringResult(
@@ -11,21 +11,18 @@ case class HelloStringResult(
                               total_runtime: Long,
                               str: String
                             )
-/*
-  We're going to structure the main workload as a case class that inherits from abstract class Workload.
-  Name, input, and workloadResultsOutputDir are required to be members of our case class, anything else
-  depends on the workload. Here, we're taking in a string that we will be returning in our workload.
-*/
-case class HelloString(
-                        name: String,
-                        input: Option[String] = None,
-                        workloadResultsOutputDir: Option[String] = None,
-                        str: String
-                      ) extends Workload {
 
+/*
+  Each workload must have a companion object extending WorkloadDefaults.  Here, you define required
+  constant attributes of the workload like its name, as well as any default values or constants that
+  you want to use and a constructor for your workload.
+ */
+object HelloString extends WorkloadDefaults {
+  val name = "hellostring"
   /*
-    Override the constructor for your case class to take in a Map[String, Any]. This will
-    be the form you receive your parameters in from the spark-bench infrastructure. Example:
+    Give the WorkloadDefaults an apply method that constructs your workload  from a
+    Map[String, Any]. This will be the form you receive your parameters in from the spark-bench
+    infrastructure. Example:
     Map(
       "name" -> "hellostring",
       "workloadresultsoutputdir" -> None,
@@ -34,12 +31,23 @@ case class HelloString(
 
     Keep in mind that the keys in your map have been toLowerCase()'d for consistency.
   */
-  def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "hellostring"),
-      input = None, // we don't need to read any input data from disk
+  def apply(m: Map[String, Any]) =
+    new HelloString(input = None, // we don't need to read any input data from disk
       workloadResultsOutputDir = None, // we don't have any output data to write to disk in the way that a SQL query would.
       str = getOrDefault(m, "str", "Hello, World!")
     )
+}
+
+/*
+  We're going to structure the main workload as a case class that inherits from abstract class Workload.
+  Input and workloadResultsOutputDir are required to be members of our case class; anything else
+  depends on the workload. Here, we're taking in a string that we will be returning in our workload.
+*/
+case class HelloString(
+                        input: Option[String] = None,
+                        workloadResultsOutputDir: Option[String] = None,
+                        str: String
+                      ) extends Workload {
 
   /*
     doWorkload is an abstract method from Workload. It may or may not take input data, and it will
@@ -61,6 +69,6 @@ case class HelloString(
     /*
       And now we have everything we need to construct our results case class and create a DataFrame!
     */
-    spark.createDataFrame(Seq(HelloStringResult(name, timestamp, t, returnedString)))
+    spark.createDataFrame(Seq(HelloStringResult(HelloString.name, timestamp, t, returnedString)))
   }
 }

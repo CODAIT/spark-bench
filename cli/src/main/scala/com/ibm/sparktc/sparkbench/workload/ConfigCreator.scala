@@ -5,27 +5,24 @@ import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.ibm.sparktc.sparkbench.workload.exercise._
 import com.ibm.sparktc.sparkbench.workload.ml.{KMeansWorkload, LogisticRegressionWorkload}
 import com.ibm.sparktc.sparkbench.workload.sql.SQLWorkload
-import org.apache.spark.sql.SparkSession
 
 object ConfigCreator {
-
-  def apply(seq: Seq[Map[String, Any]], spark: SparkSession) = {
-
-  }
-
+  private val internalWorkloads: Set[WorkloadDefaults] = Set(
+    PartitionAndSleepWorkload,
+    KMeansWorkload,
+    LogisticRegressionWorkload,
+    CacheTest,
+    SQLWorkload,
+    Sleep,
+    SparkPi,
+    HelloString
+  )
+  private val workloads = internalWorkloads.map(wk => wk.name -> wk).toMap
   def mapToConf(m: Map[String, Any]): Workload = {
     val name = getOrThrow(m, "name").asInstanceOf[String].toLowerCase
-    name match {
-      case PartitionAndSleepWorkload.name => new PartitionAndSleepWorkload(m)
-      case KMeansWorkload.name => new KMeansWorkload(m)
-      case LogisticRegressionWorkload.name => new LogisticRegressionWorkload(m)
-      case CacheTest.name => new CacheTest(m)
-      case SQLWorkload.name => new SQLWorkload(m)
-      case "sleep" => new Sleep(m)
-      case "sparkpi" => new SparkPi(m)
-      case "hellostring" => new HelloString(m)
-      case _ => throw SparkBenchException(s"Unrecognized or implemented workload name: $name")
+    workloads.get(name) match {
+      case Some(wk) => wk.apply(m)
+      case _ => throw SparkBenchException(s"Unrecognized or unimplemented workload: $name")
     }
   }
-
 }

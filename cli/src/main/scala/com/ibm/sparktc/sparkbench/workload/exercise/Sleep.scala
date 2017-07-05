@@ -12,16 +12,8 @@ case class SleepResult(
 
 object Sleep extends WorkloadDefaults {
   val name = "sleep"
-}
-
-case class Sleep(
-                input: Option[String] = None,
-                workloadResultsOutputDir: Option[String] = None,
-                sleepMS: Long
-              ) extends Workload {
-
-  def this(m: Map[String, Any]) =
-    this(input = m.get("input").map(_.asInstanceOf[String]),
+  def apply(m: Map[String, Any]) =
+    new Sleep(input = m.get("input").map(_.asInstanceOf[String]),
       workloadResultsOutputDir = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {
         case (Some(l), _) => any2Int2Long(l)
@@ -29,7 +21,13 @@ case class Sleep(
         case (_, _) => randomLong(max = 3600000L) //one hour
       }
     )
+}
 
+case class Sleep(
+                input: Option[String] = None,
+                workloadResultsOutputDir: Option[String] = None,
+                sleepMS: Long
+              ) extends Workload {
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
     val timestamp = System.currentTimeMillis()

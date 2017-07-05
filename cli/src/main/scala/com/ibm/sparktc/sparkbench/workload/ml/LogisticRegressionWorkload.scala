@@ -1,13 +1,11 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
-import com.ibm.sparktc.sparkbench.cli.SuiteArgs
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator => BCE}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.types._
 
 // ¯\_(ツ)_/¯
 // the logic for this workload came from:
@@ -32,11 +30,14 @@ case class LogisticRegressionResult(
 
 object LogisticRegressionWorkload extends WorkloadDefaults {
   val name = "lr-bml"
-  override val subcommand = new SuiteArgs(name){
-    val trainfile = opt[List[String]](short = 't', default = None)
-    val testfile = opt[List[String]](short = 'r', default = None)
-    val numpartitions = opt[List[Int]](short = 'p', default = Some(List(32)))
-  }
+  def apply(m: Map[String, Any]) = new LogisticRegressionWorkload(
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    testFile = getOrThrow(m, "testfile").asInstanceOf[String],
+    numPartitions = getOrDefault(m, "numpartitions", 32),
+    cacheEnabled = getOrDefault(m, "cacheenabled", true)
+  )
+
 }
 
 case class LogisticRegressionWorkload(
@@ -46,14 +47,6 @@ case class LogisticRegressionWorkload(
                                        numPartitions: Int,
                                        cacheEnabled: Boolean
   ) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    testFile = getOrThrow(m, "testfile").asInstanceOf[String],
-    numPartitions = getOrDefault(m, "numpartitions", 32),
-    cacheEnabled = getOrDefault(m, "cacheenabled", true)
-  )
 
   private[ml] def load(filename: String)(implicit spark: SparkSession): DataFrame = {
     import spark.implicits._

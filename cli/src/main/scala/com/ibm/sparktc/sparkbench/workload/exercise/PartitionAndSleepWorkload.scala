@@ -1,6 +1,5 @@
 package com.ibm.sparktc.sparkbench.workload.exercise
 
-import com.ibm.sparktc.sparkbench.cli.SuiteArgs
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
@@ -11,22 +10,18 @@ object PartitionAndSleepWorkload extends WorkloadDefaults {
   val name = "timedsleep"
   val PARTITIONS: Int = 48
   val SLEEPMS: Long = 12000L
-  override val subcommand = new SuiteArgs("timedsleep"){
-    val partitions = opt[List[Int]](short = 'p', default = Some(List(PARTITIONS)), descr = "how many partitions to spawn")
-    val sleepMS = opt[List[Long]](short = 't', default = Some(List(SLEEPMS)), descr = "amount of time a thread will sleep, in milliseconds")
-  }
+
+  def apply(m: Map[String, Any]) = new PartitionAndSleepWorkload(
+    None,
+    None,
+    getOrDefault(m, "partitions", PARTITIONS),
+    getOrDefault[Long](m, "sleepms", SLEEPMS, any2Int2Long))
 }
 
 case class PartitionAndSleepWorkload(input: Option[String] = None,
                                      workloadResultsOutputDir: Option[String] = None,
                                      partitions: Int,
                                      sleepMS: Long) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-      None,
-      None,
-      getOrDefault(m, "partitions", PartitionAndSleepWorkload.PARTITIONS),
-      getOrDefault[Long](m, "sleepms", PartitionAndSleepWorkload.SLEEPMS, any2Int2Long))
 
   def doStuff(spark: SparkSession): (Long, Unit) = time {
 

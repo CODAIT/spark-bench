@@ -1,6 +1,5 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
-import com.ibm.sparktc.sparkbench.cli.SuiteArgs
 import com.ibm.sparktc.sparkbench.workload.{Suite, Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
@@ -10,7 +9,6 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import org.rogach.scallop.ScallopOption
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -40,16 +38,13 @@ object KMeansWorkload extends WorkloadDefaults {
   val MAX_ITERATION: Int = 2
   val SEED: Long = 127L
 
-  override val subcommand = new SuiteArgs(name) {
-    val k = opt[List[Int]](short = 'k', default = Some(List(NUM_OF_CLUSTERS)))
-    val maxIterations = opt[List[Int]](short = 'm', default = Some(List(MAX_ITERATION)))
-    val seed = opt[List[Long]](short = 'e', default = Some(List(SEED)))
-  }
-  override val args: Map[String, ScallopOption[_ <: List[Any]]] = Map(
-    "k"	-> subcommand.k,
-    "maxIterations" -> subcommand.maxIterations,
-    "seed" -> subcommand.seed
-  )
+  def apply(m: Map[String, Any]) = new KMeansWorkload(
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    k = getOrDefault(m, "k", NUM_OF_CLUSTERS),
+    seed = getOrDefault(m, "seed", SEED, any2Int2Long),
+    maxIterations = getOrDefault(m, "maxiterations", MAX_ITERATION))
+
 }
 
 case class KMeansWorkload(input: Option[String],
@@ -57,13 +52,6 @@ case class KMeansWorkload(input: Option[String],
                           k: Int,
                           seed: Long,
                           maxIterations: Int) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    k = getOrDefault(m, "k", KMeansWorkload.NUM_OF_CLUSTERS),
-    seed = getOrDefault(m, "seed", KMeansWorkload.SEED, any2Int2Long),
-    maxIterations = getOrDefault(m, "maxiterations", KMeansWorkload.MAX_ITERATION))
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     val timestamp = System.currentTimeMillis()

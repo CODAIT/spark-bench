@@ -8,17 +8,16 @@ case class CacheTestResult(name: String, timestamp: Long, runTime1: Long, runTim
 
 object CacheTest extends WorkloadDefaults {
   val name = "cachetest"
+  def apply(m: Map[String, Any]) =
+    new CacheTest(input = m.get("input").map(_.asInstanceOf[String]),
+      workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+      sleepMs = getOrDefault(m, "sleepMs", 1000L))
+
 }
 
 case class CacheTest(input: Option[String],
                     workloadResultsOutputDir: Option[String],
                     sleepMs: Long) extends Workload {
-
-  def this(m: Map[String, Any]) =
-    this(input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
-      sleepMs = getOrDefault(m, "sleepMs", 1000L))
-
 
   def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     import spark.implicits._

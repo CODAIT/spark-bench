@@ -2,15 +2,10 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, addConfToResults}
-import com.ibm.sparktc.sparkbench.cli.SuiteArgs
-import org.rogach.scallop._
 
 trait WorkloadDefaults {
   val name: String
-  val subcommand: SuiteArgs = new SuiteArgs(name)
-  //def parseArgs(args: Map[String, Seq[Any]]): Suite = subcommand.parseWorkoadArgs()(args)
-  val args: Map[String, ScallopOption[_ <: List[Any]]] = Map.empty
-  def parseArgs: Suite = subcommand.parseWorkoadArgs(args.map(x => (x._1, x._2.apply())))
+  def apply(m: Map[String, Any]): Workload
 }
 
 trait Workload {
