@@ -22,9 +22,9 @@ object DataGenerationConf {
 
   def apply(map: Map[String, Any]): DataGenerationConf = {
     val name = getOrThrow(map, "name").asInstanceOf[String]
-    val numRows = getOrThrow(map, "numrows").asInstanceOf[Int]
-    val numCols = getOrThrow(map, "numcols").asInstanceOf[Int]
-    val outputDir = getOrThrow(map, "outputdir").asInstanceOf[String]
+    val numRows = getOrThrow(map, "rows").asInstanceOf[Int]
+    val numCols = getOrThrow(map, "cols").asInstanceOf[Int]
+    val outputDir = getOrThrow(map, "output").asInstanceOf[String]
     val outputFormat = getOrDefault[Option[String]](map, "outputformat", None)
 
     val keys = map.keySet
