@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.workload.ml
 
 import java.io.File
 
-import com.holdenkarau.spark.testing.{DataFrameSuiteBase, Utils}
+import com.holdenkarau.spark.testing.Utils
 import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
