@@ -19,13 +19,17 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
   }
 
   "Specifying Console output" should "work" in {
-    val (out) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile3.conf").getPath)))
+    val (out, _) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile3.conf").getPath)))
+    out should not be ""
+    out.split("\n").length shouldBe 10
     println(out)
   }
 
 
   "Want to see configuration added to results when there's crazy stuff" should "work" in {
-    val (out) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile4.conf").getPath)))
+    val (out, _) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile4.conf").getPath)))
+    out should not be ""
+    out.split("\n").length shouldBe 1
     println(out)
   }
 }
