@@ -7,7 +7,7 @@ import com.ibm.sparktc.sparkbench.workload.ml.{KMeansWorkload, LogisticRegressio
 import com.ibm.sparktc.sparkbench.workload.sql.SQLWorkload
 
 object ConfigCreator {
-  private val internalWorkloads: Set[WorkloadDefaults] = Set(
+  private val workloads: Map[String, WorkloadDefaults] = Set(
     PartitionAndSleepWorkload,
     KMeansWorkload,
     LogisticRegressionWorkload,
@@ -16,13 +16,25 @@ object ConfigCreator {
     Sleep,
     SparkPi,
     HelloString
-  )
-  private val workloads = internalWorkloads.map(wk => wk.name -> wk).toMap
+  ).map(wk => wk.name -> wk).toMap
+  private def loadCustom(name: String): Option[WorkloadDefaults] = {
+    import scala.reflect.runtime.universe.runtimeMirror
+    val mirror = runtimeMirror(scala.reflect.runtime.universe.getClass.getClassLoader)
+    val module = mirror.staticModule(name + "$")
+    val cls = mirror.reflectModule(module).instance.asInstanceOf[WorkloadDefaults]
+    Some(cls)
+  }
   def mapToConf(m: Map[String, Any]): Workload = {
     val name = getOrThrow(m, "name").asInstanceOf[String].toLowerCase
-    workloads.get(name) match {
+    val (displayName, conf) =
+      if (name == "custom") {
+        val className = getOrThrow(m, "class").asInstanceOf[String]
+        (className, loadCustom(className))
+      }
+      else (name, workloads.get(name))
+    conf match {
       case Some(wk) => wk.apply(m)
-      case _ => throw SparkBenchException(s"Unrecognized or unimplemented workload: $name")
+      case _ => throw SparkBenchException(s"Could not find workload $displayName")
     }
   }
 }
