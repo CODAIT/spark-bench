@@ -10,7 +10,7 @@ import scala.io.Source
 
 class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with Capturing {
 
-  val dataShiznit = new BuildAndTeardownData("tmp")
+  val dataShiznit = new BuildAndTeardownData("configfiletest")
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -29,21 +29,21 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with
     val path = resource.getPath
     CLIKickoff.main(Array(path))
 
-    val output1 = new File("/tmp/spark-bench-scalatest/tmp/spark-bench-test/conf-file-output-1.csv")
-    val output2 = new File("/tmp/spark-bench-scalatest/tmp/spark-bench-test/conf-file-output-2.parquet")
+    val output1 = new File("/tmp/spark-bench-scalatest/configfiletest/conf-file-output-1.csv")
+    val output2 = new File("/tmp/spark-bench-scalatest/configfiletest/conf-file-output-2.parquet")
 
     output1.exists() shouldBe true
     output2.exists() shouldBe true
 
-//        val fileList = output1.listFiles().toList.filter(_.getName.startsWith("part"))
+    val fileList = output1.listFiles().toList.filter(_.getName.startsWith("part"))
 
-        val fileContents: List[String] =
-            Source.fromFile(output1)
-              .getLines()
-              .toList
+    val fileContents: List[String] =
+        Source.fromFile(fileList.head)
+          .getLines()
+          .toList
 
 
-        val length: Int = fileContents.length
+    val length: Int = fileContents.length
   }
 
   "Spark-bench run through a config file with the suites running in parallel" should "work" in {
