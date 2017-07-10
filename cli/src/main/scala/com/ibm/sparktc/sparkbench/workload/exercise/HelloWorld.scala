@@ -19,7 +19,7 @@ case class HelloStringResult(
 case class HelloString(
                         name: String,
                         input: Option[String] = None,
-                        workloadResultsOutputDir: Option[String] = None,
+                        output: Option[String] = None,
                         str: String
                       ) extends Workload {
 
@@ -37,7 +37,7 @@ case class HelloString(
   def this(m: Map[String, Any]) =
     this(name = getOrDefault(m, "name", "hellostring"),
       input = None, // we don't need to read any input data from disk
-      workloadResultsOutputDir = None, // we don't have any output data to write to disk in the way that a SQL query would.
+      output = None, // we don't have any output data to write to disk in the way that a SQL query would.
       str = getOrDefault(m, "str", "Hello, World!")
     )
 

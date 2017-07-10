@@ -26,7 +26,7 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     val workload = SQLWorkload(name = "sql",
       input = Some(smallData),
-      workloadResultsOutputDir = Some(resOutput),
+      output = Some(resOutput),
       queryStr = "select `0` from input where `0` < -0.9",
       cache = false)
 

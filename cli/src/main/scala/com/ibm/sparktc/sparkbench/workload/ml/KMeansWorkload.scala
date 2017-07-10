@@ -30,7 +30,7 @@ import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 
 case class KMeansWorkload(name: String,
                           input: Option[String],
-                          workloadResultsOutputDir: Option[String],
+                          output: Option[String],
                           k: Int,
                           seed: Long,
                           maxIterations: Int) extends Workload {
@@ -38,7 +38,7 @@ case class KMeansWorkload(name: String,
   def this(m: Map[String, Any]) = this(
     name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     k = getOrDefault(m, "k", KMeansDefaults.K),
     seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
     maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION))
@@ -49,7 +49,7 @@ case class KMeansWorkload(name: String,
     val (loadtime, data) = loadToCache(df.get, spark) // Should fail loudly if df == None
     val (trainTime, model) = train(data, spark)
     val (testTime, _) = test(model, data, spark)
-    val (saveTime, _) = workloadResultsOutputDir match {
+    val (saveTime, _) = output match {
       case Some(_) => save(data, model, spark)
       case _ => (null, Unit)
     }
@@ -70,7 +70,6 @@ case class KMeansWorkload(name: String,
     )
 
     val timeList = spark.sparkContext.parallelize(Seq(Row("kmeans", timestamp, loadtime, trainTime, testTime, saveTime, total)))
-    //println(timeList.first())
 
     spark.createDataFrame(timeList, schema)
   }
@@ -115,7 +114,7 @@ case class KMeansWorkload(name: String,
       }
       import spark.implicits._
       // Already performed the match one level up so these are guaranteed to be Some(something)
-      writeToDisk(workloadResultsOutputDir.get, vectorsAndClusterIdx.toDF(), spark = spark)
+      writeToDisk(output.get, vectorsAndClusterIdx.toDF(), spark = spark)
     }
     ds.unpersist()
     res

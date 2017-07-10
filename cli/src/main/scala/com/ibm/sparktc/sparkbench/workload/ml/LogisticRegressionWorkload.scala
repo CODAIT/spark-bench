@@ -32,7 +32,7 @@ case class LogisticRegressionResult(
 case class LogisticRegressionWorkload(
                                        name: String,
                                        input: Option[String],
-                                       workloadResultsOutputDir: Option[String],
+                                       output: Option[String],
                                        testFile: String,
                                        numPartitions: Int,
                                        cacheEnabled: Boolean
@@ -41,7 +41,7 @@ case class LogisticRegressionWorkload(
   def this(m: Map[String, Any]) = this(
     name = verifyOrThrow(m, "name", "lr-bml", s"Required field name does not match"),
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     testFile = getOrThrow(m, "testfile").asInstanceOf[String],
     numPartitions = getOrDefault(m, "numpartitions", 32),
     cacheEnabled = getOrDefault(m, "cacheenabled", true)
