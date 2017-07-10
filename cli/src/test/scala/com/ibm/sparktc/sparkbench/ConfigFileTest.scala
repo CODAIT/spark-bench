@@ -4,22 +4,21 @@ import java.io.File
 
 import com.ibm.sparktc.sparkbench.cli.CLIKickoff
 import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 import scala.io.Source
 
-class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with Capturing {
+class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
 
   val dataShiznit = new BuildAndTeardownData("configfiletest")
 
-  override def beforeEach(): Unit = {
-    super.beforeEach()
+  override def beforeAll(): Unit = {
+    super.beforeAll()
     dataShiznit.deleteFolders()
     dataShiznit.createFolders()
-    // dataShiznit.generateKMeansData(1000, 5, dataShiznit.kmeansFile)
   }
 
-  override def afterEach(): Unit = {
+  override def afterAll(): Unit = {
     dataShiznit.deleteFolders()
   }
 
@@ -44,6 +43,8 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterEach with
 
 
     val length: Int = fileContents.length
+
+    (length > 0) shouldBe true
   }
 
   "Spark-bench run through a config file with the suites running in parallel" should "work" in {
