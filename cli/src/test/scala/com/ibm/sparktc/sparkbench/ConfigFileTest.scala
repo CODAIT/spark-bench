@@ -22,15 +22,19 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with 
     dataShiznit.deleteFolders()
   }
 
+  val kmeansData = new File("/tmp/spark-bench-scalatest/configfiletest/kmeans-data.parquet")
+  val output1 = new File("/tmp/spark-bench-scalatest/configfiletest/conf-file-output-1.csv")
+  val output2 = new File("/tmp/spark-bench-scalatest/configfiletest/conf-file-output-2.parquet")
+
   "Spark-bench run through a config file serially" should "work" in {
+    kmeansData.exists() shouldBe false
+
     val relativePath = "/etc/testConfFile1.conf"
     val resource = getClass.getResource(relativePath)
     val path = resource.getPath
     CLIKickoff.main(Array(path))
 
-    val output1 = new File("/tmp/spark-bench-scalatest/configfiletest/conf-file-output-1.csv")
-    val output2 = new File("/tmp/spark-bench-scalatest/configfiletest/conf-file-output-2.parquet")
-
+    kmeansData.exists() shouldBe true
     output1.exists() shouldBe true
     output2.exists() shouldBe true
 
@@ -48,6 +52,7 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with 
   }
 
   "Spark-bench run through a config file with the suites running in parallel" should "work" in {
+    kmeansData.exists() shouldBe true
     val relativePath = "/etc/testConfFile2.conf"
     val resource = getClass.getResource(relativePath)
     val path = resource.getPath
