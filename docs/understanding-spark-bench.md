@@ -35,14 +35,13 @@ Users configure the way their jobs run by defining `spark-submits`, `suites`, an
 
 ## Data Generation
 
-Data generation sits outside of the `spark-submit-config` -> `suite` -> `workload` tree, so let's briefly discuss it first.
-
 `spark-bench` has the capability to generate data according to many different configurable generators. 
 Generated data can be written to any storage addressable by Spark, including local files, hdfs, S3, etc.
 
-In the current version of `spark-bench`, users can run data generators through the `spark-bench` cli. 
-https://github.com/ecurtin/spark-bench/issues/47 tracks the work needed to add data generation capability 
-to the config file.
+Data generators are run just like workloads in spark-bench. Users should exercise caution to ensure that data generation happens before the workloads that need that input run.
+This is fairly simple to ensure in most cases.
+However, if in doubt, a bullet-proof way to do this is to create two different configuration files, one for your data generation and one with your workloads, and run them each through spark-bench.
+
  
 ## Workloads
 
@@ -117,14 +116,14 @@ A spark-bench config file only needs one workload defined to work, but it must a
 ```hocon
 spark-bench = {
   spark-submit-config = [{
-    suites = [
+    workload-suites = [
       {
         descr = "One run of SparkPi and that's it!"
         benchmark-output = "console"
         workloads = [
           {
-            name = ["sparkpi"]
-            slices = [10]
+            name = "sparkpi"
+            slices = 10
           }
         ]
       }
@@ -176,7 +175,27 @@ spark-bench = {
       master = "yarn"
     }
     suites-parallel = false
-    suites = [
+    workload-suites = [
+      {
+        descr = "Generating data for the benchmarks to use"
+        parallel = false
+        repeat = 1 // generate once and done!
+        benchmark-output = "console"
+        workloads = [
+          {
+            name = "data-generation-kmeans"
+            output = "/tmp/spark-bench-test/kmeans-data.parquet"
+            rows = 1000000
+            cols = 14
+          },
+          {
+            name = "data-generation-logistic-regression"
+            output = "/tmp/spark-bench-test/logistic-regression.parquet"
+            rows = 1000000
+            cols = 14
+          }
+        ]
+      },
       {
         descr = "Classic benchmarking"
         parallel = false
@@ -184,13 +203,13 @@ spark-bench = {
         benchmark-output = "console"
         workloads = [
           {
-            name = ["kmeans"]
-            input = ["tmp/spark-bench-test/kmeans-data.parquet"]
+            name = "kmeans"
+            input = "/tmp/spark-bench-test/kmeans-data.parquet"
             // not specifying any kmeans arguments as we want the defaults for benchmarking
           },
           {
-            name = ["logisticregression"]
-            input = ["tmp/spark-bench-test/logistic-regression.parquet"]
+            name = "logisticregression"
+            input = "/tmp/spark-bench-test/logistic-regression.parquet"
             // again, not specifying arguments
           },
           // ...more workloads
@@ -218,7 +237,7 @@ spark-bench = {
       master = "spark://10.0.0.1:7077"
     }
     suites-parallel = false
-    suites = [
+    workload-suites = [
       {
         descr = "Classic benchmarking across systems"
         parallel = false
@@ -235,7 +254,7 @@ spark-bench = {
       master = "spark://10.0.0.2:7077" // different cluster!
     }
     suites-parallel = false
-    suites = [
+    workload-suites = [
     {
       descr = "Classic benchmarking across systems"
       parallel = false
@@ -261,7 +280,7 @@ spark-bench = {
       executor-mem = "128M"
     }
     suites-parallel = false
-    suites = [
+    workload-suites = [
     {
       descr = "Spark Pi at 128M executor-mem"
       parallel = false
@@ -269,7 +288,7 @@ spark-bench = {
       benchmark-output = "console"
       workloads = [
         {
-          name = ["sparkpi"]
+          name = "sparkpi"
           slices = [10, 100, 1000]
         }
       ]
@@ -281,7 +300,7 @@ spark-bench = {
       executor-mem = "8G"
     }
     suites-parallel = false
-    suites = [
+    workload-suites = [
     {
       descr = "SparkPi at 8G executor-mem"
       parallel = false
@@ -289,7 +308,7 @@ spark-bench = {
       benchmark-output = "console"
       workloads = [
         {
-          name = ["sparkpi"]
+          name = "sparkpi"
           slices = [10, 100, 1000]
         }
       ]
