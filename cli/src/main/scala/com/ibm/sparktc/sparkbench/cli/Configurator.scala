@@ -80,12 +80,6 @@ object Configurator {
     workloadObjs.map(_.toConfig).toList
   }
 
-//  def parseDataGen(config: Config): DataGenerator = {
-//    val cfgObj = config.root()
-//    val unwrapped = cfgObj.unwrapped().asScala.toMap
-//    DataGenConfigCreator(unwrapped)
-//  }
-
   def parseSuite(config: Config): Suite = {
     val descr: Option[String] = Try(config.getString("descr")).toOption
     val parallel: Boolean = Try(config.getBoolean("parallel")).getOrElse(false)
@@ -109,7 +103,7 @@ object Configurator {
       val newValue: Seq[Any] = kv._2 match {
         case al: util.ArrayList[Any] => al.asScala
         case b: Any => Seq(b)
-        case _ => throw SparkBenchException(s"Key ${kv._1} with value ${kv._2} had an unexpected type: ${kv._2.getClass.toString}")
+//        case _ => throw SparkBenchException(s"Key ${kv._1} with value ${kv._2} had an unexpected type: ${kv._2.getClass.toString}")
       }
       kv._1 -> newValue
     })
