@@ -39,25 +39,6 @@ lazy val utils = project
     libraryDependencies ++= testDeps
   )
 
-lazy val workloads = project
-  .settings(
-    commonSettings,
-    libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= otherCompileDeps,
-    libraryDependencies ++= testDeps
-  )
-  .dependsOn(utils % "compile->compile;test->test")
-
-lazy val datageneration = project
-  .settings(
-    commonSettings,
-    libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= otherCompileDeps,
-    libraryDependencies ++= testDeps
-  )
-  .dependsOn(utils % "compile->compile;test->test")
-
-
 /*
     There's some extra code here to clean up any created jars before assembly.
     Assembly is called by regular sbt assembly and by sbt spark-launch/test.
@@ -82,12 +63,13 @@ lazy val cli = project
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff"),
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchJar.value}"),
     libraryDependencies ++= sparkDeps,
+    libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe,
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff")
   )
-  .dependsOn(workloads, datageneration, utils % "compile->compile;test->test")
-  .aggregate(utils, workloads, datageneration)
+  .dependsOn(utils % "compile->compile;test->test")
+  .aggregate(utils)
 
 
 

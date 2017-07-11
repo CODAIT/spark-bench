@@ -2,7 +2,6 @@ package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, addConfToResults}
-import org.apache.spark.sql.functions.lit
 
 trait Workload {
   val name: String
@@ -16,6 +15,10 @@ trait Workload {
    */
   def reconcileSchema(dataFrame: DataFrame): DataFrame = dataFrame
 
+  /**
+    * Actually run the workload.  Takes an optional DataFrame as input if the user
+    * supplies an inputDir, and returns the generated results DataFrame.
+    */
   def doWorkload(df: Option[DataFrame], sparkSession: SparkSession): DataFrame
 
   def run(spark: SparkSession): DataFrame = {
@@ -28,17 +31,13 @@ trait Workload {
       }
     }
 
-    val res = doWorkload(df, spark)
-    res.coalesce(1)
+    val res = doWorkload(df, spark).coalesce(1)
     addConfToResults(res, toMap)
   }
-
-
 
   def toMap: Map[String, Any] =
     (Map[String, Any]() /: this.getClass.getDeclaredFields) { (a, f) =>
       f.setAccessible(true)
       a + (f.getName -> f.get(this))
     }
-
 }
