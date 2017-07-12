@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
-import com.ibm.sparktc.sparkbench.workload.{Suite, Workload, WorkloadDefaults}
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}

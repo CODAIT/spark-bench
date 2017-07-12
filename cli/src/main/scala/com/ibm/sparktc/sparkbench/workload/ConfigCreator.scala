@@ -14,13 +14,12 @@ object ConfigCreator {
     CacheTest,
     SQLWorkload,
     Sleep,
-    SparkPi,
-    HelloString
+    SparkPi
   ).map(wk => wk.name -> wk).toMap
   private def loadCustom(name: String): Option[WorkloadDefaults] = {
     import scala.reflect.runtime.universe.runtimeMirror
     val mirror = runtimeMirror(scala.reflect.runtime.universe.getClass.getClassLoader)
-    val module = mirror.staticModule(name + "$")
+    val module = mirror.staticModule(name)
     val cls = mirror.reflectModule(module).instance.asInstanceOf[WorkloadDefaults]
     Some(cls)
   }

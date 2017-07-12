@@ -1,4 +1,4 @@
-package com.ibm.sparktc.sparkbench.workload.exercise
+package com.ibm.sparktc.sparkbench.workload.custom
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._

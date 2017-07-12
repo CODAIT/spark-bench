@@ -41,16 +41,21 @@ object SparkLaunchConf {
   def getSparkArgs(sparkContextConf: Config): Array[String] = {
     val sparkConfMaps = Try(sparkContextConf.getObject("spark-args")).map(toStringMap).getOrElse(Map.empty)
 
-    val correctedSparkConf = {
-      if(!sparkConfMaps.contains("master")) {
-        val envMaster = getOrThrow(sys.env.get("SPARK_MASTER_HOST"))
-        sparkConfMaps ++ Map("master" -> envMaster)
+    /*val cp = {
+      if (sparkConfMaps.contains("driver-class-path")) Map.empty
+      else sys.env.get("SPARK_BENCH_CLASSPATH") match {
+        case Some(envCp) => Map("driver-class-path" -> envCp)
+        case _ => Map.empty
       }
-      else sparkConfMaps
+    }*/
+
+    val master = {
+      if (sparkConfMaps.contains("master")) Map.empty
+      else Map("master" -> getOrThrow(sys.env.get("SPARK_MASTER_HOST"), "The environment variable SPARK_MASTER_HOST must be set"))
     }
 
+    val correctedSparkConf = sparkConfMaps ++ master
     assert(correctedSparkConf.contains("master"))
-
     correctedSparkConf.foldLeft(Array[String]()) { case (arr, (k, v)) => arr ++ Array(s"--$k $v") }
   }
 
