@@ -4,7 +4,7 @@
 //
 //import com.holdenkarau.spark.testing.{DataFrameSuiteBase, LocalSparkContext, Utils}
 //import com.ibm.sparktc.sparkbench.cli.CLIKickoff
-//import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
+//import com.ibm.sparktc.sparkbench.util.BuildAndTeardownData
 //import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FlatSpec, Matchers}
 //import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{stringifyStackTrace => SST}
 //

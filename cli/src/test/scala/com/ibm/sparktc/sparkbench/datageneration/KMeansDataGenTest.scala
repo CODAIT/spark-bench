@@ -3,7 +3,8 @@ package com.ibm.sparktc.sparkbench.datageneration
 import java.io.File
 
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
-import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
+import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
+import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 

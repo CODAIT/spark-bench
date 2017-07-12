@@ -4,7 +4,7 @@ import java.io.File
 
 import com.holdenkarau.spark.testing.Utils
 import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
+import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
@@ -22,7 +22,7 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
 
   def makeDataFrame(): DataFrame = {
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
-      spark.sparkContext, 1, 1, 1, KMeansDefaults.SCALING, KMeansDefaults.NUM_OF_PARTITIONS
+      spark.sparkContext, 1, 1, 1, KMeansWorkload.SCALING, KMeansWorkload.NUM_OF_PARTITIONS
     )
     val schemaString = data.first().indices.map(_.toString).mkString(" ")
     val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, DoubleType, nullable = false))

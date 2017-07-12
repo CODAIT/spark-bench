@@ -1,6 +1,7 @@
 package com.ibm.sparktc.sparkbench.workload.sql
 
-import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
+import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
+import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {

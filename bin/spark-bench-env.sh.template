@@ -9,6 +9,3 @@ export SPARK_HOME=
 
 # set this to the master for your environment, such as local[2], yarn, 10.29.0.3, etc.
 export SPARK_MASTER_HOST=
-
-# if you want to provide your own workloads, set this to the path to the directory holding the JARs with the workloads
-export WORKLOAD_DIR=

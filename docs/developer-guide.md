@@ -57,7 +57,7 @@ class ExampleGenerator(conf: DataGenerationConf, spark: SparkSession) extends Da
     val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, StringType, nullable = false))
     val schema = StructType(fields)
     val rowRDD: RDD[Row] = rdd.map(arr => Row(arr:_*))
-    
+
     spark.createDataFrame(rowRDD, schema)
   }
 }
@@ -89,61 +89,68 @@ Now create that infrastructure for taking in the argument to ScallopArgs in the 
 
 ## Adding a New Workload
 
-The spark-bench developers are actively working on features that will enable users to dynamically load their own workloads built against the Workload abstract class.
+Workloads implement the `Workload` trait and override the `doWorkload` method, which accepts an optional dataframe and returns a results dataframe.  Workloads must also have companion objects implementing `WorkloadDefaults`, which store constants and construct the workload.  This custom workload must then be packaged in a JAR that must then be supplied to Spark just as any other Spark job dependency.
 
-In the meantime, users will need to add their workloads into the codebase of spark-bench itself. Let's build an example that just returns a string. That's it.
-We're going to make sure that our clusters are super performant when it comes to returning strings.
+Let's build an example that just returns a string. That's it.  We're going to make sure that our clusters are super performant when it comes to returning strings.
 
 Here's the code:
 
 ```scala
-package com.ibm.sparktc.sparkbench.workload.exercise
+package com.ibm.sparktc.sparkbench.workload.custom
 
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import org.apache.spark.sql.{DataFrame,  SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
-// Create a case class with a member for each field we want to return in the results.
+// Create a quick case class with a member for each field we want to return in the results.
 case class HelloStringResult(
-                        name: String,
-                        timestamp: Long,
-                        total_runtime: Long,
-                        str: String
-                      )
+                              name: String,
+                              timestamp: Long,
+                              total_runtime: Long,
+                              str: String
+                            )
+
+/*
+  Each workload must have a companion object extending WorkloadDefaults.  Here, you define required
+  constant attributes of the workload like its name, as well as any default values or constants that
+  you want to use and a constructor for your workload.
+ */
+object HelloString extends WorkloadDefaults {
+  val name = "hellostring"
+  /*
+    Give the WorkloadDefaults an apply method that constructs your workload  from a
+    Map[String, Any]. This will be the form you receive your parameters in from the spark-bench
+    infrastructure. Example:
+    Map(
+      "name" -> "hellostring",
+      "workloadresultsoutputdir" -> None,
+      "str" -> "Hi I'm an Example"
+    )
+
+    Keep in mind that the keys in your map have been toLowerCase()'d for consistency.
+  */
+  def apply(m: Map[String, Any]) =
+    new HelloString(input = None, // we don't need to read any input data from disk
+      workloadResultsOutputDir = None, // we don't have any output data to write to disk in the way that a SQL query would.
+      str = getOrDefault(m, "str", "Hello, World!")
+    )
+}
+
 /*
   We're going to structure the main workload as a case class that inherits from abstract class Workload.
-  Name, input, and workloadResultsOutputDir are required to be members of our case class, anything else
+  Input and workloadResultsOutputDir are required to be members of our case class; anything else
   depends on the workload. Here, we're taking in a string that we will be returning in our workload.
 */
 case class HelloString(
-                  name: String,
-                  input: Option[String] = None,
-                  workloadResultsOutputDir: Option[String] = None,
-                  str: String
-                ) extends Workload {
+                        input: Option[String] = None,
+                        workloadResultsOutputDir: Option[String] = None,
+                        str: String
+                      ) extends Workload {
 
-/*
-  Override the constructor for your case class to take in a Map[String, Any]. This will 
-  be the form you receive your parameters in from the spark-bench infrastructure. Example:
-  Map(
-    "name" -> "hellostring",
-    "workloadresultsoutputdir" -> None,
-    "str" -> "Hi I'm an Example"
-  )
-  
-  Keep in mind that the keys in your map have been toLowerCase()'d for consistency.
-*/
-  def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "hellostring"),
-      input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = None,
-      str = getOrDefault(m, "str", "Hello, World!")
-    )
-
-/*
-  doWorkload is an abstract method from Workload. It may or may not take input data, and it will
-    output a one-row DataFrame made from the results case class we defined above.
-*/
+  /*
+    doWorkload is an abstract method from Workload. It may or may not take input data, and it will
+      output a one-row DataFrame made from the results case class we defined above.
+  */
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
     // Every workload returns a timestamp from the start of its doWorkload() method
     val timestamp = System.currentTimeMillis()
@@ -156,53 +163,36 @@ case class HelloString(
     val (t, returnedString) = time {
       str
     }
-    
+
     /*
       And now we have everything we need to construct our results case class and create a DataFrame!
     */
-    spark.createDataFrame(Seq(HelloStringResult(name, timestamp, t, returnedString)))
+    spark.createDataFrame(Seq(HelloStringResult(HelloString.name, timestamp, t, returnedString)))
   }
 }
+```
+
+Creating a JAR of this single file using `sbt package` should be sufficient to produce a JAR that can be used with spark-bench.  To configure spark-bench to use this new custom workload, add a workload with name "custom" and the key "class" set to the fully qualified name of the workload class.  Any other parameters can be provided as usual.  For example, to use our `HelloString` workload:
 
 ```
-Now that we have our amazing workload written, we're reading to tie it into the rest of the framework.
-
-In [ConfigCreator](../workloads/src/main/scala/com/ibm/sparktc/sparkbench/workload/ConfigCreator.scala)
-add your workload to the match statement in mapToConf().
-
-```scala
-  def mapToConf(m: Map[String, Any]): Workload = {
-    val name = getOrThrow(m, "name").asInstanceOf[String].toLowerCase
-    name match {
-      case "timedsleep" => new PartitionAndSleepWorkload(m)
-      case "kmeans" => new KMeansWorkload(m)
-      case "lr-bml" => new LogisticRegressionWorkload(m)
-      case "cachetest" => new CacheTest(m)
-      case "sql" => new SQLWorkload(m)
-      case "sleep" => new Sleep(m)
-      case "sparkpi" => new SparkPi(m)
-      case "hellostring" => new HelloString(m) // <--- TA-DA!!
-      case _ => throw SparkBenchException(s"Unrecognized or implemented workload name: $name")
-    }
+workloads = [
+  {
+    name = "custom"
+    class = "com.ibm.sparktc.sparkbench.workload.custom.HelloString"
+    str = ["Hello", "Hi"]
   }
+]
 ```
 
-Now your workload will work through a config file! Let's also make sure it works through
-the CLI.
+The most complicated part of the process may be getting Spark to properly handle the new JAR.  This must be done with the `spark-args` key in the configuration file, which assembles the arguments and passes them as-is to `spark-submit`.  For runs on a single machine, simply setting `driver-class-path` may be sufficient.  For example, if my custom workload is located at `/home/drwho/code/spark-bench/spark-launch/src/test/resources/jars/HelloWorld.jar`, `spark-args` may look something like:
 
-In the cli project, add your arguments to [ScallopArgs](../cli/src/main/scala/com/ibm/sparktc/sparkbench/cli/ScallopArgs.scala).
-Scallop is weird and cool and weird, you can read more about it here: <https://github.com/scallop/scallop/wiki>
-We're going to make our new arguments a subclass of SuiteArgs, which means that name, input, and workloadResultsOutput
-are already defined for us, we just have to add any extra stuff for our particular workload.
-
-Finally, we add our subcommand to the workload subcommand. Yeah, I know, Scallop is weird and cool and weird.
-
-```scala
-    // STRING RETURNER
-    val helloString = new SuiteArgs("hellostring") {
-      val str = opt[List[String]](short = 's', default = Some(List("Hello, World!")), required = true)
-    }
-    addSubcommand(helloString)
 ```
+spark-args = {
+  master = "local[*]"
+  driver-class-path = "/home/drwho/code/spark-bench/spark-launch/src/test/resources/jars/*"
+}
+```
+
+If spark-bench is running distributed and this does not work, try setting `jars` to the full path to your JAR instead.
 
 And that's it! Now your new workload is good to go!

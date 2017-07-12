@@ -110,7 +110,7 @@ lazy val `spark-launch` = project
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
   )
-  .dependsOn(utils % "compile->compile;test->test")
+  .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile;test->test")
 
 /*
     *******************************
