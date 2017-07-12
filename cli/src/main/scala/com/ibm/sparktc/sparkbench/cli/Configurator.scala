@@ -11,49 +11,6 @@ import com.typesafe.config.{Config, ConfigFactory, ConfigObject}
 
 import scala.util.Try
 
-/*
-
-spark-bench = {
-  spark-submit-config = [{
-
-    // All data generation done serially and completes before benchmarks start.
-    workload-suites = [
-      {
-        descr = "OMG I'm generating data!!!"
-        benchmark-output = "console"
-        workloads = [{
-          name = "generate-data-kmeans"
-          rows = 10
-          cols = 10
-          output = "/tmp/spark-bench-demo/kmeans-01.csv"
-        }]
-      },
-      {
-        descr = "One run of SparkPi and that's it!"
-        benchmark-output = "console"
-        workloads = [
-          {
-            name = "sparkpi"
-            slices = 10
-          }
-        ]
-      },
-      {
-        descr = "Now let's try two runs in parallel and see how that effects performance"
-        benchmark-output = "console"
-        parallel = true
-        workloads = [
-          {
-            name = "sparkpi"
-            slices = [10, 10]
-          }
-        ]
-      }
-    ]
-  }]
-}
- */
-
 object Configurator {
 
   def apply(file: File): Seq[MultiSuiteRunConfig] = {
