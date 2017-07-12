@@ -1,8 +1,6 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
-
-import com.ibm.sparktc.sparkbench.datageneration.DataGenerationKickoff
 import com.ibm.sparktc.sparkbench.workload.MultipleSuiteKickoff
 
 object CLIKickoff extends App {
