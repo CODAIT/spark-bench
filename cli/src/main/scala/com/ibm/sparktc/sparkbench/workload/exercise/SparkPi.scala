@@ -23,7 +23,7 @@ case class SparkPi(
 
 
   def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "cachetest"),
+    this(name = getOrDefault(m, "name", "sparkpi"),
       input = m.get("input").map(_.asInstanceOf[String]),
       output = None,
       slices = getOrDefault(m, "slices", 2)
