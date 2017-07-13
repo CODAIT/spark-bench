@@ -15,7 +15,7 @@ object CLIKickoff extends App {
         val worksuites = Configurator(new File(args.head))
         MultipleSuiteKickoff.run(worksuites)
       }
-      case _ => throw SparkBenchException("Requires exactly one option: config file path")
+      case _ => throw new IllegalArgumentException("Requires exactly one option: config file path")
     }
   }
 }
