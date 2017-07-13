@@ -4,7 +4,7 @@ import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class SparkLaunchOneSparkContextPerRunTest extends FlatSpec with Matchers with BeforeAndAfterEach {
-  val dataShiznit = new BuildAndTeardownData("craig-test")
+  val dataShiznit = new BuildAndTeardownData("spark-launch-one-spark-context-per-run")
 
   override def beforeEach(): Unit = {
     super.beforeEach()

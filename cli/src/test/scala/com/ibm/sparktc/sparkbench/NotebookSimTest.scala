@@ -12,6 +12,7 @@ class NotebookSimTest extends FlatSpec with Matchers with BeforeAndAfterEach wit
 
   override def beforeEach(): Unit = {
     super.beforeEach()
+    dataMaker.deleteFolders()
     dataMaker.createFolders()
     dataMaker.generateKMeansData(400000, 50, giantData)
     dataMaker.generateKMeansData(100, 5, tinyData)

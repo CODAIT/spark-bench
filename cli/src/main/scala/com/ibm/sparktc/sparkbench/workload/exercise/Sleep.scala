@@ -14,7 +14,7 @@ object Sleep extends WorkloadDefaults {
   val name = "sleep"
   def apply(m: Map[String, Any]) =
     new Sleep(input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = None,
+      output = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {
         case (Some(l), _) => any2Int2Long(l)
         case (None, Some(l)) => randomLong(max = any2Int2Long(l))
@@ -25,7 +25,7 @@ object Sleep extends WorkloadDefaults {
 
 case class Sleep(
                 input: Option[String] = None,
-                workloadResultsOutputDir: Option[String] = None,
+                output: Option[String] = None,
                 sleepMS: Long
               ) extends Workload {
 

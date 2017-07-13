@@ -49,6 +49,12 @@ object ConfigWrangler {
     }
   }
 
+  /**
+    * Utility method to get a piece of the config by the key name.
+    * @param name
+    * @param config
+    * @return
+    */
   private def getConfigListByName(name: String, config: Config): List[Config] = {
     val workloadObjs: Iterable[ConfigObject] = config.getObjectList(name).asScala
     workloadObjs.map(_.toConfig).toList

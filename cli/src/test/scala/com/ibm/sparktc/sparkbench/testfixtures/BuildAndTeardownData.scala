@@ -3,7 +3,6 @@ package com.ibm.sparktc.sparkbench.testfixtures
 import java.io.File
 
 import com.holdenkarau.spark.testing.Utils
-import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import org.apache.spark.mllib.util.KMeansDataGenerator

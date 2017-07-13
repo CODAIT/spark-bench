@@ -8,18 +8,18 @@ import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType
 
 object PartitionAndSleepWorkload extends WorkloadDefaults {
   val name = "timedsleep"
-  val PARTITIONS: Int = 48
-  val SLEEPMS: Long = 12000L
+  val partitions: Int = 48
+  val sleepms: Long = 12000L
 
   def apply(m: Map[String, Any]) = new PartitionAndSleepWorkload(
-    None,
-    None,
-    getOrDefault(m, "partitions", PARTITIONS),
-    getOrDefault[Long](m, "sleepms", SLEEPMS, any2Int2Long))
+    input = None,
+    output = None,
+    partitions = getOrDefault[Int](m, "partitions", partitions),
+    sleepMS = getOrDefault[Long](m, "sleepms", sleepms, any2Int2Long))
 }
 
 case class PartitionAndSleepWorkload(input: Option[String] = None,
-                                     workloadResultsOutputDir: Option[String] = None,
+                                     output: Option[String] = None,
                                      partitions: Int,
                                      sleepMS: Long) extends Workload {
 

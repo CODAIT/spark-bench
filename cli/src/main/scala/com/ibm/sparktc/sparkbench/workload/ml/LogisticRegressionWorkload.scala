@@ -32,17 +32,17 @@ object LogisticRegressionWorkload extends WorkloadDefaults {
   val name = "lr-bml"
   def apply(m: Map[String, Any]) = new LogisticRegressionWorkload(
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     testFile = getOrThrow(m, "testfile").asInstanceOf[String],
-    numPartitions = getOrDefault(m, "numpartitions", 32),
-    cacheEnabled = getOrDefault(m, "cacheenabled", true)
+    numPartitions = getOrDefault[Int](m, "numpartitions", 32),
+    cacheEnabled = getOrDefault[Boolean](m, "cacheenabled", true)
   )
 
 }
 
 case class LogisticRegressionWorkload(
                                        input: Option[String],
-                                       workloadResultsOutputDir: Option[String],
+                                       output: Option[String],
                                        testFile: String,
                                        numPartitions: Int,
                                        cacheEnabled: Boolean

@@ -10,7 +10,7 @@ trait WorkloadDefaults {
 
 trait Workload {
   val input: Option[String]
-  val workloadResultsOutputDir: Option[String]
+  val output: Option[String]
 
   /**
     *  Validate that the data set has a correct schema and fix if necessary.

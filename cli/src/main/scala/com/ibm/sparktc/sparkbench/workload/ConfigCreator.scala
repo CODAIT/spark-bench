@@ -1,5 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload
 
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.ibm.sparktc.sparkbench.workload.exercise._
@@ -15,7 +16,9 @@ object ConfigCreator {
     CacheTest,
     SQLWorkload,
     Sleep,
-    SparkPi
+    SparkPi,
+    KMeansDataGen,
+    LinearRegressionDataGen
   ).map(wk => wk.name -> wk).toMap
 
   private def loadCustom(name: String): WorkloadDefaults = {
@@ -38,5 +41,4 @@ object ConfigCreator {
       case _ => throw SparkBenchException(s"Could not find workload $displayName")
     }
   }
-
 }

@@ -10,13 +10,12 @@ object CacheTest extends WorkloadDefaults {
   val name = "cachetest"
   def apply(m: Map[String, Any]) =
     new CacheTest(input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
-      sleepMs = getOrDefault(m, "sleepMs", 1000L))
-
+      output = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+      sleepMs = getOrDefault[Long](m, "sleepMs", 1000L))
 }
 
 case class CacheTest(input: Option[String],
-                    workloadResultsOutputDir: Option[String],
+                    output: Option[String],
                     sleepMs: Long) extends Workload {
 
   def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {

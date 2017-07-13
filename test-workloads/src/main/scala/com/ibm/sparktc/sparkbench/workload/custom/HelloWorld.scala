@@ -33,8 +33,8 @@ object HelloString extends WorkloadDefaults {
   */
   def apply(m: Map[String, Any]) =
     new HelloString(input = None, // we don't need to read any input data from disk
-      workloadResultsOutputDir = None, // we don't have any output data to write to disk in the way that a SQL query would.
-      str = getOrDefault(m, "str", "Hello, World!")
+      output = None, // we don't have any output data to write to disk in the way that a SQL query would.
+      str = getOrDefault[String](m, "str", "Hello, World!")
     )
 }
 
@@ -45,7 +45,7 @@ object HelloString extends WorkloadDefaults {
 */
 case class HelloString(
                         input: Option[String] = None,
-                        workloadResultsOutputDir: Option[String] = None,
+                        output: Option[String] = None,
                         str: String
                       ) extends Workload {
 

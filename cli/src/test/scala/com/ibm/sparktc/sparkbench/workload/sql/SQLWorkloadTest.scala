@@ -26,7 +26,7 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   "Sql Queries over generated kmeans data" should "work" in {
 
     val workload = SQLWorkload(input = Some(smallData),
-      workloadResultsOutputDir = Some(resOutput),
+      output = Some(resOutput),
       queryStr = "select `0` from input where `0` < -0.9",
       cache = false)
 

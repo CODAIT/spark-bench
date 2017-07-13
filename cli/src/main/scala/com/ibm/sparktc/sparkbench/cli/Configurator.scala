@@ -1,14 +1,15 @@
 package com.ibm.sparktc.sparkbench.cli
 
 import java.io.File
+import java.util
+
+import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 
 import scala.collection.JavaConverters._
 import com.ibm.sparktc.sparkbench.workload.{MultiSuiteRunConfig, Suite}
 import com.typesafe.config.{Config, ConfigFactory, ConfigObject}
 
 import scala.util.Try
-
-
 
 object Configurator {
 
@@ -21,14 +22,14 @@ object Configurator {
 
   private def parseSparkBenchRunConfig(config: Config): Seq[MultiSuiteRunConfig] = {
     val sparkContextConfs = getConfigListByName("spark-submit-config", config)
-    sparkContextConfs.map { sparkContextConf =>
-      val sparkConfs = Try(sparkContextConf.getObject("conf")).map(toStringMap).getOrElse(Map.empty)
-
-      MultiSuiteRunConfig(
-        suitesParallel = Try(sparkContextConf.getBoolean("suites-parallel")).getOrElse(false),
-        suites = getConfigListByName("suites", sparkContextConf).map(parseSuite)
-      )
+    val workloadConfs = sparkContextConfs.map { sparkContextConf => {
+        MultiSuiteRunConfig(
+          suitesParallel = Try(sparkContextConf.getBoolean("suites-parallel")).getOrElse(false),
+          suites = getConfigListByName("workload-suites", sparkContextConf).map(parseSuite)
+        )
+      }
     }
+    workloadConfs
   }
 
   private def getConfigListByName(name: String, config: Config): List[Config] = {
@@ -41,7 +42,7 @@ object Configurator {
     val parallel: Boolean = Try(config.getBoolean("parallel")).getOrElse(false)
     val repeat: Int = Try(config.getInt("repeat")).getOrElse(1)
     val output: String = config.getString("benchmark-output") // throws exception
-    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(parseWorkload)
+    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(configToMap)
 
     Suite.build(
       workloads,
@@ -52,17 +53,18 @@ object Configurator {
     )
   }
 
-  //TODO work on this so you can have values as singles instead of everything a list
-  def parseWorkload(config: Config): Map[String, Seq[Any]] = {
+  def configToMap(config: Config): Map[String, Seq[Any]] = {
     val cfgObj = config.root()
     val unwrapped = cfgObj.unwrapped().asScala.toMap
-    val stuff = unwrapped.map(kv => {
-      kv._1 -> kv._2.asInstanceOf[java.util.ArrayList[Any]].toArray
+    val stuff: Map[String, Seq[Any]] = unwrapped.map(kv => {
+      val newValue: Seq[Any] = kv._2 match {
+        case al: util.ArrayList[Any] => al.asScala
+        case b: Any => Seq(b)
+//        case _ => throw SparkBenchException(s"Key ${kv._1} with value ${kv._2} had an unexpected type: ${kv._2.getClass.toString}")
+      }
+      kv._1 -> newValue
     })
-
-    stuff.map(kv => {kv._1 -> kv._2.toSeq})
+    stuff
   }
 
-  def toStringMap(co: ConfigObject): Map[String,String] =
-    co.asScala.toMap.mapValues(v => v.unwrapped.toString)
 }

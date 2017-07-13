@@ -18,13 +18,13 @@ object SparkPi extends WorkloadDefaults {
   val name = "sparkpi"
   def apply(m: Map[String, Any]) =
     new SparkPi(input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = None,
-      slices = getOrDefault(m, "slices", 2)
+      output = None,
+      slices = getOrDefault[Int](m, "slices", 2)
     )
 }
 
 case class SparkPi(input: Option[String] = None,
-                    workloadResultsOutputDir: Option[String] = None,
+                    output: Option[String] = None,
                     slices: Int
                   ) extends Workload {
 

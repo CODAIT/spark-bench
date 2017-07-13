@@ -18,15 +18,15 @@ object SQLWorkload extends WorkloadDefaults {
   val name = "sql"
   def apply(m: Map[String, Any]) =
     new SQLWorkload(input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+      output = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
       queryStr = getOrThrow(m, "query").asInstanceOf[String],
-      cache = getOrDefault(m, "cache", false)
+      cache = getOrDefault[Boolean](m, "cache", false)
     )
 
 }
 
 case class SQLWorkload (input: Option[String],
-                        workloadResultsOutputDir: Option[String] = None,
+                        output: Option[String] = None,
                         queryStr: String,
                         cache: Boolean) extends Workload {
 
@@ -49,7 +49,7 @@ case class SQLWorkload (input: Option[String],
     val timestamp = System.currentTimeMillis()
     val (loadtime, df) = loadFromDisk(spark)
     val (querytime, res) = query(df, spark)
-    val (savetime, _) = workloadResultsOutputDir match {
+    val (savetime, _) = output match {
       case Some(dir) => save(res, dir, spark)
       case _ => (0L, Unit)
     }
