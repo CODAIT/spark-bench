@@ -13,14 +13,14 @@ case class SleepResult(
 case class Sleep(
                   name: String,
                   input: Option[String] = None,
-                  workloadResultsOutputDir: Option[String] = None,
+                  output: Option[String] = None,
                   sleepMS: Long
                                         ) extends Workload {
 
   def this(m: Map[String, Any]) =
     this(name = getOrDefault(m, "name", "sleep"),
       input = m.get("input").map(_.asInstanceOf[String]),
-      workloadResultsOutputDir = None,
+      output = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {
         case (Some(l), _) => any2Int2Long(l)
         case (None, Some(l)) => randomLong(max = any2Int2Long(l))

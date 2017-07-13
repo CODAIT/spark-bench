@@ -16,7 +16,7 @@ case class SQLWorkloadResult(
 
 case class SQLWorkload (name: String,
                         input: Option[String],
-                        workloadResultsOutputDir: Option[String] = None,
+                        output: Option[String] = None,
                         queryStr: String,
                         cache: Boolean) extends Workload {
 
@@ -24,7 +24,7 @@ case class SQLWorkload (name: String,
   this(
     name = verifyOrThrow(m, "name", "sql", "Incorrect or missing workload name."),
     input = m.get("input").map(_.asInstanceOf[String]),
-    workloadResultsOutputDir = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+    output = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
     queryStr = getOrThrow(m, "query").asInstanceOf[String],
     cache = getOrDefault(m, "cache", false)
   )
@@ -48,7 +48,7 @@ case class SQLWorkload (name: String,
     val timestamp = System.currentTimeMillis()
     val (loadtime, df) = loadFromDisk(spark)
     val (querytime, res) = query(df, spark)
-    val (savetime, _) = workloadResultsOutputDir match {
+    val (savetime, _) = output match {
       case Some(dir) => save(res, dir, spark)
       case _ => (0L, Unit)
     }

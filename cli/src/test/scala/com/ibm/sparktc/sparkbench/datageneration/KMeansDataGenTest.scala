@@ -2,16 +2,15 @@ package com.ibm.sparktc.sparkbench.datageneration
 
 import java.io.File
 
-import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
+import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
 import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 import scala.io.Source
 
 class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val cool = new BuildAndTeardownData("kmeans-data-gen")
-  
+
   val fileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
@@ -27,18 +26,17 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   "KMeansDataGeneration" should "generate data correctly" in {
 
-    val x = DataGenerationConf(
-      generatorName = "kmeans",
-      numRows = 10,
-      numCols = 10,
-      outputFormat = Some("csv"),
-      outputDir = fileName,
-      generatorSpecific = Map.empty
+    val m = Map(
+      "name" -> "kmeans",
+      "rows" -> 10,
+      "cols" -> 10,
+      "output" -> fileName
     )
 
-    val generator = new KMeansDataGen(x, SparkSessionProvider.spark)
+    val generator = new KMeansDataGen(m)
 
-    generator.run()
+
+    generator.doWorkload(spark = SparkSessionProvider.spark)
 
 
     val fileList = file.listFiles().toList.filter(_.getName.startsWith("part"))
@@ -57,22 +55,8 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
     *  one extra header line per partition file. If the csv header option ever changes, this
     *  test will break, but now you know what's going on so you can fix it :)
     */
-    length shouldBe x.numRows + fileList.length
+    length shouldBe generator.numRows + fileList.length
   }
 
-  it should "handle an empty map well enough" in {
-    val x = DataGenerationConf(
-      generatorName = "kmeans",
-      numRows = 10,
-      numCols = 10,
-      outputFormat = Some("csv"),
-      outputDir = fileName,
-      generatorSpecific = Map.empty
-    )
-
-    val generator = new KMeansDataGen(x, SparkSessionProvider.spark)
-
-    generator.numPar shouldBe KMeansDefaults.NUM_OF_PARTITIONS
-  }
 
 }

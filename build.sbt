@@ -86,7 +86,7 @@ lazy val `spark-launch` = project
     moveJar in Test := {
       val log = streams.value.log
       log.info("Assembling spark-bench jar...")
-      (assembly in Compile in cli).value
+      (assembly in Compile in cli).value // This is the magic sauce
       log.info("Moving assembled spark-bench jar to resources folder for test")
       s"cp ${assemblyFile.value}/${sparkBenchJar.value} ${sparklaunchTestResourcesJarsFile.value}".!
       log.info("Done moving files.")

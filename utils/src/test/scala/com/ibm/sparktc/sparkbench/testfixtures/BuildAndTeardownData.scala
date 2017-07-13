@@ -31,7 +31,7 @@ class BuildAndTeardownData(dirname: String = System.currentTimeMillis.toString) 
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
       spark.sparkContext,
       rows,
-      KMeansDefaults.NUM_OF_CLUSTERS,
+      KMeansDefaults.K,
       cols,
       KMeansDefaults.SCALING,
       KMeansDefaults.NUM_OF_PARTITIONS

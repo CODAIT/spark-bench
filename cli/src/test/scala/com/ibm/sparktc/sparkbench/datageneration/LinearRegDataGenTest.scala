@@ -4,13 +4,15 @@ import java.io.File
 
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.LinearRegressionDataGen
 import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
+import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.load
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val cool = new BuildAndTeardownData("linear-reg-datagen")
-  
-  val fileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.csv"
+
+  val fileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.parquet"
+  val csvFileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.csv"
 
   var file: File = _
 
@@ -23,26 +25,38 @@ class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEac
     cool.deleteFolders()
   }
 
-  "LinearRegressionDataGen" should "generate data correctly" in {
+  "LinearRegressionDataGen" should "generate data correctly for Parquet output" in {
 
-    val x = DataGenerationConf(
-      generatorName = "linear-regression",
-      numRows = 10,
-      numCols = 10,
-      outputFormat = Some("parquet"),
-      outputDir = fileName,
-      generatorSpecific = Map.empty
+    val m = Map(
+      "name" -> "kmeans",
+      "rows" -> 10,
+      "cols" -> 10,
+      "output" -> fileName
     )
 
-    val generator = new LinearRegressionDataGen(x, SparkSessionProvider.spark)
+    val generator = new LinearRegressionDataGen(m)
 
-    generator.run()
+    generator.doWorkload(spark = SparkSessionProvider.spark)
 
     val fileList = file.listFiles().toList.filter(_.getName.startsWith("part"))
     val fileContents = load(SparkSessionProvider.spark, fileName, Some("parquet"))
     val length: Long = fileContents.count()
 
-    length shouldBe x.numRows
+    length shouldBe generator.numRows
+  }
+
+  //TODO ultimately fix LabeledPoints being output to CSV. Surely there's a way...
+  it should "throw an exception when somebody tries to output to CSV" in {
+    a [SparkBenchException] should be thrownBy {
+      val m = Map(
+        "name" -> "kmeans",
+        "rows" -> 10,
+        "cols" -> 10,
+        "output" -> csvFileName
+      )
+      val generator = new LinearRegressionDataGen(m)
+      generator.doWorkload(spark = SparkSessionProvider.spark)
+    }
   }
 
 }

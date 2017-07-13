@@ -87,10 +87,7 @@ and filling them out in place.
 
 ### Running the Examples
 From the spark-bench distribution file, simply run:
-```bash
-./examples/kmeans-example/kmeans-example.sh
-```
-and/or
+
 ```bash
 ./examples/multi-submit-sparkpi/multi-submit-example.sh
 ```
