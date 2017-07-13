@@ -7,7 +7,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class HelpersTest extends FlatSpec with Matchers {
   "CLIKickoff" should "reject invalid argument strings" in {
-    an [SparkBenchException] should be thrownBy CLIKickoff.main(Array())
+    an [IllegalArgumentException] should be thrownBy CLIKickoff.main(Array())
     a [SparkBenchException] should be thrownBy CLIKickoff.main(Array("/dev/null/this/file/does/not/exist"))
   }
   "Suite" should "split workload configs properly" in {
