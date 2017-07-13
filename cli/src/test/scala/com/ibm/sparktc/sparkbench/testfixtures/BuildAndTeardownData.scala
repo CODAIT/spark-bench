@@ -32,10 +32,10 @@ class BuildAndTeardownData(dirname: String = System.currentTimeMillis.toString) 
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
       spark.sparkContext,
       rows,
-      KMeansWorkload.NUM_OF_CLUSTERS,
+      KMeansWorkload.numOfClusters,
       cols,
-      KMeansWorkload.SCALING,
-      KMeansWorkload.NUM_OF_PARTITIONS
+      KMeansWorkload.scaling,
+      KMeansWorkload.numOfPartitions
     )
 
     val schemaString = data.first().indices.map(_.toString).mkString(" ")

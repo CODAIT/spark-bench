@@ -9,11 +9,10 @@ object LinearRegressionWorkload extends WorkloadDefaults{
     throw new NotImplementedError("Linear regression workloads are not supported at this time")
   }
   // Application parameters #1million points have 200M data size
-  val NUM_OF_EXAMPLES: Int = 40000
-  val NUM_OF_FEATURES: Int = 4
-  val EPS: Double = 0.5
-  val INTERCEPTS: Double = 0.1
-  val NUM_OF_PARTITIONS: Int = 10
-  val MAX_ITERATION: Int = 3
-  //  val SPARK_STORAGE_MEMORYFRACTION = 0.5
+  val numOfExamples: Int = 40000
+  val numOfFeatures: Int = 4
+  val eps: Double = 0.5
+  val intercepts: Double = 0.1
+  val numOfPartitions: Int = 10
+  val maxIteration: Int = 3
 }

@@ -29,21 +29,21 @@ import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 object KMeansWorkload extends WorkloadDefaults {
   val name = "kmeans"
   // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
-  val NUM_OF_CLUSTERS: Int = 2
-  val DIMENSIONS: Int = 20
-  val SCALING: Double = 0.6
-  val NUM_OF_PARTITIONS: Int = 2
+  val numOfClusters: Int = 2
+  val dimensions: Int = 20
+  val scaling: Double = 0.6
+  val numOfPartitions: Int = 2
 
   // Params for workload, in addition to some stuff up there ^^
-  val MAX_ITERATION: Int = 2
-  val SEED: Long = 127L
+  val maxIteration: Int = 2
+  val seed: Long = 127L
 
   def apply(m: Map[String, Any]) = new KMeansWorkload(
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    k = getOrDefault[Int](m, "k", NUM_OF_CLUSTERS),
-    seed = getOrDefault(m, "seed", SEED, any2Int2Long),
-    maxIterations = getOrDefault[Int](m, "maxiterations", MAX_ITERATION))
+    k = getOrDefault[Int](m, "k", numOfClusters),
+    seed = getOrDefault(m, "seed", seed, any2Int2Long),
+    maxIterations = getOrDefault[Int](m, "maxiterations", maxIteration))
 
 }
 

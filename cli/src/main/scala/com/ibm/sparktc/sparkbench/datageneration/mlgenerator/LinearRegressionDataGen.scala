@@ -20,9 +20,9 @@ class LinearRegressionDataGen (conf: DataGenerationConf, spark: SparkSession) ex
 
   val nExamples: Int = conf.numRows
   val nFeatures: Int = conf.numCols
-  val eps: Double = getOrDefault(m, "eps", LinearRegressionWorkload.EPS)
-  val intercepts: Double = getOrDefault(m, "intercepts", LinearRegressionWorkload.INTERCEPTS)
-  val numPar: Int = getOrDefault(m, "partitions", LinearRegressionWorkload.NUM_OF_PARTITIONS)
+  val eps: Double = getOrDefault(m, "eps", LinearRegressionWorkload.eps)
+  val intercepts: Double = getOrDefault(m, "intercepts", LinearRegressionWorkload.intercepts)
+  val numPar: Int = getOrDefault(m, "partitions", LinearRegressionWorkload.numOfPartitions)
 
 
   override def generateData(spark: SparkSession): DataFrame = {

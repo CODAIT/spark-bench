@@ -22,7 +22,7 @@ class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach 
 
   def makeDataFrame(): DataFrame = {
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
-      spark.sparkContext, 1, 1, 1, KMeansWorkload.SCALING, KMeansWorkload.NUM_OF_PARTITIONS
+      spark.sparkContext, 1, 1, 1, KMeansWorkload.scaling, KMeansWorkload.numOfPartitions
     )
     val schemaString = data.first().indices.map(_.toString).mkString(" ")
     val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, DoubleType, nullable = false))

@@ -73,7 +73,7 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
 
     val generator = new KMeansDataGen(x, SparkSessionProvider.spark)
 
-    generator.numPar shouldBe KMeansWorkload.NUM_OF_PARTITIONS
+    generator.numPar shouldBe KMeansWorkload.numOfPartitions
   }
 
 }
