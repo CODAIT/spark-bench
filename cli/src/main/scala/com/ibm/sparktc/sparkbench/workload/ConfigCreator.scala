@@ -7,6 +7,7 @@ import com.ibm.sparktc.sparkbench.workload.ml.{KMeansWorkload, LogisticRegressio
 import com.ibm.sparktc.sparkbench.workload.sql.SQLWorkload
 
 object ConfigCreator {
+
   private val workloads: Map[String, WorkloadDefaults] = Set(
     PartitionAndSleepWorkload,
     KMeansWorkload,
@@ -16,6 +17,7 @@ object ConfigCreator {
     Sleep,
     SparkPi
   ).map(wk => wk.name -> wk).toMap
+
   private def loadCustom(name: String): Option[WorkloadDefaults] = {
     import scala.reflect.runtime.universe.runtimeMirror
     val mirror = runtimeMirror(scala.reflect.runtime.universe.getClass.getClassLoader)
@@ -23,6 +25,7 @@ object ConfigCreator {
     val cls = mirror.reflectModule(module).instance.asInstanceOf[WorkloadDefaults]
     Some(cls)
   }
+
   def mapToConf(m: Map[String, Any]): Workload = {
     val name = getOrThrow(m, "name").asInstanceOf[String].toLowerCase
     val (displayName, conf) =
@@ -36,4 +39,5 @@ object ConfigCreator {
       case _ => throw SparkBenchException(s"Could not find workload $displayName")
     }
   }
+
 }
