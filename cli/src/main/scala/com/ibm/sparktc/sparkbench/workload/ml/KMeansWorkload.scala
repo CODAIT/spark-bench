@@ -41,9 +41,9 @@ object KMeansWorkload extends WorkloadDefaults {
   def apply(m: Map[String, Any]) = new KMeansWorkload(
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     workloadResultsOutputDir = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    k = getOrDefault(m, "k", NUM_OF_CLUSTERS),
+    k = getOrDefault[Int](m, "k", NUM_OF_CLUSTERS),
     seed = getOrDefault(m, "seed", SEED, any2Int2Long),
-    maxIterations = getOrDefault(m, "maxiterations", MAX_ITERATION))
+    maxIterations = getOrDefault[Int](m, "maxiterations", MAX_ITERATION))
 
 }
 
