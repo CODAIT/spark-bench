@@ -18,12 +18,11 @@ object ConfigCreator {
     SparkPi
   ).map(wk => wk.name -> wk).toMap
 
-  private def loadCustom(name: String): Option[WorkloadDefaults] = {
+  private def loadCustom(name: String): WorkloadDefaults = {
     import scala.reflect.runtime.universe.runtimeMirror
     val mirror = runtimeMirror(scala.reflect.runtime.universe.getClass.getClassLoader)
     val module = mirror.staticModule(name)
-    val cls = mirror.reflectModule(module).instance.asInstanceOf[WorkloadDefaults]
-    Some(cls)
+    mirror.reflectModule(module).instance.asInstanceOf[WorkloadDefaults]
   }
 
   def mapToConf(m: Map[String, Any]): Workload = {
@@ -31,7 +30,7 @@ object ConfigCreator {
     val (displayName, conf) =
       if (name == "custom") {
         val className = getOrThrow(m, "class").asInstanceOf[String]
-        (className, loadCustom(className))
+        (className, Some(loadCustom(className)))
       }
       else (name, workloads.get(name))
     conf match {
