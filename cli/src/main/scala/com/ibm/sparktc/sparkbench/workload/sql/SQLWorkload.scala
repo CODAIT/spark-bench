@@ -2,7 +2,7 @@ package com.ibm.sparktc.sparkbench.workload.sql
 
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 case class SQLWorkloadResult(
@@ -14,20 +14,21 @@ case class SQLWorkloadResult(
                             total_Runtime: Long
                             )
 
-case class SQLWorkload (name: String,
-                        input: Option[String],
+object SQLWorkload extends WorkloadDefaults {
+  val name = "sql"
+  def apply(m: Map[String, Any]) =
+    new SQLWorkload(input = m.get("input").map(_.asInstanceOf[String]),
+      output = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+      queryStr = getOrThrow(m, "query").asInstanceOf[String],
+      cache = getOrDefault[Boolean](m, "cache", false)
+    )
+
+}
+
+case class SQLWorkload (input: Option[String],
                         output: Option[String] = None,
                         queryStr: String,
                         cache: Boolean) extends Workload {
-
-  def this(m: Map[String, Any]) =
-  this(
-    name = verifyOrThrow(m, "name", "sql", "Incorrect or missing workload name."),
-    input = m.get("input").map(_.asInstanceOf[String]),
-    output = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
-    queryStr = getOrThrow(m, "query").asInstanceOf[String],
-    cache = getOrDefault(m, "cache", false)
-  )
 
   def loadFromDisk(spark: SparkSession): (Long, DataFrame) = time {
     val df = load(spark, input.get)

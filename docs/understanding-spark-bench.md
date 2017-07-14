@@ -58,8 +58,7 @@ Some existing categories of workloads include:
 - Simulation workloads: designed to simulate Spark usage cases such as notebooks
 
 ### Custom Workloads
-https://github.com/ecurtin/spark-bench/issues/11 describes the plans to allow users to tie custom workloads into spark-bench. 
-In the meantime, users will need to fork spark-bench and add their workloads into the code, as documented in the [developer guide](developer-guide.md)
+Users can easily create and run their own workloads by implementing the `Workload` trait and placing the resulting JAR in the classpath.  For details, see the [developer guide](developer-guide.md).
 
 ### Parameters
 | Name        | Required (y/n)| Description  |

@@ -4,14 +4,32 @@ import org.apache.spark.mllib.util.LinearDataGenerator
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.{LinearRegressionDefaults, SparkBenchException}
+import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, getOrThrow, time}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
 
+object LinearRegressionDataGen extends WorkloadDefaults {
+  val name = "data-generation-lr"
+  // Application parameters #1million points have 200M data size
+  val numOfExamples: Int = 40000
+  val numOfFeatures: Int = 4
+  val eps: Double = 0.5
+  val intercepts: Double = 0.1
+  val numOfPartitions: Int = 10
+  val maxIteration: Int = 3
+  override def apply(m: Map[String, Any]) = new LinearRegressionDataGen(
+    numRows = getOrThrow(m, "rows").asInstanceOf[Int],
+    numCols = getOrThrow(m, "cols").asInstanceOf[Int],
+    output = Some(getOrThrow(m, "output").asInstanceOf[String]),
+    eps = getOrDefault[Double](m, "eps", eps),
+    intercepts = getOrDefault[Double](m, "intercepts", intercepts),
+    numPartitions = getOrDefault[Int](m, "partitions", numOfPartitions)
+  )
+}
+
 case class LinearRegressionDataGen (
-                                      name: String,
                                       numRows: Int,
                                       numCols: Int,
                                       input: Option[String] = None,
@@ -20,16 +38,6 @@ case class LinearRegressionDataGen (
                                       intercepts: Double,
                                       numPartitions: Int
                                    ) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-    name = getOrThrow(m, "name").asInstanceOf[String],
-    numRows = getOrThrow(m, "rows").asInstanceOf[Int],
-    numCols = getOrThrow(m, "cols").asInstanceOf[Int],
-    output = Some(getOrThrow(m, "output").asInstanceOf[String]),
-    eps = getOrDefault[Double](m, "eps", LinearRegressionDefaults.EPS),
-    intercepts = getOrDefault[Double](m, "intercepts", LinearRegressionDefaults.INTERCEPTS),
-    numPartitions = getOrDefault[Int](m, "partitions", LinearRegressionDefaults.NUM_OF_PARTITIONS)
-  )
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
 

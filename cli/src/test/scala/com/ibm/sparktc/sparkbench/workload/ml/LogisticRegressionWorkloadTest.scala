@@ -21,7 +21,6 @@ class LogisticRegressionWorkloadTest extends FlatSpec with Matchers {
     val workload = ConfigCreator.mapToConf(cfg)
     workload shouldBe a [LogisticRegressionWorkload]
     lr = workload.asInstanceOf[LogisticRegressionWorkload]
-    lr.name shouldBe cfg("name")
     lr.input shouldBe cfg.get("input")
     lr.testFile shouldBe cfg("testfile")
     lr.cacheEnabled shouldBe true

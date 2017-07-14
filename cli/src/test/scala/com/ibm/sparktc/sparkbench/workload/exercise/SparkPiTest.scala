@@ -7,7 +7,7 @@ class SparkPiTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val spark = SparkSessionProvider.spark
 
   "SparkPi" should "instantiate and run" in {
-    val workload = new SparkPi(Map("name" -> "sparkpi", "slices" -> 4))
+    val workload = SparkPi(Map("name" -> "sparkpi", "slices" -> 4))
     val res = workload.doWorkload(None, spark).collect
     res.length shouldBe 1
     val row = res(0)

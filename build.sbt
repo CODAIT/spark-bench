@@ -65,13 +65,19 @@ lazy val cli = project
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps,
-    libraryDependencies ++= typesafe,
-    mainClass in assembly := Some("com.ibm.sparktc.sparkbench.cli.CLIKickoff")
+    libraryDependencies ++= typesafe
   )
   .dependsOn(utils % "compile->compile;test->test")
   .aggregate(utils)
 
-
+lazy val `test-workloads` = project
+  .settings(
+    commonSettings,
+    name := "test-workloads",
+    libraryDependencies ++= sparkDeps,
+    libraryDependencies ++= testDeps
+  )
+  .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile")
 
 /*
     spark-launch relies on having the cli uber jar to launch through spark-submit. So
@@ -85,10 +91,12 @@ lazy val `spark-launch` = project
 
     moveJar in Test := {
       val log = streams.value.log
-      log.info("Assembling spark-bench jar...")
+      log.info("Assembling spark-bench and custom-workload JARs...")
       (assembly in Compile in cli).value // This is the magic sauce
-      log.info("Moving assembled spark-bench jar to resources folder for test")
+      log.info("Moving assembled JARs to resources folder for test")
       s"cp ${assemblyFile.value}/${sparkBenchJar.value} ${sparklaunchTestResourcesJarsFile.value}".!
+      val customTestJar = (Keys.`package` in Compile in `test-workloads`).value
+      s"cp $customTestJar ${sparklaunchTestResourcesJarsFile.value}".!
       log.info("Done moving files.")
     },
     test in Test := {
@@ -102,7 +110,7 @@ lazy val `spark-launch` = project
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
   )
-  .dependsOn(utils % "compile->compile;test->test")
+  .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile;test->test")
 
 /*
     *******************************

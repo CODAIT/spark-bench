@@ -1,6 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
@@ -8,7 +8,6 @@ import org.apache.spark.mllib.linalg.Vector
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 
 /*
@@ -27,21 +26,32 @@ import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
  * limitations under the License.
  */
 
+object KMeansWorkload extends WorkloadDefaults {
+  val name = "kmeans"
+  // The parameters for data generation. 100 million points (aka rows) roughly produces 36GB data size
+  val numOfClusters: Int = 2
+  val dimensions: Int = 20
+  val scaling: Double = 0.6
+  val numOfPartitions: Int = 2
 
-case class KMeansWorkload(name: String,
-                          input: Option[String],
+  // Params for workload, in addition to some stuff up there ^^
+  val maxIteration: Int = 2
+  val seed: Long = 127L
+
+  def apply(m: Map[String, Any]) = new KMeansWorkload(
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    k = getOrDefault[Int](m, "k", numOfClusters),
+    seed = getOrDefault(m, "seed", seed, any2Int2Long),
+    maxIterations = getOrDefault[Int](m, "maxiterations", maxIteration))
+
+}
+
+case class KMeansWorkload(input: Option[String],
                           output: Option[String],
                           k: Int,
                           seed: Long,
                           maxIterations: Int) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-    name = verifyOrThrow(m, "name", "kmeans", s"Required field name does not match"),
-    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    k = getOrDefault(m, "k", KMeansDefaults.K),
-    seed = getOrDefault(m, "seed", KMeansDefaults.SEED, any2Int2Long),
-    maxIterations = getOrDefault(m, "maxiterations", KMeansDefaults.MAX_ITERATION))
 
   override def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     val timestamp = System.currentTimeMillis()

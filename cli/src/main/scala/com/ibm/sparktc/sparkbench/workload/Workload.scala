@@ -3,8 +3,12 @@ package com.ibm.sparktc.sparkbench.workload
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, addConfToResults}
 
-trait Workload {
+trait WorkloadDefaults {
   val name: String
+  def apply(m: Map[String, Any]): Workload
+}
+
+trait Workload {
   val input: Option[String]
   val output: Option[String]
 

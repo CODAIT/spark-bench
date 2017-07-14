@@ -1,8 +1,8 @@
 package com.ibm.sparktc.sparkbench.workload.exercise
 
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import org.apache.spark.sql.{DataFrame,  SparkSession}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 case class SleepResult(
                       name: String,
@@ -10,16 +10,10 @@ case class SleepResult(
                       total_runtime: Long
                       )
 
-case class Sleep(
-                  name: String,
-                  input: Option[String] = None,
-                  output: Option[String] = None,
-                  sleepMS: Long
-                                        ) extends Workload {
-
-  def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "sleep"),
-      input = m.get("input").map(_.asInstanceOf[String]),
+object Sleep extends WorkloadDefaults {
+  val name = "sleep"
+  def apply(m: Map[String, Any]) =
+    new Sleep(input = m.get("input").map(_.asInstanceOf[String]),
       output = None,
       sleepMS = (m.get("sleepms"), m.get("maxsleepms")) match {
         case (Some(l), _) => any2Int2Long(l)
@@ -27,7 +21,13 @@ case class Sleep(
         case (_, _) => randomLong(max = 3600000L) //one hour
       }
     )
+}
 
+case class Sleep(
+                input: Option[String] = None,
+                output: Option[String] = None,
+                sleepMS: Long
+              ) extends Workload {
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
     val timestamp = System.currentTimeMillis()

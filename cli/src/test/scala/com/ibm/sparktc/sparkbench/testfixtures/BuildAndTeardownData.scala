@@ -3,8 +3,8 @@ package com.ibm.sparktc.sparkbench.testfixtures
 import java.io.File
 
 import com.holdenkarau.spark.testing.Utils
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
+import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
@@ -31,10 +31,10 @@ class BuildAndTeardownData(dirname: String = System.currentTimeMillis.toString) 
     val data: RDD[Array[Double]] = KMeansDataGenerator.generateKMeansRDD(
       spark.sparkContext,
       rows,
-      KMeansDefaults.K,
+      KMeansWorkload.numOfClusters,
       cols,
-      KMeansDefaults.SCALING,
-      KMeansDefaults.NUM_OF_PARTITIONS
+      KMeansWorkload.scaling,
+      KMeansWorkload.numOfPartitions
     )
 
     val schemaString = data.first().indices.map(_.toString).mkString(" ")

@@ -16,18 +16,29 @@
 
 package com.ibm.sparktc.sparkbench.datageneration.mlgenerator
 
-import com.ibm.sparktc.sparkbench.utils.KMeansDefaults
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, _}
+import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.types._
 
+object KMeansDataGen extends WorkloadDefaults {
+  val name = "data-generation-kmeans"
+  override def apply(m: Map[String, Any]) = new KMeansDataGen(
+    numRows = getOrThrow(m, "rows").asInstanceOf[Int],
+    numCols = getOrThrow(m, "cols").asInstanceOf[Int],
+    output = Some(getOrThrow(m, "output").asInstanceOf[String]),
+    k = getOrDefault[Int](m, "k", KMeansWorkload.numOfClusters),
+    scaling = getOrDefault[Double](m, "scaling", KMeansWorkload.scaling),
+    numPartitions = getOrDefault[Int](m, "partitions", KMeansWorkload.numOfPartitions)
+  )
+}
+
 case class KMeansDataGen(
-                          name: String,
                           numRows: Int,
                           numCols: Int,
                           input: Option[String] = None,
@@ -36,16 +47,6 @@ case class KMeansDataGen(
                           scaling: Double,
                           numPartitions: Int
                         ) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-    name = getOrThrow(m, "name").asInstanceOf[String],
-    numRows = getOrThrow(m, "rows").asInstanceOf[Int],
-    numCols = getOrThrow(m, "cols").asInstanceOf[Int],
-    output = Some(getOrThrow(m, "output").asInstanceOf[String]),
-    k = getOrDefault[Int](m, "k", KMeansDefaults.K),
-    scaling = getOrDefault[Double](m, "scaling", KMeansDefaults.SCALING),
-    numPartitions = getOrDefault[Int](m, "partitions", KMeansDefaults.NUM_OF_PARTITIONS)
-  )
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {
     val timestamp = System.currentTimeMillis()

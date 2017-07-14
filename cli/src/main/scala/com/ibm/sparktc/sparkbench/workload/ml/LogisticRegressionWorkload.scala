@@ -1,12 +1,11 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator => BCE}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.types._
 
 // ¯\_(ツ)_/¯
 // the logic for this workload came from:
@@ -29,23 +28,25 @@ case class LogisticRegressionResult(
                                      area_under_roc: Double
                                    )
 
+object LogisticRegressionWorkload extends WorkloadDefaults {
+  val name = "lr-bml"
+  def apply(m: Map[String, Any]) = new LogisticRegressionWorkload(
+    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
+    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    testFile = getOrThrow(m, "testfile").asInstanceOf[String],
+    numPartitions = getOrDefault[Int](m, "numpartitions", 32),
+    cacheEnabled = getOrDefault[Boolean](m, "cacheenabled", true)
+  )
+
+}
+
 case class LogisticRegressionWorkload(
-                                       name: String,
                                        input: Option[String],
                                        output: Option[String],
                                        testFile: String,
                                        numPartitions: Int,
                                        cacheEnabled: Boolean
   ) extends Workload {
-
-  def this(m: Map[String, Any]) = this(
-    name = verifyOrThrow(m, "name", "lr-bml", s"Required field name does not match"),
-    input = Some(getOrThrow(m, "input").asInstanceOf[String]),
-    output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
-    testFile = getOrThrow(m, "testfile").asInstanceOf[String],
-    numPartitions = getOrDefault(m, "numpartitions", 32),
-    cacheEnabled = getOrDefault(m, "cacheenabled", true)
-  )
 
   private[ml] def load(filename: String)(implicit spark: SparkSession): DataFrame = {
     import spark.implicits._

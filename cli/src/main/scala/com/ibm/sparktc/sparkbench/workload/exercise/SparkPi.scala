@@ -1,8 +1,9 @@
 package com.ibm.sparktc.sparkbench.workload.exercise
 
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{any2Int2Long, getOrDefault, randomLong, time}
-import com.ibm.sparktc.sparkbench.workload.Workload
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, time}
+import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.{DataFrame, SparkSession}
+
 import scala.math.random
 
 
@@ -13,22 +14,19 @@ case class SparkPiResult(
                         pi_approximate: Double
                       )
 
-case class SparkPi(
-                    name: String,
-                    input: Option[String] = None,
+object SparkPi extends WorkloadDefaults {
+  val name = "sparkpi"
+  def apply(m: Map[String, Any]) =
+    new SparkPi(input = m.get("input").map(_.asInstanceOf[String]),
+      output = None,
+      slices = getOrDefault[Int](m, "slices", 2)
+    )
+}
+
+case class SparkPi(input: Option[String] = None,
                     output: Option[String] = None,
                     slices: Int
                   ) extends Workload {
-
-
-
-  def this(m: Map[String, Any]) =
-    this(name = getOrDefault(m, "name", "sparkpi"),
-      input = m.get("input").map(_.asInstanceOf[String]),
-      output = None,
-      slices = getOrDefault(m, "slices", 2)
-
-    )
 
   // Taken directly from Spark Examples:
   // https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/SparkPi.scala
