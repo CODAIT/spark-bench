@@ -78,9 +78,9 @@ object GeneralFunctions {
     case _ => throw SparkBenchException(errorMessage)
   }
 
-  def getOrThrow[A](opt: Option[A]): A = opt match {
+  def getOrThrow[A](opt: Option[A], msg: String = "Empty option"): A = opt match {
     case Some(x) => x
-    case _ => throw SparkBenchException("Error: empty option")
+    case _ => throw SparkBenchException(s"Error: $msg")
   }
 
   def getOrThrow(m: Map[String, Any], key: String): Any = getOrThrow(m.get(key))

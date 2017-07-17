@@ -42,8 +42,8 @@ object SparkLaunch extends App {
 
   def launch(conf: SparkLaunchConf): Unit = {
     val argz: Array[String] = conf.toSparkArgs
-    val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"))
-    val submitCmd = s"""$sparkHome/bin/spark-submit ${argz.mkString(" ")}"""
+    val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"), "The environment variable SPARK_HOME must be set")
+    val submitCmd = (Seq(s"$sparkHome/bin/spark-submit") ++ argz).mkString(" ")
     println(s" *** SPARK-SUBMIT: $submitCmd")
     val returnCode: Int = submitCmd.!
     if (returnCode != 0) {
