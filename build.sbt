@@ -106,8 +106,8 @@ lazy val `spark-launch` = project
     name := "spark-bench-launch",
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchLaunchJar.value}"),
-    libraryDependencies ++= sparkDeps,
     libraryDependencies ++= testDeps,
+    libraryDependencies ++= sparkDeps,
     libraryDependencies ++= typesafe
   )
   .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile;test->test")
