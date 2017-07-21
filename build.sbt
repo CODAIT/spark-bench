@@ -100,7 +100,7 @@ lazy val `spark-launch` = project
       log.info("Assembling spark-bench and custom-workload JARs...")
       (assembly in Compile in cli).value // This is the magic sauce
       log.info("Moving assembled JARs to resources folder for test")
-      s"mkdir ${sparklaunchTestResourcesJarsFile.value}".!
+      s"mkdir -p ${sparklaunchTestResourcesJarsFile.value}".!
       s"cp ${assemblyFile.value}/${sparkBenchJar.value} ${sparklaunchTestResourcesJarsFile.value}".!
       val customTestJar = (Keys.`package` in Compile in `test-workloads`).value
       s"cp $customTestJar ${sparklaunchTestResourcesJarsFile.value}".!
