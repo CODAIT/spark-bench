@@ -85,15 +85,22 @@ lazy val `test-workloads` = project
     that's accessible to the test code for spark-launch.
  */
 val moveJar = TaskKey[Unit]("moveJars", "move the assembled jars for spark-launch test")
+val removeJar = TaskKey[Unit]("removeJars", "deletes the jars from the test resources folder")
 
 lazy val `spark-launch` = project
   .settings(
-
+    removeJar := {
+      val log = streams.value.log
+      log.info("Removing cli jars assembled for test.")
+      s"rm -rf ${sparklaunchTestResourcesJarsFile.value}".!
+      log.info("Done removing jars")
+    },
     moveJar in Test := {
       val log = streams.value.log
       log.info("Assembling spark-bench and custom-workload JARs...")
       (assembly in Compile in cli).value // This is the magic sauce
       log.info("Moving assembled JARs to resources folder for test")
+      s"mkdir -p ${sparklaunchTestResourcesJarsFile.value}".!
       s"cp ${assemblyFile.value}/${sparkBenchJar.value} ${sparklaunchTestResourcesJarsFile.value}".!
       val customTestJar = (Keys.`package` in Compile in `test-workloads`).value
       s"cp $customTestJar ${sparklaunchTestResourcesJarsFile.value}".!
@@ -107,7 +114,11 @@ lazy val `spark-launch` = project
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchLaunchJar.value}"),
     libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= testDeps,
+    libraryDependencies ++= Seq(
+      "junit"             % "junit"              % junitVersion       % "test",
+      "org.scalacheck"   %% "scalacheck"         % scalacheckVersion  % "test",
+      "org.scalactic"    %% "scalactic"          % scalatestVersion   % "test",
+      "org.scalatest"    %% "scalatest"          % scalatestVersion   % "test"),
     libraryDependencies ++= typesafe
   )
   .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile;test->test")
@@ -202,3 +213,5 @@ rmTemp := {
 dist := (dist dependsOn assembly).value
 
 clean := (clean dependsOn rmDist dependsOn rmTemp).value
+
+clean := (clean dependsOn (removeJar in Test in `spark-launch`)).value

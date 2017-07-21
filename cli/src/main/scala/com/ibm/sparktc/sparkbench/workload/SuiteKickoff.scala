@@ -63,7 +63,7 @@ object SuiteKickoff {
     s.description.foreach(println)
     // And now we're going to curry in the results
     val plusSparkConf = addConfToResults(singleDF, strSparkConfs)
-    val plusDescription = addConfToResults(plusSparkConf, Map("description" -> s.description))
+    val plusDescription = addConfToResults(plusSparkConf, Map("description" -> s.description)).coalesce(1)
     // And write to disk. We're done with this suite!
     writeToDisk(s.benchmarkOutput, plusDescription, spark)
   }

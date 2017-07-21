@@ -17,6 +17,7 @@
 - [Suites](#suites)
 - [Spark-Submit-Configs](#spark-submit-configs)
 - [Levels and Combinations of Parallelism](#levels-and-combinations-of-parallelism)
+  - [Minimal spark-bench Config File](#minimal-spark-bench-config-file)
   - [Classic Benchmarking](#classic-benchmarking)
   - [Classic Benchmarking Across Systems](#classic-benchmarking-across-systems)
   - [Same Algorithm, Different Spark Settings](#same-algorithm-different-spark-settings)
