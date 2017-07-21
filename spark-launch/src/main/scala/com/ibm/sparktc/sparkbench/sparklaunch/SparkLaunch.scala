@@ -1,6 +1,5 @@
 package com.ibm.sparktc.sparkbench.sparklaunch
 
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 import com.typesafe.config._
 import java.io.File
 import scala.collection.parallel.ForkJoinTaskSupport
@@ -42,11 +41,9 @@ object SparkLaunch extends App {
 
   def launch(conf: SparkLaunchConf): Unit = {
     val argz: Array[String] = conf.toSparkArgs
-    val sparkHome = getOrThrow(sys.env.get("SPARK_HOME"), "The environment variable SPARK_HOME must be set")
-    val submitCmd = (Seq(s"$sparkHome/bin/spark-submit") ++ argz).mkString(" ")
-    println(s" *** SPARK-SUBMIT: $submitCmd")
-    val returnCode: Int = submitCmd.!
-    if (returnCode != 0) {
+    val submitProc = Process(Seq(s"${conf.sparkHome}/bin/spark-submit") ++ argz, None, "SPARK_HOME" -> conf.sparkHome)
+    println(" *** SPARK-SUBMIT: " + submitProc.toString)
+    if (submitProc.! != 0) {
       throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${argz.mkString(" ")}")
     }
   }
