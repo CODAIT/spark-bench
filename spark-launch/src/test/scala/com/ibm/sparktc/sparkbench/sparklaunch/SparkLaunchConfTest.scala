@@ -21,9 +21,9 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val conf1 = sparkContextConfs.head._1
 
     val expectedSparkConfs = Array(
-      "--conf spark.shuffle.service.enabled=false",
-      "--conf spark.fake=yes",
-      "--conf spark.dynamicAllocation.enabled=false"
+      "--conf", "spark.shuffle.service.enabled=false",
+      "--conf", "spark.fake=yes",
+      "--conf", "spark.dynamicAllocation.enabled=false"
     )
 
     conf1.sparkConfs shouldBe expectedSparkConfs
