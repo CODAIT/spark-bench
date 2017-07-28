@@ -14,6 +14,7 @@ import org.apache.log4j.Level;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.apache.spark.broadcast.Broadcast;
 import scala.Tuple2;
 
 import org.apache.spark.api.java.*;
@@ -97,12 +98,13 @@ public class SVMApp {
     // Clear the default threshold.
     start = System.currentTimeMillis();
     model.clearThreshold();
+    Broadcast<SVMModel> modelBC = sc.broadcast(model);
     System.out.println("predict score and labels " );
     // Compute raw scores on the test set.
     JavaRDD<Tuple2<Object, Object>> scoreAndLabels = test.map(
         new Function<LabeledPoint, Tuple2<Object, Object>>() {
           public Tuple2<Object, Object> call(LabeledPoint p) {
-            Double score = model.predict(p.features());
+            Double score = modelBC.getValue().predict(p.features());
             return new Tuple2<Object, Object>(score, p.label());
           }
         }
