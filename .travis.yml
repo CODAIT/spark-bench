@@ -1,0 +1,52 @@
+branches:
+  except:
+  - "/^v[0-9]/"
+language: scala
+scala:
+- 2.11.8
+jdk:
+- oraclejdk8
+sudo: false
+# These directories are cached to S3 at the end of the build
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+before_cache:
+# Cleanup the cached directories to avoid unnecessary cache updates
+- find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+- find $HOME/.sbt        -name "*.lock"               -print -delete
+install:
+- sh -x travis-shell-scripts/install-spark.sh
+sbt_args:
+- "-Xmx1536M"
+- "-XX:+UseConcMarkSweepGC"
+- "-XX:+CMSClassUnloadingEnabled"
+- "-Xss2M"
+script:
+- sbt clean coverage test coverageReport
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+notifications:
+  email:
+    recipients:
+    - ecurtin@us.ibm.com
+before_deploy:
+- sh travis-shell-scripts/set_tags.sh
+- sbt dist
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: "${GH_TOKEN}"
+  file_glob: true
+  file: spark-bench_*.tgz
+  on:
+    tags: false
+    repo: ecurtin/spark-bench
+    branch:
+    - master
+env:
+  global:
+  - SPARK_HOME=/home/travis/spark-2.1.1-bin-hadoop2.7
+  - secure: JS/rka6JhO1QeDm24KcOfb5rdvgi3yu0HnCxdSbFRosJLOiFbRLft8TYac0bapfB4JinYHHdghLThIbFxZBCJ1i0vYKp+XA0k5Y0iI7JjTf8TbwbNPpqaHd++ST60oMUJlnn47ZWrnmEg0sp5+iHseyUR66TNJ0VyLWpNS5c1xsYkdepZfKJegolCI/0naTw/c5BBNkIEqQqtATZGEe5XsqyiqMBpM9ZSLKvWQXuxQQlC5bJnmuV53meIjhDbGEpsaxIXkJKdwP5PPS/wGktVS1m4THy8egpY6oKGN4x8rL6lofZEX1qD6bG/m2MOlFLt77+Qd6VDxTZAn/dQt0aDnL71mVSs3tXjgC5/UB4Yg2kFwPWkSk+v9HwgNA6uP34M6a3gVeVWK6uNEJ+D6goUboXvgLH6BFDhquhoNWEgDcYmULGHuq/X/wrMgW1RTZmB89NZBdWKY7rvzDC1zR6qOZLZivSuqjaJrpd85pGXyCIt7JAalZXkD8GdZwzsW4ypqVnQrfnt42EGaXDXGIQwk4vRa9BXG3cK1A8jmpAgRT9+LJ4/uSFVS6r2MYbrxMSr/Xu6wRxcyciURF2btJmRQZZu36i5yrhhlKkEUZi9M68OHvdRN15jKW2MI/9QZxMYluycqRdndzJqwuBAAY4PFaZWpOhtUpo+HCGGWvXHg0=
