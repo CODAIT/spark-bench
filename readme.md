@@ -1,11 +1,22 @@
 # spark-bench
 ## Benchmark Suite for Apache Spark
 
+<!-- will reinstate this with new links when SparkTC/spark-bench gets re-enrolled in TravisCI
 [![Build Status](https://travis-ci.org/ecurtin/spark-bench.svg?branch=master)](https://travis-ci.org/ecurtin/spark-bench)
 [![codecov](https://codecov.io/gh/ecurtin/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/ecurtin/spark-bench)
+-->
 
+# Current VS. Legacy Version
 
-### Current Spark and spark-bench version: 2.1.0
+spark-bench has recently gone through an extensive rewrite.
+While we think you'll like the new capabilities, it is not quite feature complete with the previous version of spark-bench.
+Many of the workloads that were available in the legacy have not yet been ported over, but they will be!
+
+In the meantime, if you would like to see the old version of spark-bench, it's preserved in [the legacy branch](https://github.com/SparkTC/spark-bench/tree/legacy).
+
+You can also grab the last official release of the legacy version [from here](https://github.com/SparkTC/spark-bench/releases/tag/SparkBench_spark-v1.6).
+
+## Current Spark version supported by spark-bench: 2.1.1
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
