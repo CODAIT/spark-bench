@@ -1,155 +1,101 @@
-# Benchmark Suite for Apache Spark #
+# spark-bench
+## Benchmark Suite for Apache Spark
 
-- Current version: 2.0
-- Release date: 2015-5-10
+[![Build Status](https://travis-ci.org/ecurtin/spark-bench.svg?branch=master)](https://travis-ci.org/ecurtin/spark-bench)
+[![codecov](https://codecov.io/gh/ecurtin/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/ecurtin/spark-bench)
 
-- Contents:
 
-  1. Overview
-  2. Getting Started
-  3. Advanced Configuration
-  4. Possible Issues
+### Current Spark and spark-bench version: 2.1.0
 
----
-### OVERVIEW ###
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# Table of Contents
 
-**What's Benchmark Suite for Apache Spark ?**
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Building It Yourself](#building-it-yourself)
+- [Running the Examples From The Distribution](#running-the-examples-from-the-distribution)
+  - [Creating the Distribution Folder](#creating-the-distribution-folder)
+  - [Setting Environment Variables](#setting-environment-variables)
+  - [Running the Examples](#running-the-examples)
+- [Remember, there's more documentation, but it's not in this readme!](#remember-theres-more-documentation-but-its-not-in-this-readme)
 
-Spark-Bench is a benchmarking suite specific for Apache Spark.
-It comprises a representative and comprehensive set of workloads belonging to four different application types that currently supported by Apache Spark, including machine learning, graph processing, streaming and SQL queries.
-
-The chosen workloads exhibit different workload characteristics and exercise different system bottlenecks; currently we cover CPU, memory, and shuffle and IO intensive workloads.
-
-It also includes a data generator that allows users to generate arbitrary size of input data.
-
-**Why the Benchmark Suite for Apache Spark ?**
-
-While Apache Spark has been evolving rapidly, the community lacks a comprehensive benchmarking suite specifically tailored for Apache Spark. The purpose of such a suite is to help users to understand the trade-off between different system designs, guide the configuration optimization and cluster provisioning for Apache Spark deployments. In particular, there are four main use cases of Spark-Bench.
-	
-Usecase 1. It enables quantitative comparison for Apache Spark system optimizations such as caching policy and memory management optimization, scheduling policy optimization. Researchers and developers can use Spark-Bench to comprehensively evaluate and compare the performance of their optimization and the vanilla Apache Spark. 
-	
-Usecase 2. It provides quantitative comparison for different platforms and hardware cluster setups such as Google cloud and Amazon cloud. 
-	
-Usecase 3. It offers insights and guidance for cluster sizing and provision. It also helps to identify the bottleneck resources and minimize the impact of resource contention.
-	
-Usecase 4. It allows in-depth study of performance implication of Apache Spark system in various aspects including workload characterization, the study of parameter impact, scalability and fault tolerance behavior of Apache Spark system.
-	
-**Machine Learning Workloads:**
-
-- Logistic Regression
-- Support Vector Machine
-- Matrix Factorization
-
-**Graph Computation Workloads:**
-
-- PageRank
-- SVD++
-- Triangle Count
-
-**SQL Workloads:**
-
-- Hive
-- RDD Relation
-
-**Streaming Workloads:**
-
-- Twitter Tag
-- Page View
-
-**Other Workloads:**
-
-- KMeans, LinearRegression, DecisionTree, ShortestPaths, LabelPropagation, ConnectedComponent, StronglyConnectedComponent, PregelOperation
-
-**Supported Apache Spark releases:**
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
  
-  - Spark 2.0.1, this code is branched for release 2.0.1, note that these versions need a later version of scala and as such there are changes to pom files. 
+## Documentation
+The [docs](docs) folder in this repo has several documents to help you on your spark-bench journey to greatness.
+
+[understanding-spark-bench](docs/understanding-spark-bench.md) Is the best starting point.
  
----
-### Getting Started ###
+## Installation 
 
-1. System setup and compilation.
-
-	Setup JDK, Apache Hadoop-YARN, Apache Spark runtime environment properly.
-	
-	Download  wikixmlj package:
-	cd to a directory for download and type the next commands
-	```
-		git clone https://github.com/synhershko/wikixmlj.git
-		cd wikixmlj
-		mvn package install
-	```
-	Download/checkout Spark-Bench benchmark suite
-
-	Run `<SPARK_BENCH_HOME>/bin/build-all.sh` to build Spark-Bench.
-	
-	Copy `<SparkBench_Root>/conf/env.sh.template` to `<SparkBench_Root>/conf/env.sh`, and set it according to your cluster.
-	
-2. Spark-Bench Configurations.
-	
-	Make sure below variables has been set:
-	
-	SPARK_HOME    The Spark installation location  
-	HADOOP_HOME   The HADOOP installation location  
-	SPARK_MASTER  Spark master  
-	HDFS_MASTER	  HDFS master  
-
-    Local mode:         
-            `DATA_HDFS="file:///home/`whoami`/SparkBench"`
-            `SPARK_MASTER=local[2]`
-            `MC_List=""`
+1. Grab the latest release from here: <https://github.com/ecurtin/spark-bench/releases/latest>.
+2. Unpack the tarball using `tar -xvzf`.
+3. `cd` into the newly created folder.
+4. Modify `SPARK_HOME` and `SPARK_MASTER_HOST` in `bin/spark-bench-env.sh` to reflect your environment. 
+5. Start using spark-bench!
 
 
-3. Execute.
+## Building It Yourself
 
-    **Scala version:**
-    
-	`<SPARK_BENCH_HOME>/<Workload>/bin/gen_data.sh`  
-	`<SPARK_BENCH_HOME>/<Workload>/bin/run.sh`
-	
-    **Java version:**
-    
-	`<SparkBench_Root>/<Workload>/bin/gen_data_java.sh`  
-	`<SparkBench_Root>/<Workload>/bin/run_java.sh`	
-	
-	**Note for SQL applications**
-	
-	For SQL applications, by default it runs the RDDRelation workload.
-	To run Hive workload, execute `<SPARK_BENCH_HOME>/SQL/bin/run.sh hive`;
-	
-	**Note for streaming applications**
-	For Streaming applications such as TwitterTag,StreamingLogisticRegression
-	First, execute `<SPARK_BENCH_HOME>/Streaming/bin/gen_data.sh` in one terminal;
-	Second, execute `<SPARK_BENCH_HOME>/Streaming/bin/run.sh` in another terminal;
+Alternatively, you can also clone this repo and build it yourself. 
 
-        In order run a particular streaming app (default: PageViewStream):
-            You need to pass a subApp parameter to the gen_data.sh or run.sh like this:
-                  <SPARK_BENCH_HOME>/Streaming/bin/run.sh TwitterPopularTags
-            *Note: some subApps do not need the data_gen step. In those you will get a "no need" string in the output.
+First, install SBT according to the instructions for your system: <http://www.scala-sbt.org/0.13/docs/Setup.html>
 
-        You can make a certain subApp default by changing Streaming/conf/env.sh and changing the subApp= line with your choice of the streaming application.
-	
-    In addition, StreamingLogisticRegression requires the `gen_data.sh` and `run.sh` scripts which
-	launches Apache Spark applications can run simultaneously.
-4. View the result.
+Clone this repo.
+```bash
+git clone https://github.com/ecurtin/spark-bench.git
+cd spark-bench/
+```
+The latest changes will always be on develop, the stable version is master. Optionally check out develop here, or skip this step to stay on master.
+```bash
+git checkout develop
+```
+Building spark-bench takes more heap space than the default provided by SBT. There are several ways to set these options for SBT, 
+this is just one. I recommend adding the following line to your bash_profile:
+```bash
+export SBT_OPTS="-Xmx1536M -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss2M"
+```
+Now you're ready to test spark-bench, if you so desire.
+```bash
+sbt test
+```
+And finally to build the distribution folder and associated tar file.
+```bash
+sbt dist
+```
 
-	Goto `<SPARK_BENCH_HOME>/report` to check for the final report.
 
----
-### Advanced Configurations ###
+## Running the Examples From The Distribution
 
-1. Configuration for running workloads.
+The spark-bench distribution comes bundled with example scripts and configuration files that should run out out the box
+with only very limited setup.
 
-	The `<SPARK_BENCH_HOME>/bin/applications.lst` file defines the workloads to run when you execute the bin/run-all.sh script under the package folder. Each line in the list file specifies one workload. You can use # at the beginning of each line to skip the corresponding bench if necessary.
+### Creating the Distribution Folder
+If you installed spark-bench by unpacking the tar file, you're ready to go. If you cloned the repo, first run
+`sbt dist` and then change into that generated folder.
 
-	You can also run each workload separately. In general, there are 3 different files under one workload folder.
+### Setting Environment Variables
+Inside the `bin` folder is a file called `spark-bench-env.sh`. In this folder are two environment variables
+that you will be required to set. The first is `SPARK_HOME` which is simply the full path to the top level of your
+Spark installation on your laptop or cluster. The second is SPARK_MASTER_HOST which is the same as what you
+would enter as `--master` in a spark submit script for this environment. This might be `local[2]` on your laptop,
+`yarn` on a Yarn cluster, an IP address and port if you're running in standalone mode, you get the idea!
 
-	`<Workload>/bin/config.sh`      change the workload specific configurations  
-	`<Workload>/bin/gen_data.sh`  
-	`<Workload>/bin/run.sh`  
+You can set those environment variables in your bash profile or by uncommenting the lines in `spark-bench-env.sh`
+and filling them out in place.
 
-2. Apache Spark configuration.
+### Running the Examples
+From the spark-bench distribution file, simply run:
 
-	spark.executors.memory                Executor memory, standalone or YARN mode
-    	spark.driver.memory                   Driver memory, standalone or YARN mode
-	spark.rdd.cache
+```bash
+./examples/multi-submit-sparkpi/multi-submit-example.sh
+```
 
+The example scripts and associated configuration files are a great starting point for learning spark-bench by example.
+The kmeans example shows some examples of using the spark-bench CLI while the multi-submit example shows more
+thorough usage of a configuration file.
+
+## Remember, there's more documentation, but it's not in this readme!
+
+To read more about spark-bench, start with [docs/understanding-spark-bench.md](docs/understanding-spark-bench.md)
