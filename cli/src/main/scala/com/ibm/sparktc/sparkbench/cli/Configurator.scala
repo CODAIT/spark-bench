@@ -4,6 +4,7 @@ import java.io.File
 import java.util
 
 import com.ibm.sparktc.sparkbench.utils.SparkBenchException
+import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.configToMapStringAny
 
 import scala.collection.JavaConverters._
 import com.ibm.sparktc.sparkbench.workload.{MultiSuiteRunConfig, Suite}
@@ -42,7 +43,7 @@ object Configurator {
     val parallel: Boolean = Try(config.getBoolean("parallel")).getOrElse(false)
     val repeat: Int = Try(config.getInt("repeat")).getOrElse(1)
     val output: String = config.getString("benchmark-output") // throws exception
-    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(configToMap)
+    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(configToMapStringAny)
 
     Suite.build(
       workloads,
@@ -53,18 +54,6 @@ object Configurator {
     )
   }
 
-  def configToMap(config: Config): Map[String, Seq[Any]] = {
-    val cfgObj = config.root()
-    val unwrapped = cfgObj.unwrapped().asScala.toMap
-    val stuff: Map[String, Seq[Any]] = unwrapped.map(kv => {
-      val newValue: Seq[Any] = kv._2 match {
-        case al: util.ArrayList[Any] => al.asScala
-        case b: Any => Seq(b)
-//        case _ => throw SparkBenchException(s"Key ${kv._1} with value ${kv._2} had an unexpected type: ${kv._2.getClass.toString}")
-      }
-      kv._1 -> newValue
-    })
-    stuff
-  }
+
 
 }
