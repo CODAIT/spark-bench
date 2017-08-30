@@ -36,6 +36,7 @@ lazy val utils = project
   .settings(
     commonSettings,
     libraryDependencies ++= sparkDeps,
+    libraryDependencies ++= typesafe,
     libraryDependencies ++= testDeps
   )
 
@@ -80,7 +81,7 @@ lazy val `test-workloads` = project
   .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile")
 
 /*
-    spark-launch relies on having the cli uber jar to launch through spark-submit. So
+    spark-launch relies on having the cli fat jar to launch through spark-submit. So
     in order to test spark-launch, we have to assemble the cli jar and move it into a folder
     that's accessible to the test code for spark-launch.
  */
@@ -98,7 +99,7 @@ lazy val `spark-launch` = project
     moveJar in Test := {
       val log = streams.value.log
       log.info("Assembling spark-bench and custom-workload JARs...")
-      (assembly in Compile in cli).value // This is the magic sauce
+      (assembly in Compile in cli).value
       log.info("Moving assembled JARs to resources folder for test")
       s"mkdir -p ${sparklaunchTestResourcesJarsFile.value}".!
       s"cp ${assemblyFile.value}/${sparkBenchJar.value} ${sparklaunchTestResourcesJarsFile.value}".!
@@ -114,11 +115,8 @@ lazy val `spark-launch` = project
     mainClass in assembly := Some("com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"),
     assemblyOutputPath in assembly := new File(s"${assemblyFile.value}/${sparkBenchLaunchJar.value}"),
     libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= Seq(
-      "junit"             % "junit"              % junitVersion       % "test",
-      "org.scalacheck"   %% "scalacheck"         % scalacheckVersion  % "test",
-      "org.scalactic"    %% "scalactic"          % scalatestVersion   % "test",
-      "org.scalatest"    %% "scalatest"          % scalatestVersion   % "test"),
+    libraryDependencies ++= otherCompileDeps,
+    libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe
   )
   .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile;test->test")
