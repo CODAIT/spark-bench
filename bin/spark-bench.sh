@@ -1,13 +1,21 @@
 #!/bin/bash
+set -eu
 
-WHEREILIVE=$(realpath $0)
-BASEDIR=$(dirname "$WHEREILIVE")
-PARENTDIR=$(dirname "$BASEDIR")
+bin=$(dirname $(realpath $0))
+basedir=$(dirname "$bin")
+if [[ -d "$basedir/lib" ]]
+    then jars="$basedir/lib"
+elif [[ -d "$basedir/target/assembly" ]]
+    then jars="$basedir/target/assembly"
+else
+    echo "Could not find spark-bench JARs." >&2
+    exit 1
+fi
 
-[[ -f "$BASEDIR/spark-bench-env.sh" ]] && source "$BASEDIR/spark-bench-env.sh"
+[[ -f "$bin/spark-bench-env.sh" ]] && source "$bin/spark-bench-env.sh"
 
-SPARK_BENCH_LAUNCH_JAR=$(ls "$PARENTDIR"/lib/spark-bench-launch*.jar)
-MAIN_CLASS="com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"
-SPARK_BENCH_JAR=$(ls "$PARENTDIR"/lib/spark-bench-[0-9]*.jar)
+mainclass="com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"
+launchjar=$(ls "$jars"/spark-bench-launch-[0-9]*.jar)
+sparkbenchjar=$(ls "$jars"/spark-bench-[0-9]*.jar)
 
-java -cp "$SPARK_BENCH_LAUNCH_JAR" "$MAIN_CLASS" "$@"
+java -cp "$launchjar" "$mainclass" "$@"
