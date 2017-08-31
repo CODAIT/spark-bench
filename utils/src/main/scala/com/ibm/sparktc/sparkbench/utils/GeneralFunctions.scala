@@ -85,6 +85,11 @@ object GeneralFunctions {
 
   def getOrThrow(m: Map[String, Any], key: String): Any = getOrThrow(m.get(key))
 
+  def optionallyGet[A](m: Map[String, Any], key: String): Option[A] = m.get(key) match {
+    case None => None
+    case Some(any) => Some(any.asInstanceOf[A])
+  }
+
   def stringifyStackTrace(e: Throwable): String = {
     import java.io.PrintWriter
     val sw = new StringWriter()
