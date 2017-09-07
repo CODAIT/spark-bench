@@ -1,3 +1,4 @@
+dist: precise
 branches:
   except:
   - "/^v[0-9]/"
