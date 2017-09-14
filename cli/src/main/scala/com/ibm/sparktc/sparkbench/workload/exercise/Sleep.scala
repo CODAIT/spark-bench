@@ -14,24 +14,15 @@ case class SleepResult(
 
 object Sleep extends WorkloadDefaults {
 
-  def optionAnyToOptionLong(a: Option[Any]): Option[Long] = a match {
-    case None => None
-    case Some(any) => Some(any2Long(any))
-  }
-
-
   val name = "sleep"
   def apply(m: Map[String, Any]): Sleep = {
 
-    val sleepMS: Option[Long] = m.get("sleepms") match {
-      case None => None
-      case Some(any) => Some(any2Long(any))
-    }
+    val sleepMS: Option[Long] = m.get("sleepms").map(any2Long)
     val distribution: Option[String] = m.get("distribution").asInstanceOf[Option[String]]
     val distributionMean: Option[Double] = m.get("mean").asInstanceOf[Option[Double]]
     val distributionStd: Option[Double] = m.get("std").asInstanceOf[Option[Double]]
-    val distributionMin: Option[Long] = optionAnyToOptionLong(m.get("min"))
-    val distributionMax: Option[Long] = optionAnyToOptionLong(m.get("max"))
+    val distributionMin: Option[Long] = m.get("min").map(any2Long)
+    val distributionMax: Option[Long] = m.get("max").map(any2Long)
 
     def buildWithDist(dist: String) = dist match {
       case "uniform" => buildWithUniform(distributionMin, distributionMax)
@@ -45,20 +36,20 @@ object Sleep extends WorkloadDefaults {
     }
 
     (sleepMS, distribution) match {
-      case (Some(sleep), Some(dist)) => throw  SparkBenchException("Cannot specify both sleepMS and a distribution. " +
-        "Please modify your config file.")
       case (Some(sleep), None) => buildWithSleepMS(sleep)
-      case (None, None) => throw SparkBenchException("The Sleep workload requires either a time specified by sleepMS " +
-        "or a distribution from which to choose a time. Please modify your config file.")
       case (None, Some(dist)) => buildWithDist(dist)
+      case _ => throw SparkBenchException("The Sleep workload requires either a time specified by sleepMS " +
+        "or a distribution from which to choose a time. Please modify your config file.")
     }
-
   }
 
-  def buildWithSleepMS(long: Long) = long match {
-    case x if long <= 0 => throw SparkBenchException("The time specified by sleepMS must be greater than or equal to zero. " +
-      "Please modify your config file.")
-    case y if long > 0 =>  new Sleep( sleepMS = long )
+  def buildWithSleepMS(long: Long): Sleep = {
+    if (long <= 0 )
+      throw SparkBenchException("The time specified by sleepMS must be greater than or equal to zero. " +
+        "Please modify your config file.")
+    else
+      new Sleep( sleepMS = long )
+
   }
 
 
@@ -92,11 +83,7 @@ object Sleep extends WorkloadDefaults {
     val adjustedMax: Long = max match {
       case None => throw SparkBenchException("Using the uniform distribution for the Sleep workload " +
         "requires a value for \"distributionMax\". Please modify your config file.")
-      case Some(m) => {
-        val x = any2Long(m)
-        val y = x - minimum
-        y
-      }
+      case Some(m) => any2Long(m) - minimum
     }
 
     val sleepTime = uniformRandomDraw(adjustedMax) + minimum
