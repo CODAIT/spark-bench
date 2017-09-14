@@ -66,7 +66,8 @@ lazy val cli = project
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps,
-    libraryDependencies ++= typesafe
+    libraryDependencies ++= typesafe,
+    libraryDependencies ++= breezeDeps
   )
   .dependsOn(utils % "compile->compile;test->test")
   .aggregate(utils)

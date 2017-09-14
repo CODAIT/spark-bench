@@ -42,7 +42,7 @@ object KMeansWorkload extends WorkloadDefaults {
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     k = getOrDefault[Int](m, "k", numOfClusters),
-    seed = getOrDefault(m, "seed", seed, any2Int2Long),
+    seed = getOrDefault(m, "seed", seed, any2Long),
     maxIterations = getOrDefault[Int](m, "maxiterations", maxIteration))
 
 }

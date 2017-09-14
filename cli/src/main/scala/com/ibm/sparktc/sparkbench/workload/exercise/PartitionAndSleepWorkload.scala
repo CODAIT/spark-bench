@@ -15,7 +15,7 @@ object PartitionAndSleepWorkload extends WorkloadDefaults {
     input = None,
     output = None,
     partitions = getOrDefault[Int](m, "partitions", partitions),
-    sleepMS = getOrDefault[Long](m, "sleepms", sleepms, any2Int2Long))
+    sleepMS = getOrDefault[Long](m, "sleepms", sleepms, any2Long))
 }
 
 case class PartitionAndSleepWorkload(input: Option[String] = None,

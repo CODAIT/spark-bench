@@ -14,6 +14,15 @@ object Dependencies {
     "org.apache.spark" %% "spark-sql"   % sparkVersion % "provided"
   )
 
+  //According to Breeze documentation, SBT 0.13.3+ requires this crazy thing
+  val breezeDeps = Seq(
+    "com.github.fommil.netlib" % "all" % "1.1.2" pomOnly(),
+
+  "org.scalanlp" % "breeze_2.11" % "0.13.2"
+//    ,
+//    "org.scalanlp" %% "breeze-natives" % "0.13.2"
+  )
+
   val otherCompileDeps = Seq(
 //    "org.jblas" % "jblas" % "1.2.4"
   )
@@ -24,7 +33,7 @@ object Dependencies {
     "org.scalactic"    %% "scalactic"          % scalatestVersion   % "test",
     "org.scalatest"    %% "scalatest"          % scalatestVersion   % "test",
     "org.apache.spark" %% "spark-hive"         % sparkVersion       % "test",
-    "com.holdenkarau"  %% "spark-testing-base" % "2.1.0_0.6.0"      % "test" excludeAll(
+    "com.holdenkarau"  %% "spark-testing-base" % "2.1.1_0.7.2"      % "test" excludeAll(
       ExclusionRule(organization = "org.scalacheck"),
       ExclusionRule(organization = "org.scalactic"),
       ExclusionRule(organization = "org.scalatest"),
