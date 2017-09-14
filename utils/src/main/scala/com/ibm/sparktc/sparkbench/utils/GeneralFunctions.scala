@@ -7,33 +7,9 @@ import scala.util.{Failure, Random, Success, Try}
 
 object GeneralFunctions {
 
-  val any2Int2Long = (a: Any) => Try{
-    val x = a.asInstanceOf[Int]
-    x.toLong
-  } match {
-    case Success(l) => l
-    case Failure(ex) => throw ex
+  val any2Long = (a: Any) => {
+    a.asInstanceOf[Number].longValue()
   }
-
-//  def getOrDefault[A](
-//                       map: Map[String, Any],
-//                       name: String, default: A,
-//                       optFunc: Option[(Any) => A] = None
-//                     ): A ={
-//    val optA: Option[Any] = map.get(name)
-//
-//    val castedValue: Option[A] = optA match {
-//      case Some(b) => Try(b.asInstanceOf[A]).toOption
-//      case None => None
-//    }
-//
-//    (optA, castedValue, optFunc) match {
-//      case (None, _, _) => default
-//      case (Some(a), Some(v), _) => v
-//      case (Some(a), None, Some(f)) => f(a)
-//      case (_, _, _) => default
-//    }
-//  }
 
   def getOrDefault[A](
                        map: Map[String, Any],
@@ -52,6 +28,22 @@ object GeneralFunctions {
     }
   }
 
+  def getOrDefaultOpt[A](
+                       opt: Option[Any],
+                       default: A,
+                       func: (Any) => A = {(any: Any) => any.asInstanceOf[A]}
+                     ): A = {
+
+    val any = opt match {
+      case None => return default
+      case Some(a) => a
+    }
+
+    Try(func(any)) match {
+      case Success(b) => b
+      case Failure(_) => default
+    }
+  }
 
   def time[R](block: => R): (Long, R) = {
     val t0 = System.nanoTime()
