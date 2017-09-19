@@ -1,10 +1,8 @@
 # spark-bench
 ## Benchmark Suite for Apache Spark
 
-<!-- will reinstate this with new links when SparkTC/spark-bench gets re-enrolled in TravisCI
-[![Build Status](https://travis-ci.org/ecurtin/spark-bench.svg?branch=master)](https://travis-ci.org/ecurtin/spark-bench)
-[![codecov](https://codecov.io/gh/ecurtin/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/ecurtin/spark-bench)
--->
+[![Build Status](https://travis-ci.org/SparkTC/spark-bench.svg?branch=master)](https://travis-ci.org/SparkTC/spark-bench)
+[![codecov](https://codecov.io/gh/SparkTC/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/SparkTC/spark-bench)
 
 # Current VS. Legacy Version
 
