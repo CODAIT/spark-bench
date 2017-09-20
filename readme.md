@@ -3,6 +3,7 @@
 
 [![Build Status](https://travis-ci.org/SparkTC/spark-bench.svg?branch=master)](https://travis-ci.org/SparkTC/spark-bench)
 [![codecov](https://codecov.io/gh/SparkTC/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/SparkTC/spark-bench)
+<a href="https://github.com/SparkTC/spark-bench#boards?repos=40686427"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
 # Current VS. Legacy Version
 
