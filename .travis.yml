@@ -39,15 +39,14 @@ deploy:
   skip_cleanup: true
   provider: releases
   api_key:
-    secure: "${GH_TOKEN}"
+    secure: gkFq/Heisi7AJmJ4kdQALAjun7hjdIyjUkTcyqBzBEooL4k/j+1lW3CBDdOgSW4Kn4Juq2/jVuV0iyK/G3Btwinh2H3Fgc+bKJ/QxCCV6OhDXm4aYI9FFOw696glgPZPhFccSwBHZFiKmJ7rXThL8apdLMvhRYIOR+idj3Y/PoVOxXMt8eb+L8NGENtbEqPL+7dtKQuoQsGPTjyu29Bg1XPw5UXB/Dvsbuxl5Sf3XKivo9qoEbUTAbrg3lP7YKgyGaDJ17iM5J8R25zzYgxS1MZZ5eGuQ4qty3aMzhTLV8dKPGWeNI/6fQUKxF1VnKBb9LinksEUbOhidzdQA/FActWakV/h/amBcGYYy0vXKhtrPd/y672wWae0OUyAPtlzOFxLBRb5OwAlBy5b7hD3bsIgfmAdU6ONF73H2Hu04/NGVY5OEfNFzl0RlIyN0f+oDVZmA97ODR/MMi1Hd/VyuqRw7u6Z0YYEOwE8HFETWHgRTDcbv8Xl3vDRz9fLcYb3Nj312np/oazk9VucgezozSScpPZS5hCB/7Qp3900UnTZghOcqnkWr98QqTbEl7FYMSDT/bGS8RDsI/3mWnOl3heCDucFOIfPPDs3h24SXltnKSukiR3wvyPelh4gadJvkSBYfhxdFanv2IeqN4RHttmR1GdqPebqJMOCUWCpYIQ=
   file_glob: true
   file: spark-bench_*.tgz
   on:
     tags: false
-    repo: ecurtin/spark-bench
+    repo: SparkTC/spark-bench
     branch:
     - master
 env:
   global:
   - SPARK_HOME=/home/travis/spark-2.1.1-bin-hadoop2.7
-  - secure: JS/rka6JhO1QeDm24KcOfb5rdvgi3yu0HnCxdSbFRosJLOiFbRLft8TYac0bapfB4JinYHHdghLThIbFxZBCJ1i0vYKp+XA0k5Y0iI7JjTf8TbwbNPpqaHd++ST60oMUJlnn47ZWrnmEg0sp5+iHseyUR66TNJ0VyLWpNS5c1xsYkdepZfKJegolCI/0naTw/c5BBNkIEqQqtATZGEe5XsqyiqMBpM9ZSLKvWQXuxQQlC5bJnmuV53meIjhDbGEpsaxIXkJKdwP5PPS/wGktVS1m4THy8egpY6oKGN4x8rL6lofZEX1qD6bG/m2MOlFLt77+Qd6VDxTZAn/dQt0aDnL71mVSs3tXjgC5/UB4Yg2kFwPWkSk+v9HwgNA6uP34M6a3gVeVWK6uNEJ+D6goUboXvgLH6BFDhquhoNWEgDcYmULGHuq/X/wrMgW1RTZmB89NZBdWKY7rvzDC1zR6qOZLZivSuqjaJrpd85pGXyCIt7JAalZXkD8GdZwzsW4ypqVnQrfnt42EGaXDXGIQwk4vRa9BXG3cK1A8jmpAgRT9+LJ4/uSFVS6r2MYbrxMSr/Xu6wRxcyciURF2btJmRQZZu36i5yrhhlKkEUZi9M68OHvdRN15jKW2MI/9QZxMYluycqRdndzJqwuBAAY4PFaZWpOhtUpo+HCGGWvXHg0=
