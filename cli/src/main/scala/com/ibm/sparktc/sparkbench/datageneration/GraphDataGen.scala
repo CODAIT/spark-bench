@@ -26,17 +26,17 @@ import org.apache.spark.graphx.util.GraphGenerators
 object GraphDataGen extends WorkloadDefaults {
 
   val name = "graph-data-generator"
-  val mu = 4.0
-  val sigma = 1.3
-  val seed = -1L
-  val numOfPartitions = 0
+  val defaultMu = 4.0
+  val defaultSigma = 1.3
+  val defaultSeed = -1L
+  val defaultNumOfPartitions = 0
 
   override def apply(m: Map[String, Any]): GraphDataGen = {
       val numVertices = getOrThrow(m, "vertices").asInstanceOf[Int]
-      val muu = getOrDefault[Double](m, "mu", mu)
-      val sigmaa = getOrDefault[Double](m, "sigma", sigma)
-      val numPartitions = getOrDefault[Int](m, "partitions", numOfPartitions)
-      val seedd = getOrDefault[Long](m, "seed", seed, any2Long)
+      val mu = getOrDefault[Double](m, "mu", defaultMu)
+      val sigma = getOrDefault[Double](m, "sigma", defaultSigma)
+      val numPartitions = getOrDefault[Int](m, "partitions", defaultNumOfPartitions)
+      val seed = getOrDefault[Long](m, "seed", defaultSeed, any2Long)
       val output = {
         val str = getOrThrow(m, "output").asInstanceOf[String]
         val s = verifySuitabilityOfOutputFileFormat(str)
@@ -47,9 +47,9 @@ object GraphDataGen extends WorkloadDefaults {
       numVertices = numVertices,
       input = None,
       output = output,
-      mu = muu,
-      sigma = sigmaa,
-      seed = seedd,
+      mu = mu,
+      sigma = sigma,
+      seed = seed,
       numPartitions = numPartitions
     )
   }

@@ -1,5 +1,6 @@
 package com.ibm.sparktc.sparkbench.workload
 
+import com.ibm.sparktc.sparkbench.datageneration.GraphDataGen
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.{KMeansDataGen, LinearRegressionDataGen}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.getOrThrow
 import com.ibm.sparktc.sparkbench.utils.SparkBenchException
@@ -18,7 +19,8 @@ object ConfigCreator {
     Sleep,
     SparkPi,
     KMeansDataGen,
-    LinearRegressionDataGen
+    LinearRegressionDataGen,
+    GraphDataGen
   ).map(wk => wk.name -> wk).toMap
 
   private def loadCustom(name: String): WorkloadDefaults = {
