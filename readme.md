@@ -21,7 +21,26 @@
 [![codecov](https://codecov.io/gh/SparkTC/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/SparkTC/spark-bench)
 <a href="https://github.com/SparkTC/spark-bench#boards?repos=40686427"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
-# Current VS. Legacy Version
+Visit the docs website: <https://sparktc.github.io/spark-bench/>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of Contents
+
+- [Current VS. Legacy Version](#current-vs-legacy-version)
+- [Current Spark version supported by spark-bench: 2.1.1](#current-spark-version-supported-by-spark-bench-211)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Building It Yourself](#building-it-yourself)
+- [Running the Examples From The Distribution](#running-the-examples-from-the-distribution)
+  - [Creating the Distribution Folder](#creating-the-distribution-folder)
+  - [Setting Environment Variables](#setting-environment-variables)
+  - [Running the Examples](#running-the-examples)
+- [Previewing the Github Pages Site Locally](#previewing-the-github-pages-site-locally)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+ 
+## Current VS. Legacy Version
 
 spark-bench has recently gone through an extensive rewrite.
 While we think you'll like the new capabilities, it is not quite feature complete with the previous version of spark-bench.
@@ -33,25 +52,9 @@ You can also grab the last official release of the legacy version [from here](ht
 
 ## Current Spark version supported by spark-bench: 2.1.1
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-# Table of Contents
 
-- [Documentation](#documentation)
-- [Installation](#installation)
-- [Building It Yourself](#building-it-yourself)
-- [Running the Examples From The Distribution](#running-the-examples-from-the-distribution)
-  - [Creating the Distribution Folder](#creating-the-distribution-folder)
-  - [Setting Environment Variables](#setting-environment-variables)
-  - [Running the Examples](#running-the-examples)
-- [Remember, there's more documentation, but it's not in this readme!](#remember-theres-more-documentation-but-its-not-in-this-readme)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
- 
 ## Documentation
-The [docs](docs) folder in this repo has several documents to help you on your spark-bench journey to greatness.
-
-[understanding-spark-bench](docs/understanding-spark-bench.md) Is the best starting point.
+Visit the docs website: <https://sparktc.github.io/spark-bench/>
  
 ## Installation 
 
@@ -122,6 +125,13 @@ The example scripts and associated configuration files are a great starting poin
 The kmeans example shows some examples of using the spark-bench CLI while the multi-submit example shows more
 thorough usage of a configuration file.
 
-## Remember, there's more documentation, but it's not in this readme!
 
-To read more about spark-bench, start with [docs/understanding-spark-bench.md](docs/understanding-spark-bench.md)
+## Previewing the Github Pages Site Locally
+
+The spark-bench documentation at <https://sparktc.github.io/spark-bench/> is generated from files in the `docs/` folder.
+To see the Jekyll site locally:
+
+1. Follow the instructions [from Github](https://help.github.com/articles/setting-up-your-github-pages-site-locally-with-jekyll/)
+regarding installing Ruby, bundler, etc.
+
+2. From the `docs/` folder, run `bundle exec jekyll serve` and navigate in your browser to `127.0.0.1:4000`
