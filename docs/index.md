@@ -1,20 +1,18 @@
 ---
 layout: page
+title: "Spark-Bench"
 ---
+Spark-Bench is a flexible system for benchmarking and simulating Spark jobs. 
+It can do two main things:
+1. Run workloads in a highly configurable fashion
+2. Generate data
 
-`spark-bench` is a flexible system for benchmarking and simulating Spark jobs. 
+Users configure the way their jobs run by defining `spark-submits`, `workload-suites`, and `workloads` in a nested structure.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table of Contents
-
-- [Summary](#summary)
 - [Data Generation](#data-generation)
 - [Workloads](#workloads)
-  - [Types of Workloads](#types-of-workloads)
-  - [Custom Workloads](#custom-workloads)
-  - [Parameters](#parameters)
-  - [Benchmark Output vs. Workload Output](#benchmark-output-vs-workload-output)
 - [Workload Suites](#workload-suites)
 - [Spark-Submit-Configs](#spark-submit-configs)
 - [Levels and Combinations of Parallelism](#levels-and-combinations-of-parallelism)
@@ -24,14 +22,6 @@ layout: page
   - [Same Algorithm, Different Spark Settings](#same-algorithm-different-spark-settings)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Summary
-
-`spark-bench` can do two main things:
-1. Run workloads in a highly configurable fashion
-2. Generate data
-
-Users configure the way their jobs run by defining `spark-submits`, `workload-suites`, and `workloads` in a nested structure.
 
 ## Data Generation
 
