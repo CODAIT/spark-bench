@@ -88,25 +88,25 @@ case class SparkSubmitDeconstructed (
       else None
     }
 
-    val suitesParallel = optionallyGetFromJavaMap[Boolean](sparkSubmitOptions,SLD.suitesParallel)
-
+    val sparkHome = optionallyGetFromJavaMap[String](sparkSubmitOptions, SLD.sparkHome)
+    val suitesParallel = optionallyGetFromJavaMap[Boolean](sparkSubmitOptions, SLD.suitesParallel)
     val conf: Option[util.Map[String, Any]] = optionallyGetFromJavaMap[util.Map[String, Any]](sparkSubmitOptions, SLD.sparkConf)
 
     val sparkArgs: Option[util.Map[String, Any]] = {
-
       val asScala = sparkSubmitOptions.asScala
-
-
       val filtered = asScala.filterKeys {
         case SLD.sparkConf => false
         case SLD.suitesParallel => false
+        case SLD.sparkHome => false
         case _ => true
       }
+
       if (filtered.isEmpty) None
       else Some(filtered.asJava)
     }
 
     SparkSubmitPieces(
+      sparkHome,
       suitesParallel,
       conf,
       sparkArgs,
@@ -116,6 +116,7 @@ case class SparkSubmitDeconstructed (
 }
 
 case class SparkSubmitPieces (
+                               sparkHome: Option[String],
                                suitesParallel: Option[Boolean],
                                conf: Option[util.Map[String, Any]],
                                sparkArgs: Option[util.Map[String, Any]],
@@ -129,6 +130,7 @@ case class SparkSubmitPieces (
       Try(key -> option.get).toOption
 
     val mostOfIt = Seq(
+      ifItsThere(SLD.sparkHome, sparkHome),
       ifItsThere(SLD.suitesParallel, suitesParallel),
       ifItsThere(SLD.sparkConf, conf),
       ifItsThere(SLD.sparkArgs, sparkArgs)

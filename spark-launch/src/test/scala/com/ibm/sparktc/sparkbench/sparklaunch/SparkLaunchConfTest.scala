@@ -35,7 +35,9 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val field = System.getenv().getClass.getDeclaredField("m")
     field.setAccessible(true)
     val map = field.get(System.getenv()).asInstanceOf[java.util.Map[java.lang.String, java.lang.String]]
+    val value = map.get(key)
     map.remove(key)
+    value
   }
 
   before {
@@ -80,6 +82,20 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     conf2.sparkArgs should contain ("--master")
 
     SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
+  }
+
+  it should "pick up spark-home as set in the config file" in {
+    val oldSparkHome = unsetEnv("SPARK_HOME")
+    val relativePath = "/etc/specific-spark-home.conf"
+    val resource = new File(getClass.getResource(relativePath).toURI)
+    val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
+    val conf2 = sparkContextConfs.head._1
+
+    conf2.sparkHome shouldBe "/usr/iop/current/spark2-client/"
+
+    setEnv("SPARK_HOME", oldSparkHome)
+    SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
+
   }
 
 }
