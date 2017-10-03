@@ -25,7 +25,7 @@ Users configure the way their jobs run by defining `spark-submits`, `workload-su
 
 ## Data Generation
 
-`spark-bench` has the capability to generate data according to many different configurable generators. 
+Spark-Bench has the capability to generate data according to many different configurable generators. 
 Generated data can be written to any storage addressable by Spark, including local files, hdfs, S3, etc.
 
 Data generators are run just like workloads in spark-bench. Users should exercise caution to ensure that data generation happens before the workloads that need that input run.
@@ -35,28 +35,27 @@ However, if in doubt, a bullet-proof way to do this is to create two different c
  
 ## Workloads
 
-The atomic unit of organization in `spark-bench` is the workload. Workloads are standalone Spark jobs that read their input data, if any,
+The atomic unit of organization in Spark-Bench is the workload. Workloads are standalone Spark jobs that read their input data, if any,
 from disk, and write their output, if the user wants it, out to disk.
 
 Some workloads are designed to exercise a particular algorithm implementation or a particular method. Others are designed to 
 simulate Spark use cases such as multiple notebook users hitting a single Spark cluster.
 
-Read more about workloads
+Read more about [workloads]({{ "/workloads/" | relative_url }})
 
 ## Workload Suites
 
 Workload suites are collections of one or more workloads. The workloads in a suite can be run serially or in parallel.
 
-workload suites serve the following functions:
-- collect the benchmark output info from each run of each workload and write in one common file (or in the console)
-- control whether workloads are run serially or kicked off in parallel from a thread pool
-- control how many times each workload is run. Many times it is advantageous to run a workload multiple times, particularly for benchmarking. Workload suites let you do that all in one place.
+Workload suites **control the benchmark output**. They collect the benchmark output info from each run of each workload and write in one common file (or in the console).
+They **control the parallelism of workloads**, whether workloads are run serially or kicked off in parallel from a thread pool
+They **can repeat a set of workloads**. Many times it is advantageous to run a workload multiple times, particularly for benchmarking. Workload suites let you do that all in one place
 
 Workload suites themselves can be run serially or in parallel.
 
 ## Spark-Submit-Configs
 
-`spark-bench` allows you to launch multiple spark-submit commands by creating and launching multiple spark-submit scripts.
+Spark-Bench allows you to launch multiple spark-submit commands by creating and launching multiple spark-submit scripts.
 This can be advantageous in a number of situations. To name just a few:
 
 - Comparing benchmark times of the same workloads with different Spark settings
@@ -67,7 +66,7 @@ Just like workload suites and workloads, spark-submit-configs can be launched se
 
 ## Levels and Combinations of Parallelism
 
-There are many, many different ways of controlling parallelism in `spark-bench`.
+There are many, many different ways of controlling parallelism in Spark-Bench.
 
 You can control parallelism at the level of the spark-submit-config, and/or the suite, and/or the workload.
 
