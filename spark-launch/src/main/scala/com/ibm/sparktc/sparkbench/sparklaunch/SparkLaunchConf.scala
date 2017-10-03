@@ -90,7 +90,7 @@ object SparkLaunchConf {
       fileList.filterNot(_ == whereIAm).head
     }
     else if(whereIAm.isEmpty) {
-      throw new SparkBenchException("Could not determine location for necessary spark-bench jars."); null
+      throw SparkBenchException("Could not determine location for necessary spark-bench jars."); null
     }
     else {
       /* Assume here that we're in a testing environment. When `sbt test` runs for spark-launch, it'll

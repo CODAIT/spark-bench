@@ -25,6 +25,7 @@ object SparkLaunchDefaults {
   val sparkConf = "conf"
   val suites = "workload-suites"
   val suitesParallel = "suites-parallel"
+  val sparkHome = "spark-home"
 
   val suitesParallelDefaultValue = false
 }

@@ -60,7 +60,6 @@ class ConfigWranglerTest extends FlatSpec with Matchers with BeforeAndAfterEach 
     val res1 = seq1.flatMap(ConfigWrangler.processConfig)
     val res2 = seq2.flatMap(ConfigWrangler.processConfig)
 
-    //TODO ugh, this exposed a bug. Well, I guess that's what tests are supposed to do...
     res1.size shouldBe 5 // 4 resulting from crossjoin plus 1 more from other spark-submit-config
     res2.size shouldBe 1
   }

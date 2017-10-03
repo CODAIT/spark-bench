@@ -39,6 +39,9 @@ collections:
   workloads:
     output: true
     permalink: /workloads/:path/
+  users-guide:
+    output: true
+    permalink: /users-guide/:path/
 
 
 # Exclude from processing.
