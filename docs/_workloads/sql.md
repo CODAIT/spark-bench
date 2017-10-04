@@ -23,7 +23,7 @@ select `0` from input where `0` < -0.9
 | name        | yes      | -- | "sql" |
 | input       | yes      | -- | the input dataset |
 | output      | no       | -- | If users wish to capture the actual results of the SQL query, they can specify an output file here. |
-| queryStr    | yes      | --    | the sql query to perform. The table name must be "input" as shown in the examples above. |
+| query    | yes      | --    | the sql query to perform. The table name must be "input" as shown in the examples above. |
 | cache       | no       | false | whether the dataset should be cached after being read from disk |
 
 #### Examples
@@ -33,7 +33,7 @@ select `0` from input where `0` < -0.9
   name = "sql"
   input = "/tmp/generated-kmeans-data.parquet"
   output = "/tmp/sql-query-results.parquet"
-  queryStr = "select `0` from input where `0` < -0.9"
+  query = "select `0` from input where `0` < -0.9"
 }
 ```
 
@@ -41,7 +41,7 @@ select `0` from input where `0` < -0.9
 {
   name = "sql"
   input = "/tmp/generated-kmeans-data.parquet"
-  queryStr = "select `0` from input where `0` < -0.9"
+  query = "select `0` from input where `0` < -0.9"
   cache = true
 }
 ```
