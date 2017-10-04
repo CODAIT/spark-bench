@@ -35,7 +35,7 @@ object SQLWorkload extends WorkloadDefaults {
   val name = "sql"
   def apply(m: Map[String, Any]) =
     new SQLWorkload(input = m.get("input").map(_.asInstanceOf[String]),
-      output = m.get("workloadresultsoutputdir").map(_.asInstanceOf[String]),
+      output = m.get("output").map(_.asInstanceOf[String]),
       queryStr = getOrThrow(m, "query").asInstanceOf[String],
       cache = getOrDefault[Boolean](m, "cache", false)
     )
