@@ -49,7 +49,8 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with 
     val relativePath = "/etc/testConfFile1.conf"
     val resource = getClass.getResource(relativePath)
     val path = resource.getPath
-    CLIKickoff.main(Array(path))
+    val text = Source.fromFile(path).mkString
+    CLIKickoff.main(Array(text))
 
     kmeansData.exists() shouldBe true
     output1.exists() shouldBe true
@@ -73,6 +74,7 @@ class ConfigFileTest extends FlatSpec with Matchers with BeforeAndAfterAll with 
     val relativePath = "/etc/testConfFile2.conf"
     val resource = getClass.getResource(relativePath)
     val path = resource.getPath
-    CLIKickoff.main(Array(path))
+    val text = Source.fromFile(path).mkString
+    CLIKickoff.main(Array(text))
   }
 }

@@ -21,6 +21,8 @@ import com.ibm.sparktc.sparkbench.cli.CLIKickoff
 import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
+import scala.io.Source
+
 class NotebookSimTest extends FlatSpec with Matchers with BeforeAndAfterEach with Capturing {
   val dataMaker = new BuildAndTeardownData("notebook-sim-test")
 
@@ -43,7 +45,8 @@ class NotebookSimTest extends FlatSpec with Matchers with BeforeAndAfterEach wit
     val relativePath = "/etc/notebook-sim.conf"
     val resource = getClass.getResource(relativePath)
     val path = resource.getPath
-    CLIKickoff.main(Array(path))
+    val text = Source.fromFile(path).mkString
+    CLIKickoff.main(Array(text))
   }
 
 

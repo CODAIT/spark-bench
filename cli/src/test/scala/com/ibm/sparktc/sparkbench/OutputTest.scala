@@ -21,6 +21,8 @@ import com.ibm.sparktc.sparkbench.cli.CLIKickoff
 import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
+import scala.io.Source
+
 class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capturing {
   val dataStuff = new BuildAndTeardownData("output-test")
 
@@ -36,7 +38,12 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
   }
 
   "Specifying Console output" should "work" in {
-    val (out, _) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile3.conf").getPath)))
+    val relativePath = "/etc/testConfFile3.conf"
+    val resource = getClass.getResource(relativePath)
+    val path = resource.getPath
+    val text = Source.fromFile(path).mkString
+
+    val (out, _) = captureOutput(CLIKickoff.main(Array(text)))
     out should not be ""
     out.split("\n").length shouldBe 10
     println(out)
@@ -44,7 +51,12 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
 
 
   "Want to see configuration added to results when there's crazy stuff" should "work" in {
-    val (out, _) = captureOutput(CLIKickoff.main(Array(getClass.getResource("/etc/testConfFile4.conf").getPath)))
+    val relativePath = "/etc/testConfFile4.conf"
+    val resource = getClass.getResource(relativePath)
+    val path = resource.getPath
+    val text = Source.fromFile(path).mkString
+
+    val (out, _) = captureOutput(CLIKickoff.main(Array(text)))
     out should not be ""
     out.split("\n").length shouldBe 1
     println(out)

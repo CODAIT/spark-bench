@@ -24,35 +24,32 @@ import com.typesafe.config.{Config, ConfigValueFactory}
 import scala.collection.JavaConverters._
 import com.ibm.sparktc.sparkbench.sparklaunch.{SparkLaunchDefaults => SLD}
 import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.{configToMapStringAny, splitGroupedConfigToIndividualConfigs}
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.optionallyGet
 
 import scala.util.Try
 
-
-
-case class SparkSubmitDeconstructedWithSeqs (
+case class LaunchConfigDeconstructedWithSeqs(
                                               sparkSubmitOptions: Map[String, Seq[Any]],
                                               suitesConfig: Config
                                             ) {
 
-  def split(): Seq[SparkSubmitDeconstructed] = {
+  def split(): Seq[LaunchConfigDeconstructed] = {
     val splitMaps: Seq[Map[String, Any]] = splitGroupedConfigToIndividualConfigs(sparkSubmitOptions)
     val asJava: Seq[util.Map[String, Any]] = splitMaps.map(_.asJava)
 
-    asJava.map(SparkSubmitDeconstructed(_, suitesConfig))
+    asJava.map(LaunchConfigDeconstructed(_, suitesConfig))
   }
 }
 
-object SparkSubmitDeconstructedWithSeqs {
+object LaunchConfigDeconstructedWithSeqs {
 
-  def apply(oneSparkSubmitConfig: Config): SparkSubmitDeconstructedWithSeqs = {
+  def apply(oneSparkSubmitConfig: Config): LaunchConfigDeconstructedWithSeqs = {
     val suites = oneSparkSubmitConfig.withOnlyPath(SLD.suites)
     val workingConf = oneSparkSubmitConfig.withoutPath(SLD.suites)
     val map: Map[String, Seq[Any]] = configToMapStringAny(workingConf)
 
     val newMap = extractSparkArgsToHigherLevel(map, workingConf)
 
-    SparkSubmitDeconstructedWithSeqs(
+    LaunchConfigDeconstructedWithSeqs(
       newMap,
       suites
     )
@@ -71,7 +68,7 @@ object SparkSubmitDeconstructedWithSeqs {
   }
 }
 
-case class SparkSubmitDeconstructed (
+case class LaunchConfigDeconstructed(
                                       sparkSubmitOptions: util.Map[String, Any],
                                       suitesConfig: Config
                                     ) {
