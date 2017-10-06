@@ -47,25 +47,30 @@ object ConfigWrangler {
     * Takes in the path to the config file, splits that file to a bunch of files in a folder in /tmp, returns
     * the paths to those files.
     * @param path
-    * @return a Seq of paths to the created files.
+    * @return a Seq of the new config files as Strings
     */
-  def apply(path: File): Seq[(SparkLaunchConf, String)] = {
+  def apply(path: File): Seq[SparkSubmitScriptConf] = {
     val config: Config = ConfigFactory.parseFile(path)
     val sparkBenchConfig = config.getObject(SLD.topLevelConfObject).toConfig
     val sparkContextConfs  = getListOfSparkSubmits(sparkBenchConfig)
 
-    val processedConfs = sparkContextConfs.flatMap(processConfig)
-    val confsAndPaths: Seq[(Config, String)] = processedConfs.map{ oneConf =>
-      (oneConf, writePartialConfToDisk(sparkBenchConfig, oneConf))
+    val processedConfs: Seq[Config] = sparkContextConfs.flatMap(processConfig)
+    val scriptsReadyToGo: Seq[SparkSubmitScriptConf] = processedConfs.map{ oneConf =>
+      val wrapped = wrapConf(oneConf)
+      SparkSubmitScriptConf(oneConf, wrapped.root().render(ConfigRenderOptions.concise()))
     }
 
-    val ret = confsAndPaths.map{ tuple => {
-        val conf = tuple._1
-        val tmpFilePath = tuple._2
-        (SparkLaunchConf(conf, tmpFilePath), tmpFilePath)
-      }
-    }
-    ret
+    scriptsReadyToGo
+  }
+
+
+  private def wrapConf(oneConf: Config): Config = {
+    val wrapWithSparkSubmit = ConfigFactory.empty.withValue(
+      SLD.sparkSubmitObject,
+      ConfigValueFactory.fromIterable(Iterable(oneConf.root).asJava)
+    )
+    val sbConf = ConfigFactory.empty.withValue(SLD.topLevelConfObject, wrapWithSparkSubmit.root)
+    sbConf
   }
 
   /**
@@ -74,10 +79,10 @@ object ConfigWrangler {
     * @return
     */
   private[sparklaunch] def processConfig(config: Config): Seq[Config] = {
-    val a: SparkSubmitDeconstructedWithSeqs = SparkSubmitDeconstructedWithSeqs(config)
+    val a: LaunchConfigDeconstructedWithSeqs = LaunchConfigDeconstructedWithSeqs(config)
     if(a.sparkSubmitOptions.isEmpty) Seq(config)
     else {
-      val b: Seq[SparkSubmitDeconstructed] = a.split()
+      val b: Seq[LaunchConfigDeconstructed] = a.split()
       val c: Seq[SparkSubmitPieces] = b.map(_.splitPieces)
       val d: Seq[Config] = c.map(_.reconstruct)
       d

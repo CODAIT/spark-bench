@@ -22,7 +22,7 @@ import java.io.File
 import org.apache.spark.sql.SparkSession
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
-class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
+class SparkSubmitScriptConfTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   private def setEnv(key: String, value: String) = {
     val field = System.getenv().getClass.getDeclaredField("m")
@@ -35,14 +35,20 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val field = System.getenv().getClass.getDeclaredField("m")
     field.setAccessible(true)
     val map = field.get(System.getenv()).asInstanceOf[java.util.Map[java.lang.String, java.lang.String]]
-    val value = map.get(key)
     map.remove(key)
-    value
   }
+
+  val sparkHome = sys.env("SPARK_HOME")
+  val masterHost = "local[2]"
 
   before {
     SparkSession.clearDefaultSession()
     SparkSession.clearActiveSession()
+  }
+
+  after {
+    setEnv("SPARK_HOME", sparkHome)
+    setEnv("SPARK_MASTER_HOST", masterHost)
   }
 
   "SparkLaunchConf" should "turn into arguments properly" in {
@@ -51,7 +57,7 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val resource = new File(getClass.getResource(relativePath).toURI)
 //    val source = scala.io.Source.fromFile(resource)
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
-    val conf1 = sparkContextConfs.head._1
+    val conf1 = sparkContextConfs.head
 
     val expectedSparkConfs = Array(
       "--conf", "spark.shuffle.service.enabled=false",
@@ -62,26 +68,20 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     conf1.sparkConfs shouldBe expectedSparkConfs
     conf1.sparkArgs should contain ("--master")
 
-    SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
-
-//    val resultConf = conf1.createSparkContext().sparkContext.getConf
-//    resultConf.getBoolean("spark.dynamicAllocation.enabled", defaultValue = true) shouldBe false
-//    resultConf.getBoolean("spark.shuffle.service.enabled", defaultValue = true) shouldBe false
-//    resultConf.get("spark.fake") shouldBe "yes"
   }
 
   it should "not blow up when spark context confs are left out" in {
     val relativePath = "/etc/noMasterConf.conf"
+    val oldValue = unsetEnv("SPARK_MASTER_HOST")
     setEnv("SPARK_MASTER_HOST", "local[2]")
     val resource = new File(getClass.getResource(relativePath).toURI)
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
-    val conf2 = sparkContextConfs.head._1
-    unsetEnv("SPARK_MASTER_HOST")
+    val conf2 = sparkContextConfs.head
 
     conf2.sparkConfs.isEmpty shouldBe true
     conf2.sparkArgs should contain ("--master")
+    setEnv("SPARK_MASTER_HOST", masterHost)
 
-    SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
   }
 
   it should "pick up spark-home as set in the config file" in {
@@ -89,12 +89,11 @@ class SparkLaunchConfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val relativePath = "/etc/specific-spark-home.conf"
     val resource = new File(getClass.getResource(relativePath).toURI)
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
-    val conf2 = sparkContextConfs.head._1
+    val conf2 = sparkContextConfs.head
 
     conf2.sparkHome shouldBe "/usr/iop/current/spark2-client/"
 
-    setEnv("SPARK_HOME", oldSparkHome)
-    SparkLaunch.rmTmpFiles(sparkContextConfs.map(_._2))
+    setEnv("SPARK_HOME", sparkHome)
 
   }
 

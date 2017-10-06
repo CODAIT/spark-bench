@@ -31,8 +31,8 @@ import scala.util.Try
 
 object Configurator {
 
-  def apply(file: File): Seq[MultiSuiteRunConfig] = {
-    val config: Config = ConfigFactory.parseFile(file)
+  def apply(str: String): Seq[MultiSuiteRunConfig] = {
+    val config: Config = ConfigFactory.parseString(str)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
     val sparkContextConfs = parseSparkBenchRunConfig(sparkBenchConfig)
     sparkContextConfs

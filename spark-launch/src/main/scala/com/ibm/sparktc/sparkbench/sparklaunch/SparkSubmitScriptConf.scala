@@ -26,7 +26,7 @@ import com.typesafe.config.{Config, ConfigObject}
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-case class SparkLaunchConf(
+case class SparkSubmitScriptConf(
                             `class`: String,
                             sparkHome: String,
                             sparkBenchJar: String,
@@ -35,21 +35,21 @@ case class SparkLaunchConf(
                             childArgs: Array[String]
                           ){
 
-  def toSparkArgs: Array[String] =
+  def toSparkSubmitArgs: Array[String] =
     Array("--class", `class`) ++ sparkArgs ++ sparkConfs ++ Array(sparkBenchJar) ++ childArgs
 
 }
 
-object SparkLaunchConf {
+object SparkSubmitScriptConf {
 
-  def apply(sparkContextConf: Config, path: String): SparkLaunchConf = {
-    SparkLaunchConf(
+  def apply(sparkContextConf: Config, childArg: String): SparkSubmitScriptConf = {
+    SparkSubmitScriptConf(
       `class` = getSparkBenchClass(sparkContextConf),
       sparkHome = getSparkHome(sparkContextConf),
       sparkBenchJar = getSparkBenchJar(sparkContextConf),
       sparkArgs = getSparkArgs(sparkContextConf),
       sparkConfs = getSparkConfs(sparkContextConf),
-      childArgs = Array(path)
+      childArgs = Array(childArg)
     )
   }
 
@@ -78,7 +78,6 @@ object SparkLaunchConf {
   def getSparkBenchJar(sparkContextConf: Config): String = {
 
     val whereIAm = this.getClass.getProtectionDomain.getCodeSource.getLocation.getFile
-    println(s"I'M HERE::: $whereIAm")
 
     if(whereIAm.endsWith(".jar")) {
       /*
