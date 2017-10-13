@@ -16,5 +16,5 @@ export SPARK_HOME=/path/to/my/local/install/of/spark/
 4. Run the examples!
 ```
 # pwd is /path/to/where/you/unzipped/spark-bench_.../
-./bin/spark-bench.sh examples/from-docs/minimal-example.conf
+./bin/spark-bench.sh examples/minimal-example.conf
 ```

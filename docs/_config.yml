@@ -42,6 +42,9 @@ collections:
   users-guide:
     output: true
     permalink: /users-guide/:path/
+  examples:
+    output: true
+    permalink: /examples/:path/
 
 
 # Exclude from processing.
