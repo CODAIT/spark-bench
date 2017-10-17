@@ -12,6 +12,7 @@ those spark-submits. The `class` and `jar` parameters are set by the spark-bench
 
 
 - [Parameters](#parameters)
+- [spark-submit-parallel](#spark-submit-parallel)
 - [spark-home](#spark-home)
 - [spark-args](#spark-args)
 - [conf](#conf)
@@ -21,12 +22,31 @@ those spark-submits. The `class` and `jar` parameters are set by the spark-bench
 
 ## Parameters
 
-| Name    | Required | Description |  
-| ---------- | ----- | --- |    
-| spark-home  | no | Path to the top level of your Spark installation |  
-| spark-args  | no | Includes master, executor-memory, and other spark-submit arguments |  
-| conf        | no | A series of configuration options for Spark |  
-| suites-parallel | no | Whether the workload-suites within this spark-submit should run serially or in parallel. Defaults to `false`. |   
+| Name    | Required | Default | Description |  
+| ------- | -------- | ------- | ----------- |  
+| spark-submit-parallel | no | false | Controls whether spark-submits are launched in parallel. Defaults to `false` |    
+| spark-home  | no | $SPARK_HOME | Path to the top level of your Spark installation |  
+| spark-args  | no | master = $SPARK_MASTER_HOST | Includes master, executor-memory, and other spark-submit arguments |  
+| conf        | no | -- | A series of configuration options for Spark |  
+| suites-parallel | no | false | Whether the workload-suites within this spark-submit should run serially or in parallel. Defaults to `false`. |   
+
+## spark-submit-parallel
+
+`spark-submit-parallel` is the only parameter listed here which is set outside of the `spark-submit-config` structure.
+If there are multiple spark-submits created by the config file, this boolean option determines whether they are launched 
+serially or in parallel. 
+This option defaults to `false` meaning the suites will run serially.
+
+```hocon
+spark-bench = {
+
+  spark-submit-parallel = true
+
+  spark-submit-config = {
+    spark-home = //...
+  }
+}
+```
 
 ## spark-home
 
@@ -63,6 +83,14 @@ spark-args = {
 ```hocon
 spark-args = {
   master = "mesos://207.184.161.138:7077"
+}
+```
+```hocon
+/* 
+ *  Since no master is specified here, spark-bench will look for the master 
+ *  from the environment variable $SPARK_MASTER_HOST 
+ */
+spark-args = {
 }
 ```
 
