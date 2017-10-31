@@ -21,7 +21,7 @@
 [![codecov](https://codecov.io/gh/SparkTC/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/SparkTC/spark-bench)
 <a href="https://github.com/SparkTC/spark-bench#boards?repos=40686427"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
-Visit the docs website: <https://sparktc.github.io/spark-bench/>
+# READ OUR DOCS: <https://sparktc.github.io/spark-bench/>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -35,6 +35,8 @@ Visit the docs website: <https://sparktc.github.io/spark-bench/>
 - [Running the Examples From The Distribution](#running-the-examples-from-the-distribution)
   - [Creating the Distribution Folder](#creating-the-distribution-folder)
   - [Setting Environment Variables](#setting-environment-variables)
+    - [Option 1: Setting Bash Environment Variables](#option-1-setting-bash-environment-variables)
+    - [Option 2: RECOMMENDED! Modifying Example Config Files To Include Environment Info](#option-2-recommended-modifying-example-config-files-to-include-environment-info)
   - [Running the Examples](#running-the-examples)
 - [Previewing the Github Pages Site Locally](#previewing-the-github-pages-site-locally)
 
@@ -52,16 +54,17 @@ You can also grab the last official release of the legacy version [from here](ht
 
 ## Current Spark version supported by spark-bench: 2.1.1
 
-
 ## Documentation
 Visit the docs website: <https://sparktc.github.io/spark-bench/>
  
 ## Installation 
 
-1. Grab the latest release from here: <https://github.com/ecurtin/spark-bench/releases/latest>.
+1. Grab the latest release from here: <https://github.com/Spark-TC/spark-bench/releases/latest>.
 2. Unpack the tarball using `tar -xvzf`.
 3. `cd` into the newly created folder.
-4. Modify `SPARK_HOME` and `SPARK_MASTER_HOST` in `bin/spark-bench-env.sh` to reflect your environment. 
+4. Set your environment variables
+  - Option 1: modify `SPARK_HOME` and `SPARK_MASTER_HOST` in `bin/spark-bench-env.sh` to reflect your environment. 
+  - Option 2: Recommended! Modify the config files in the examples and set `spark-home` and `spark-args = { master }` to reflect your environment. [See here for more details.](#option-2-recommended-modifying-example-config-files-to-include-environment-info)
 5. Start using spark-bench!
 
 
@@ -73,7 +76,7 @@ First, install SBT according to the instructions for your system: <http://www.sc
 
 Clone this repo.
 ```bash
-git clone https://github.com/ecurtin/spark-bench.git
+git clone https://github.com/Spark-TC/spark-bench.git
 cd spark-bench/
 ```
 The latest changes will always be on develop, the stable version is master. Optionally check out develop here, or skip this step to stay on master.
@@ -94,7 +97,6 @@ And finally to build the distribution folder and associated tar file.
 sbt dist
 ```
 
-
 ## Running the Examples From The Distribution
 
 The spark-bench distribution comes bundled with example scripts and configuration files that should run out out the box
@@ -105,6 +107,9 @@ If you installed spark-bench by unpacking the tar file, you're ready to go. If y
 `sbt dist` and then change into that generated folder.
 
 ### Setting Environment Variables
+There are two ways to set the Spark home and master variables necessary to run the examples. 
+
+#### Option 1: Setting Bash Environment Variables
 Inside the `bin` folder is a file called `spark-bench-env.sh`. In this folder are two environment variables
 that you will be required to set. The first is `SPARK_HOME` which is simply the full path to the top level of your
 Spark installation on your laptop or cluster. The second is SPARK_MASTER_HOST which is the same as what you
@@ -114,16 +119,60 @@ would enter as `--master` in a spark submit script for this environment. This mi
 You can set those environment variables in your bash profile or by uncommenting the lines in `spark-bench-env.sh`
 and filling them out in place.
 
+#### Option 2: RECOMMENDED! Modifying Example Config Files To Include Environment Info
+For example, in the minimal-example.conf, which looks like this:
+```hocon
+spark-bench = {
+  spark-submit-config = [{
+    workload-suites = [
+      {
+        descr = "One run of SparkPi and that's it!"
+        benchmark-output = "console"
+        workloads = [
+          {
+            name = "sparkpi"
+            slices = 10
+          }
+        ]
+      }
+    ]
+  }]
+}
+```
+
+Add the spark-home and master keys.
+```hocon
+spark-bench = {
+  spark-home = "/path/to/your/spark/install/" 
+  spark-submit-config = [{
+    spark-args = {
+      master = "local[*]" // or whatever the correct master is for your environment
+    }
+    workload-suites = [
+      {
+        descr = "One run of SparkPi and that's it!"
+        benchmark-output = "console"
+        workloads = [
+          {
+            name = "sparkpi"
+            slices = 10
+          }
+        ]
+      }
+    ]
+  }]
+}
+```
+
 ### Running the Examples
 From the spark-bench distribution file, simply run:
 
 ```bash
-./examples/multi-submit-sparkpi/multi-submit-example.sh
+./bin/spark-bench.sh ./examples/minimal-example.conf
 ```
 
 The example scripts and associated configuration files are a great starting point for learning spark-bench by example.
-The kmeans example shows some examples of using the spark-bench CLI while the multi-submit example shows more
-thorough usage of a configuration file.
+You can also read more about spark-bench at our [documentation site](https://sparktc.github.io/spark-bench/)
 
 
 ## Previewing the Github Pages Site Locally
