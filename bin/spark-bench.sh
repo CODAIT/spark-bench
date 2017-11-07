@@ -38,4 +38,25 @@ mainclass="com.ibm.sparktc.sparkbench.sparklaunch.SparkLaunch"
 launchjar=$(ls "$jars"/spark-bench-launch-[0-9]*.jar)
 sparkbenchjar=$(ls "$jars"/spark-bench-[0-9]*.jar)
 
-java -cp "$launchjar" "$mainclass" "$@"
+print_usage()
+{
+  echo "Usage: spark-bench.sh <PATH_TO_CONFIGURATION_FILE>"
+  echo "i.e.: ./bin/spark-bench.sh ./examples/minimal-example.conf"
+  echo "(https://github.com/SparkTC/spark-bench#running-the-examples-from-the-distribution)"
+}
+
+if [ $# -ne 1 ]
+  then
+    echo "spark-bench takes exactly ONE argument."
+    print_usage
+  else
+    case ${1} in
+      -h|--help)
+      print_usage
+      exit 1
+      ;;
+    esac
+
+    java -cp "$launchjar" "$mainclass" "$@"
+
+fi
