@@ -3,11 +3,15 @@ layout: page
 title: "Spark-Bench"
 ---
 Spark-Bench is a flexible system for benchmarking and simulating Spark jobs. 
-It can do two main things:
-1. Run workloads in a highly configurable fashion
-2. Generate data
 
-Users configure the way their jobs run by defining `spark-submits`, `workload-suites`, and `workloads` in a nested structure.
+You can use Spark-Bench to do traditional benchmarking, to stress test your cluster, to simulate multiple users 
+hitting a cluster at the same time, and much more!
+
+Users configure the way their jobs run by defining 
+[spark-submit configs]({{ "/users-guide/spark-submit-config" | relative_url }}), 
+[workload suites]({{ "/users-guide/workload-suite-config/" | relative_url }}), 
+and [workloads]({{ "/workloads/" | relative_url }})
+in a nested structure.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -53,6 +57,8 @@ They **can repeat a set of workloads**. Many times it is advantageous to run a w
 
 Workload suites themselves can be run serially or in parallel.
 
+Read more about [workload suites]({{ "/users-guide/workload-suite-config/" | relative_url }})
+
 ## Spark-Submit-Configs
 
 Spark-Bench allows you to launch multiple spark-submit commands by creating and launching multiple spark-submit scripts.
@@ -63,6 +69,8 @@ This can be advantageous in a number of situations. To name just a few:
 - Comparing benchmark times against two different Spark clusters!
 
 Just like workload suites and workloads, spark-submit-configs can be launched serially or in parallel.
+
+Read more about [spark-submit configs]({{ "/users-guide/spark-submit-config" | relative_url }})
 
 ## Levels and Combinations of Parallelism
 
