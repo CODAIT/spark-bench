@@ -9,7 +9,7 @@ permalink: /compilation/
 
 2. Clone this repo.
 ```bash
-git clone https://github.com/Spark-TC/spark-bench.git
+git clone https://github.com/SparkTC/spark-bench.git
 cd spark-bench/
 ```
 Make sure you are on the master branch.

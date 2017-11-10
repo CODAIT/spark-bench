@@ -7,7 +7,7 @@ to the system where it is installed._
 
 ## Installation Summary
 
-1. Grab the latest release from here: <https://github.com/Spark-TC/spark-bench/releases/latest>.
+1. Grab the latest release from here: <https://github.com/SparkTC/spark-bench/releases/latest>.
 2. Unpack the tarball using `tar -xvzf`.
 3. `cd` into the newly created folder.
 4. Set your environment variables
