@@ -23,7 +23,7 @@ case class Suite(
                   description: Option[String],
                   repeat: Int = 1,
                   parallel: Boolean = false,
-                  benchmarkOutput: String,
+                  benchmarkOutput: Option[String],
                   workloadConfigs: Seq[Map[String, Any]]
 
                 )
@@ -34,7 +34,7 @@ object Suite {
             description: Option[String],
             repeat: Int,
             parallel: Boolean,
-            benchmarkOutput: String): Suite = {
+            benchmarkOutput: Option[String]): Suite = {
     Suite(
       description,
       repeat,

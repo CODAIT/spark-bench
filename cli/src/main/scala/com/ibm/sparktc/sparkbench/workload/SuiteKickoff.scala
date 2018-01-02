@@ -82,7 +82,7 @@ object SuiteKickoff {
     val plusSparkConf = addConfToResults(singleDF, strSparkConfs)
     val plusDescription = addConfToResults(plusSparkConf, Map("description" -> s.description)).coalesce(1)
     // And write to disk. We're done with this suite!
-    writeToDisk(s.benchmarkOutput, plusDescription, spark)
+    if(s.benchmarkOutput.nonEmpty) writeToDisk(s.benchmarkOutput.get, plusDescription, spark)
   }
 
   private def runParallel(workloadConfigs: Seq[Workload], spark: SparkSession): Seq[DataFrame] = {
