@@ -22,7 +22,7 @@ Workload suites can be composed with each other for benchmarking tasks or to sim
 
 | Name    | Required | Description |  
 | ---------- | ----- | --- |    
-| benchmark-output | yes | path to the file where benchmark results should be stored, or use `"console"` to print to the terminal |
+| benchmark-output | no | path to the file where benchmark results should be stored, or use `"console"` to print to the terminal |
 | descr | yes | Human-readable string description of what the suite intends to do |
 | parallel  | no | Whether the workloads in the suite run serially or in parallel. Defaults to `false`. |  
 | repeat  | no | How many times the workloads in the suite should be repeated. |  
@@ -39,6 +39,23 @@ workload-suites = [
   {
     descr = "One run of a SQL query"
     benchmark-output = "hdfs:///tmp/sql-benchmark-results.csv"
+    workloads = [
+      {
+        name = "sql"
+        input = "/tmp/generated-kmeans-data.parquet"
+        output = "/tmp/sql-query-results.parquet"
+        query = "select `0` from input where `0` < -0.9"
+      }
+    ]
+  }
+]
+```
+_Omitting `benchmark-output` will prevent benchmark results from being written._ For example, this will run the same workloads
+as above but the benchmark results will not be written, but the workload output will be written.
+```hocon
+workload-suites = [
+  {
+    descr = "One run of a SQL query with no benchmark result output"
     workloads = [
       {
         name = "sql"
