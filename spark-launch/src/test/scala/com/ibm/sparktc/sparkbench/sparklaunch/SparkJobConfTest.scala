@@ -19,10 +19,12 @@ package com.ibm.sparktc.sparkbench.sparklaunch
 
 import java.io.File
 
+import com.ibm.sparktc.sparkbench.sparklaunch.confparse.{ConfigWrangler, SparkJobConf}
+import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import org.apache.spark.sql.SparkSession
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
-class SparkSubmitScriptConfTest extends FlatSpec with Matchers with BeforeAndAfter {
+class SparkJobConfTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   private def setEnv(key: String, value: String) = {
     val field = System.getenv().getClass.getDeclaredField("m")
@@ -38,16 +40,17 @@ class SparkSubmitScriptConfTest extends FlatSpec with Matchers with BeforeAndAft
     map.remove(key)
   }
 
-  val sparkHome = sys.env("SPARK_HOME")
+  val sparkHome = sys.env.get("SPARK_HOME")
   val masterHost = "local[2]"
 
   before {
     SparkSession.clearDefaultSession()
     SparkSession.clearActiveSession()
+    if(sparkHome.isEmpty) throw SparkBenchException("WTF this is supposed to be set")
   }
 
   after {
-    setEnv("SPARK_HOME", sparkHome)
+    if(sparkHome.nonEmpty) setEnv("SPARK_HOME", sparkHome.get)
     setEnv("SPARK_MASTER_HOST", masterHost)
   }
 
@@ -59,14 +62,14 @@ class SparkSubmitScriptConfTest extends FlatSpec with Matchers with BeforeAndAft
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
     val conf1 = sparkContextConfs.head
 
-    val expectedSparkConfs = Array(
-      "--conf", "spark.shuffle.service.enabled=false",
-      "--conf", "spark.fake=yes",
-      "--conf", "spark.dynamicAllocation.enabled=false"
+    val expectedSparkConfs = Map(
+      "spark.shuffle.service.enabled" -> "false",
+      "spark.fake" -> "yes",
+      "spark.dynamicAllocation.enabled" -> "false"
     )
 
     conf1.sparkConfs shouldBe expectedSparkConfs
-    conf1.sparkArgs should contain ("--master")
+    conf1.sparkArgs.contains("master") shouldBe true
 
   }
 
@@ -79,7 +82,7 @@ class SparkSubmitScriptConfTest extends FlatSpec with Matchers with BeforeAndAft
     val conf2 = sparkContextConfs.head
 
     conf2.sparkConfs.isEmpty shouldBe true
-    conf2.sparkArgs should contain ("--master")
+    conf2.sparkArgs.contains("master") shouldBe true
     setEnv("SPARK_MASTER_HOST", masterHost)
 
   }
@@ -91,10 +94,23 @@ class SparkSubmitScriptConfTest extends FlatSpec with Matchers with BeforeAndAft
     val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
     val conf2 = sparkContextConfs.head
 
-    conf2.sparkHome shouldBe "/usr/iop/current/spark2-client/"
+    ConfigWrangler.isSparkSubmit(conf2.submissionParams) shouldBe true
+    conf2. submissionParams("spark-home") shouldBe "/usr/iop/current/spark2-client/"
 
-    setEnv("SPARK_HOME", sparkHome)
+    if(sparkHome.nonEmpty) setEnv("SPARK_HOME", sparkHome.get)
+  }
 
+  it should "pick up the livy submission parameters" in {
+    val oldSparkHome = unsetEnv("SPARK_HOME")
+    val relativePath = "/etc/livy-example.conf"
+    val resource = new File(getClass.getResource(relativePath).toURI)
+    val (sparkContextConfs, _) = SparkLaunch.mkConfs(resource)
+    val conf2: SparkJobConf = sparkContextConfs.head
+
+    ConfigWrangler.isLivySubmit(conf2.submissionParams) shouldBe true
+    conf2.sparkBenchJar shouldBe "hdfs:///opt/spark-bench.jar"
+
+    if(sparkHome.nonEmpty) setEnv("SPARK_HOME", sparkHome.get)
   }
 
 }

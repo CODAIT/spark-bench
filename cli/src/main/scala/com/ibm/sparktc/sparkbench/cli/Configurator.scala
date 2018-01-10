@@ -21,7 +21,7 @@ import java.io.File
 import java.util
 
 import com.ibm.sparktc.sparkbench.utils.SparkBenchException
-import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.configToMapStringAny
+import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.configToMapStringSeqAny
 
 import scala.collection.JavaConverters._
 import com.ibm.sparktc.sparkbench.workload.{MultiSuiteRunConfig, Suite}
@@ -32,10 +32,11 @@ import scala.util.Try
 object Configurator {
 
   def apply(str: String): Seq[MultiSuiteRunConfig] = {
-    val config: Config = ConfigFactory.parseString(str)
+    val unescaped = StringContext.treatEscapes(str)
+    val config: Config = ConfigFactory.parseString(unescaped)
     val sparkBenchConfig = config.getObject("spark-bench").toConfig
-    val sparkContextConfs = parseSparkBenchRunConfig(sparkBenchConfig)
-    sparkContextConfs
+    val multiSuiteRunConfig: Seq[MultiSuiteRunConfig] = parseSparkBenchRunConfig(sparkBenchConfig)
+    multiSuiteRunConfig
   }
 
   private def parseSparkBenchRunConfig(config: Config): Seq[MultiSuiteRunConfig] = {
@@ -60,7 +61,7 @@ object Configurator {
     val parallel: Boolean = Try(config.getBoolean("parallel")).getOrElse(false)
     val repeat: Int = Try(config.getInt("repeat")).getOrElse(1)
     val output: Option[String] = Try(config.getString("benchmark-output")).toOption
-    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(configToMapStringAny)
+    val workloads: Seq[Map[String, Seq[Any]]]  = getConfigListByName("workloads", config).map(configToMapStringSeqAny)
 
     Suite.build(
       workloads,

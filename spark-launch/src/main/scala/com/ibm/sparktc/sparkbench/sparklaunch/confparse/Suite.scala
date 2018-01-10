@@ -15,7 +15,7 @@
   *
   */
 
-package com.ibm.sparktc.sparkbench.sparklaunch
+package com.ibm.sparktc.sparkbench.sparklaunch.confparse
 
 case class Suite(
                   description: Option[String],

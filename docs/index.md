@@ -2,17 +2,23 @@
 layout: page
 title: "Spark-Bench"
 ---
+
+## Summary
 Spark-Bench is a flexible system for benchmarking and simulating Spark jobs. 
 
 You can use Spark-Bench to do traditional benchmarking, to stress test your cluster, to simulate multiple users 
 hitting a cluster at the same time, and much more!
 
+You can **install a [pre-built distribution of Spark-Bench]({{ "/users-guide/installation/" | relative_url }})** 
+or if you're feeling advanced you can **clone the repo and [build it yourself using sbt.]({{ "/compilation/" | relative_url }})**
+
 Users configure the way their jobs run by defining 
-[spark-submit configs]({{ "/users-guide/spark-submit-config" | relative_url }}), 
-[workload suites]({{ "/users-guide/workload-suite-config/" | relative_url }}), 
-and [workloads]({{ "/workloads/" | relative_url }})
+**[spark-submit configs]({{ "/users-guide/spark-submit-config" | relative_url }})**, 
+**[workload suites]({{ "/users-guide/workload-suite-config/" | relative_url }})**, 
+and **[workloads]({{ "/workloads/" | relative_url }})**
 in a nested structure.
 
+## Table of Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 - [Data Generation](#data-generation)
