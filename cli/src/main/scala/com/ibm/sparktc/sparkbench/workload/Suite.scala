@@ -25,11 +25,9 @@ case class Suite(
                   parallel: Boolean = false,
                   benchmarkOutput: Option[String],
                   workloadConfigs: Seq[Map[String, Any]]
-
                 )
 
 object Suite {
-
   def build(confsFromArgs: Seq[Map[String, Seq[Any]]],
             description: Option[String],
             repeat: Int,
@@ -43,5 +41,4 @@ object Suite {
       confsFromArgs.flatMap( splitGroupedConfigToIndividualConfigs )
     )
   }
-
 }

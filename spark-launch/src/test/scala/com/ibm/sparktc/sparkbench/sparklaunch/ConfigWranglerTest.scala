@@ -19,7 +19,8 @@ package com.ibm.sparktc.sparkbench.sparklaunch
 
 import java.io.File
 
-import com.typesafe.config.{ConfigFactory, Config}
+import com.ibm.sparktc.sparkbench.sparklaunch.confparse.ConfigWrangler
+import com.typesafe.config.{Config, ConfigFactory}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import com.ibm.sparktc.sparkbench.sparklaunch.{SparkLaunchDefaults => SLD}
 

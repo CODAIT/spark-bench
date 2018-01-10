@@ -15,16 +15,15 @@
   *
   */
 
-package com.ibm.sparktc.sparkbench.sparklaunch
+package com.ibm.sparktc.sparkbench.sparklaunch.confparse
 
 import java.util
 
+import com.ibm.sparktc.sparkbench.sparklaunch.{SparkLaunchDefaults => SLD}
+import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.{configToMapStringSeqAny, splitGroupedConfigToIndividualConfigs}
 import com.typesafe.config.{Config, ConfigValueFactory}
 
 import scala.collection.JavaConverters._
-import com.ibm.sparktc.sparkbench.sparklaunch.{SparkLaunchDefaults => SLD}
-import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.{configToMapStringAny, splitGroupedConfigToIndividualConfigs}
-
 import scala.util.Try
 
 case class LaunchConfigDeconstructedWithSeqs(
@@ -45,7 +44,7 @@ object LaunchConfigDeconstructedWithSeqs {
   def apply(oneSparkSubmitConfig: Config): LaunchConfigDeconstructedWithSeqs = {
     val suites = oneSparkSubmitConfig.withOnlyPath(SLD.suites)
     val workingConf = oneSparkSubmitConfig.withoutPath(SLD.suites)
-    val map: Map[String, Seq[Any]] = configToMapStringAny(workingConf)
+    val map: Map[String, Seq[Any]] = configToMapStringSeqAny(workingConf)
 
     val newMap = extractSparkArgsToHigherLevel(map, workingConf)
 
@@ -59,7 +58,7 @@ object LaunchConfigDeconstructedWithSeqs {
     if(map.contains("spark-args")) {
       val mapStripped = map - "spark-args"
       val justSparkArgs = workingConf.withOnlyPath("spark-args").getObject("spark-args").toConfig
-      val sparkArgsMap = configToMapStringAny(justSparkArgs)
+      val sparkArgsMap = configToMapStringSeqAny(justSparkArgs)
 
       val newMap = mapStripped ++ sparkArgsMap
       newMap
@@ -87,7 +86,10 @@ case class LaunchConfigDeconstructed(
 
     val sparkHome = optionallyGetFromJavaMap[String](sparkSubmitOptions, SLD.sparkHome)
     val suitesParallel = optionallyGetFromJavaMap[Boolean](sparkSubmitOptions, SLD.suitesParallel)
+    val livyConf = optionallyGetFromJavaMap[util.HashMap[String, Any]](sparkSubmitOptions, "livy")
     val conf: Option[util.Map[String, Any]] = optionallyGetFromJavaMap[util.Map[String, Any]](sparkSubmitOptions, SLD.sparkConf)
+    val sparkBenchJar = optionallyGetFromJavaMap[String](sparkSubmitOptions, SLD.sparkBenchJar)
+
 
     val sparkArgs: Option[util.Map[String, Any]] = {
       val asScala = sparkSubmitOptions.asScala
@@ -95,6 +97,8 @@ case class LaunchConfigDeconstructed(
         case SLD.sparkConf => false
         case SLD.suitesParallel => false
         case SLD.sparkHome => false
+        case SLD.sparkBenchJar => false
+        case "livy" => false
         case _ => true
       }
 
@@ -105,9 +109,11 @@ case class LaunchConfigDeconstructed(
     SparkSubmitPieces(
       sparkHome,
       suitesParallel,
+      livyConf,
       conf,
       sparkArgs,
-      suitesConfig
+      suitesConfig,
+      sparkBenchJar
     )
   }
 }
@@ -115,13 +121,13 @@ case class LaunchConfigDeconstructed(
 case class SparkSubmitPieces (
                                sparkHome: Option[String],
                                suitesParallel: Option[Boolean],
+                               livyConf: Option[util.Map[String, Any]],
                                conf: Option[util.Map[String, Any]],
                                sparkArgs: Option[util.Map[String, Any]],
-                               suitesConfig: Config
+                               suitesConfig: Config,
+                               sparkBenchJar: Option[String]
                              ) {
   def reconstruct: Config = {
-
-//    val confToJava = conf match {case Some(m) => Some(m.asJava); case None => None}
 
     def ifItsThere[A](key: String, option: Option[A]): Option[(String, A)] =
       Try(key -> option.get).toOption
@@ -129,8 +135,10 @@ case class SparkSubmitPieces (
     val mostOfIt = Seq(
       ifItsThere(SLD.sparkHome, sparkHome),
       ifItsThere(SLD.suitesParallel, suitesParallel),
+      ifItsThere("livy", livyConf),
       ifItsThere(SLD.sparkConf, conf),
-      ifItsThere(SLD.sparkArgs, sparkArgs)
+      ifItsThere(SLD.sparkArgs, sparkArgs),
+      ifItsThere(SLD.sparkBenchJar, sparkBenchJar)
     ).flatten.toMap.asJava
 
     val sparkSubmitConf = ConfigValueFactory.fromMap(mostOfIt)

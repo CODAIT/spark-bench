@@ -18,7 +18,7 @@
 package com.ibm.sparktc.sparkbench.sparklaunch
 
 import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class SparkLaunchTest extends FlatSpec with Matchers with BeforeAndAfterEach {
   val dataShiznit = new BuildAndTeardownData("multi-spark")
@@ -34,6 +34,7 @@ class SparkLaunchTest extends FlatSpec with Matchers with BeforeAndAfterEach {
     dataShiznit.deleteFolders()
   }
   "Launching Spark" should "work" in {
+    assert(sys.env.get("SPARK_HOME").nonEmpty)
     val relativePath = "/etc/testConfFile1.conf"
     val resource = getClass.getResource(relativePath)
     val path = resource.getPath

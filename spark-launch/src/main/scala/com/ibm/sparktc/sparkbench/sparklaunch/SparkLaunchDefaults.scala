@@ -26,6 +26,11 @@ object SparkLaunchDefaults {
   val suites = "workload-suites"
   val suitesParallel = "suites-parallel"
   val sparkHome = "spark-home"
+  val livy = "livy"
+  val url = "url"
+  val pollSeconds = "poll-seconds"
+  val sparkBenchJar = "spark-bench-jar"
 
   val suitesParallelDefaultValue = false
+  val pollSecondsDefault = 5
 }

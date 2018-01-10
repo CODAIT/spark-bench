@@ -54,7 +54,8 @@ lazy val utils = project
     commonSettings,
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= typesafe,
-    libraryDependencies ++= testDeps
+    libraryDependencies ++= testDeps,
+    libraryDependencies ++= everybodyNeedsThis
   )
 
 /*
@@ -84,7 +85,8 @@ lazy val cli = project
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps,
     libraryDependencies ++= typesafe,
-    libraryDependencies ++= breezeDeps
+    libraryDependencies ++= breezeDeps,
+    libraryDependencies ++= everybodyNeedsThis
   )
   .dependsOn(utils % "compile->compile;test->test")
   .aggregate(utils)
@@ -94,7 +96,8 @@ lazy val `test-workloads` = project
     commonSettings,
     name := "test-workloads",
     libraryDependencies ++= sparkDeps,
-    libraryDependencies ++= testDeps
+    libraryDependencies ++= testDeps,
+    libraryDependencies ++= everybodyNeedsThis
   )
   .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile")
 
@@ -135,7 +138,9 @@ lazy val `spark-launch` = project
     libraryDependencies ++= sparkDeps,
     libraryDependencies ++= otherCompileDeps,
     libraryDependencies ++= testDeps,
-    libraryDependencies ++= typesafe
+    libraryDependencies ++= typesafe,
+    libraryDependencies ++= jsonCreation,
+    libraryDependencies ++= everybodyNeedsThis
   )
   .dependsOn(utils % "compile->compile;test->test", cli % "compile->compile;test->test")
 

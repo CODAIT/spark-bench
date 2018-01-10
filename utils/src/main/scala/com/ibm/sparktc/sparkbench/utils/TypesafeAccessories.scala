@@ -58,7 +58,7 @@ object TypesafeAccessories {
     * @param config
     * @return
     */
-  def configToMapStringAny(config: Config): Map[String, Seq[Any]] = {
+  def configToMapStringSeqAny(config: Config): Map[String, Seq[Any]] = {
     val cfgObj = config.root()
     val unwrapped = cfgObj.unwrapped().asScala.toMap
     val stuff: Map[String, Seq[Any]] = unwrapped.map(kv => {
@@ -130,6 +130,6 @@ object TypesafeAccessories {
     * @return
     */
   def configToMapSeq(config: Config): Seq[Map[String, Any]] =
-    splitGroupedConfigToIndividualConfigs( configToMapStringAny( config ) )
+    splitGroupedConfigToIndividualConfigs( configToMapStringSeqAny( config ) )
 
 }

@@ -2,6 +2,7 @@
 layout: page
 title: Installation
 ---
+
 _This guide assumes you have a working installation of Spark 2.x available and that you have access
 to the system where it is installed._
 
@@ -18,6 +19,18 @@ to the system where it is installed._
 ```bash
 ./bin/spark-bench.sh /path/to/your/config/file.conf
 ```
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Installation Summary](#installation-summary)
+  - [Setting Environment Variables](#setting-environment-variables)
+    - [Option 1: Setting Bash Environment Variables](#option-1-setting-bash-environment-variables)
+    - [Option 2: RECOMMENDED! Modifying Example Config Files To Include Environment Info](#option-2-recommended-modifying-example-config-files-to-include-environment-info)
+  - [Running the Examples](#running-the-examples)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### Setting Environment Variables
 There are two ways to set the Spark home and master variables necessary to run the examples. 
