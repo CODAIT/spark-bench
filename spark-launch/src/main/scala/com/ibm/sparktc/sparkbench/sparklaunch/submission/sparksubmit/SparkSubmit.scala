@@ -23,7 +23,6 @@ import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 
 import scala.sys.process.Process
 
-// TODO make this an object and also the livy submit an object
 object SparkSubmit extends Submitter {
 
   override def launch(conf: SparkJobConf): Unit = {
@@ -53,12 +52,12 @@ object SparkSubmit extends Submitter {
   }
 
   private def convertSparkArgs(map: Map[String, String]): Seq[String] =
-    map.foldLeft(Seq[String]()) {
+    map.foldLeft(Seq.empty[String]) {
       case (arr, (k, v)) => arr ++ Seq("--" + k, v)
     }
 
   private def convertSparkConf(map: Map[String, String]): Seq[String] =
-    map.foldLeft(Seq[String]()) {
+    map.foldLeft(Seq.empty[String]) {
       case (arr, (k, v)) => arr ++ Seq("--conf", s"$k=$v")
     }
 }

@@ -47,7 +47,6 @@ object ConfigWrangler {
     * @return a Seq of SparkJobConf ready to be launched
     */
 
-  //TODO wtf we already parsed this file...
   def apply(path: File): Seq[SparkJobConf] = {
     val config: Config = ConfigFactory.parseFile(path)
     val sparkBenchConfig = config.getObject(SLD.topLevelConfObject).toConfig
@@ -101,7 +100,7 @@ object ConfigWrangler {
     * @return
     */
   private[sparklaunch] def getListOfSparkSubmits(rootConfig: Config): Seq[Config] = {
-    getConfigListByName(s"${SLD.sparkSubmitObject}", rootConfig)
+    getConfigListByName(SLD.sparkSubmitObject, rootConfig)
   }
 
   def isSparkSubmit(map: Map[String, Any]): Boolean = {

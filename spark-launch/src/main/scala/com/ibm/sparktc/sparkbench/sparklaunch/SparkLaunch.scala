@@ -37,7 +37,6 @@ object SparkLaunch extends App {
     val path = args.head
     val (confSeq: Seq[SparkJobConf], parallel: Boolean) = mkConfs(new File(path))
 
-
     launchJobs(confSeq, parallel)
   }
 
@@ -49,21 +48,18 @@ object SparkLaunch extends App {
     (confs, parallel)
   }
 
-
   private def getConfigListByName(name: String, config: Config): List[Config] = {
     val workloadObjs: Iterable[ConfigObject] = config.getObjectList(name).asScala
     workloadObjs.map(_.toConfig).toList
   }
 
   def launchJobs(confSeq: Seq[SparkJobConf], parallel: Boolean): Unit = {
-    // TODO calling head here precludes doing a combo of submit and livy submit
-    // instead partition these and have one instance of each and ship them accordingly
-    // or something
 
-    def launch(conf: SparkJobConf): Unit = confSeq.head.submissionParams match {
+    def launch(conf: SparkJobConf): Unit = conf.submissionParams match {
       case s if ConfigWrangler.isLivySubmit(s) => LivySubmit().launch(conf)
       case s if ConfigWrangler.isSparkSubmit(s) => SparkSubmit.launch(conf)
     }
+
     if (parallel) {
       val confSeqPar = confSeq.par
       confSeqPar.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(confSeqPar.size))

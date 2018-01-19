@@ -24,11 +24,6 @@ object Dependencies {
   lazy val junitVersion = "4.12"
   lazy val scalatestVersion = "3.0.1"
 
-  // All non-test classes need these
-  val everybodyNeedsThis = Seq(
-    "org.apache.logging.log4j" % "log4j-api-scala_2.11" % "11.0"
-  )
-
   // Libraries
   val sparkDeps = Seq(
     "org.apache.spark" %% "spark-core"  % sparkVersion % "provided",
@@ -41,7 +36,6 @@ object Dependencies {
   )
 
   val jsonCreation = Seq(
-//    "io.spray" % "spray-json_2.11" % "1.3.4",
     "com.softwaremill.sttp" %% "json4s" % "1.1.3",
     "com.softwaremill.sttp" %% "core" % "1.1.3"
   )
