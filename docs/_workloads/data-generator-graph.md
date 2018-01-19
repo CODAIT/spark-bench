@@ -42,16 +42,16 @@ All other output file formats will cause an error.
 // Generate a graph with 1,000,000 vertices using the default out degree parameters.
 {
   name = "graph-data-generator"
-  vertices = 1000000
-  output = "hdfs:///one-million-vertex-graph.txt"
+  vertices = 1000
+  output = "hdfs:///one-thousand-vertex-graph.txt"
 }
 ```
 ```hocon
 // Generate a graph with 1,000,000 vertices but specify a random seed.
 {
   name = "graph-data-generator"
-  vertices = 1000000
-  output = "hdfs:///one-million-vertex-graph.txt"
+  vertices = 1000
+  output = "hdfs:///one-thousand-vertex-graph.txt"
   seed = 104623
 }
 ```
