@@ -112,13 +112,6 @@ class LivySubmitTest extends FlatSpec with Matchers with BeforeAndAfterEach {
         Nil
       )
     }
-//    val deleteRequest: Request[ResponseBodyDelete, Nothing] =
-//      sttp
-//        .delete(deleteBatchUrl)
-//        .contentType("application/json")
-//        .response(asJson[ResponseBodyDelete])
-
-//    uri"$url/batches/$id"
 
     def deleteRequest(request: Request[_,_]): Boolean = {
       request.uri.path.head == "batches" &&
@@ -135,9 +128,7 @@ class LivySubmitTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       Nil
     )
 
-    // TODO I think the GET request is failing in the match to POST before it gets to the match for GET
     val testingBackend = SttpBackendStub(HttpURLConnectionBackend())
-      // Handle polling GET requests
       .whenRequestMatchesPartial({
         case r if pollRequest(r) => pollResponse(batchID, mockJobIsDone())
         case r if postRequest(r, expectedBody) => postResponse(batchID)

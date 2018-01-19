@@ -46,7 +46,7 @@ class SparkJobConfTest extends FlatSpec with Matchers with BeforeAndAfter {
   before {
     SparkSession.clearDefaultSession()
     SparkSession.clearActiveSession()
-    if(sparkHome.isEmpty) throw SparkBenchException("WTF this is supposed to be set")
+    if(sparkHome.isEmpty) throw SparkBenchException("SPARK_HOME needs to be set")
   }
 
   after {

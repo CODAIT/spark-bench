@@ -98,7 +98,7 @@ case class LaunchConfigDeconstructed(
         case SLD.suitesParallel => false
         case SLD.sparkHome => false
         case SLD.sparkBenchJar => false
-        case "livy" => false
+        case SLD.livy => false
         case _ => true
       }
 
@@ -135,7 +135,7 @@ case class SparkSubmitPieces (
     val mostOfIt = Seq(
       ifItsThere(SLD.sparkHome, sparkHome),
       ifItsThere(SLD.suitesParallel, suitesParallel),
-      ifItsThere("livy", livyConf),
+      ifItsThere(SLD.livy, livyConf),
       ifItsThere(SLD.sparkConf, conf),
       ifItsThere(SLD.sparkArgs, sparkArgs),
       ifItsThere(SLD.sparkBenchJar, sparkBenchJar)

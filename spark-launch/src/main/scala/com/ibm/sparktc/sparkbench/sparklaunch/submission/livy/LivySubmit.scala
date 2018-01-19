@@ -24,6 +24,9 @@ import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.softwaremill.sttp.{Id, SttpBackend}
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.annotation.tailrec
+import scala.sys.ShutdownHookThread
+
 object LivySubmit {
   val log: Logger = LoggerFactory.getLogger(this.getClass)
   val successCode = 200
@@ -32,8 +35,6 @@ object LivySubmit {
 
   val emptyBodyException: SparkBenchException = SparkBenchException("REST call returned empty message body")
   val nonSuccessCodeException: Int => SparkBenchException = (code: Int) => SparkBenchException(s"REST call returned non-sucess code: $code")
-
-
 
   def apply(): LivySubmit = {
     new LivySubmit()(HttpURLConnectionBackend())
@@ -53,7 +54,7 @@ object LivySubmit {
                           (implicit backend: SttpBackend[Id, Nothing]):
                             (LivyRequestWithID, Response[ResponseBodyBatch]) = {
     val livyRequest = LivyRequest(conf)
-    println(s"Sending Livy POST request:\n${livyRequest.postRequest.toString}")
+    log.info(s"Sending Livy POST request:\n${livyRequest.postRequest.toString}")
     val response: Id[Response[ResponseBodyBatch]] = livyRequest.postRequest.send()
     (response.isSuccess, response.body) match {
       case (true, Left(_)) => throw emptyBodyException
@@ -66,21 +67,22 @@ object LivySubmit {
     (livyWithID, response)
   }
 
-  private def pollHelper(request: LivyRequestWithID, sleeperThread: Thread)(implicit backend: SttpBackend[Id, Nothing]): Response[ResponseBodyState] = {
-    sleeperThread.run()
+  private def pollHelper(request: LivyRequestWithID)(implicit backend: SttpBackend[Id, Nothing]): Response[ResponseBodyState] = {
+    Thread.sleep(request.pollSeconds * 1000)
     log.info(s"Sending Livy status GET request:\n${request.statusRequest.toString}")
     val response: Id[Response[ResponseBodyState]] = request.statusRequest.send()
     response
   }
 
-  def poll(request: LivyRequestWithID, sleeperThread: Thread, response: Response[ResponseBodyState])
+  @tailrec
+  def poll(request: LivyRequestWithID, response: Response[ResponseBodyState])
           (implicit backend: SttpBackend[Id, Nothing]): Response[ResponseBodyState] = (response.isSuccess, response.body) match {
     case (false, _) => throw SparkBenchException(s"Request failed with code ${response.code}")
     case (_, Left(_)) => throw emptyBodyException
     case (true, Right(bod)) => bod.state match {
       case "success" => response
       case "dead" => throw SparkBenchException(s"Poll request failed with state: dead\n" + getLogs(request))
-      case "running" => poll(request, sleeperThread, pollHelper(request, sleeperThread))
+      case "running" => poll(request, pollHelper(request))
       case st => throw SparkBenchException(s"Poll request failed with state: $st")
     }
   }
@@ -98,15 +100,12 @@ object LivySubmit {
 class LivySubmit()(implicit val backend: SttpBackend[Id, Nothing]) extends Submitter {
   override def launch(conf: SparkJobConf): Unit = {
     val (livyWithID, postResponse) = sendPostBatchRequest(conf)(backend)
-    val sleeperThread = new Thread{
-      override def run(): Unit = Thread.sleep(livyWithID.pollSeconds * 1000)
-    }
-    val pollResponse = poll(livyWithID, sleeperThread, pollHelper(livyWithID, sleeperThread))(backend)
-    sys.ShutdownHookThread {
-      // cancel any polling
-      sleeperThread.interrupt()
+    val shutdownHook: ShutdownHookThread = sys.ShutdownHookThread {
       // interrupt any batches
       cancelAllBatches(livyWithID)(backend)
     }
+    val pollResponse = poll(livyWithID, pollHelper(livyWithID))(backend)
+    // The request has completed, so we're going to remove the shutdown hook.
+    shutdownHook.remove()
   }
 }

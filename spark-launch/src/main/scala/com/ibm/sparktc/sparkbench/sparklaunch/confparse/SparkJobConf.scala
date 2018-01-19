@@ -64,23 +64,19 @@ object SparkJobConf {
     )
   }
 
-  def getSubmissionParams(sparkContextConf: Config): Map[String, Any] = {
-    val livyConf: Option[Map[String, Any]] =
-      Try{
-        val livyObj = sparkContextConf.getObject("livy")
-        livyObj.unwrapped().asScala.toMap
-      }.toOption
-    if(livyConf.isEmpty) {
+  def getSubmissionParams(sparkContextConf: Config): Map[String, Any] =
+    Try{
+      val livyObj = sparkContextConf.getObject("livy")
+      livyObj.unwrapped().asScala.toMap
+    }.getOrElse{
       val sparkHome = Try(sparkContextConf.getString("spark-home")).getOrElse(
         getOrThrow[String](sys.env.get("SPARK_HOME"), "The environment variable SPARK_HOME must be set")
       )
-      Map("spark-home" -> sparkHome)
+      Map[String, Any]("spark-home" -> sparkHome)
     }
-    else livyConf.get
-  }
 
   def getSparkBenchClass(sparkContextConf: Config): String = {
-    Try(sparkContextConf.getString("class")).toOption.getOrElse("com.ibm.sparktc.sparkbench.cli.CLIKickoff")
+    Try(sparkContextConf.getString("class")).getOrElse("com.ibm.sparktc.sparkbench.cli.CLIKickoff")
   }
 
   def getSparkArgs(sparkContextConf: Config): Map[String, String] = {
@@ -98,7 +94,6 @@ object SparkJobConf {
 
   def getSparkBenchJar(sparkContextConf: Config): String = {
     Try(sparkContextConf.getString(SLD.sparkBenchJar))
-      .toOption
       .getOrElse(findSparkBenchJar(sparkContextConf))
   }
 
@@ -122,20 +117,29 @@ object SparkJobConf {
     val path = getClass.getResource(relativePath)
     if(path == null) throw SparkBenchException("Failed to find compiled Spark-Bench jars")
     val folder = new File(path.getPath)
-    assert(folder.exists && folder.isDirectory)
-    val filez = folder.listFiles.toList.filterNot(file => file.getName.startsWith("spark-bench-launch"))
+    if(!folder.exists) throw SparkBenchException("Directory does not exist")
+    if(!folder.isDirectory) throw SparkBenchException("Expected a directory but found a file")
+    val filez = folder.listFiles.filterNot(file => file.getName.startsWith("spark-bench-launch"))
     filez.foreach(file => log.info(file.getName))
-    filez.filter(file => file.getName.startsWith("spark-bench")).head.getPath
+    val optFile: Option[File] = filez.find(file => file.getName.startsWith("spark-bench"))
+    optFile match {
+      case None => throw SparkBenchException("Failed to find Spark-Bench jar")
+      case Some(f) => f.getPath
+    }
   }
 
   def findSparkBenchJar(sparkContextConf: Config): String = {
     val whereIAm: String = this.getClass.getProtectionDomain.getCodeSource.getLocation.getFile
 
-    if(whereIAm.endsWith(".jar")) getDistributionJar(whereIAm)
+    if(whereIAm.endsWith(".jar")) {
+      getDistributionJar(whereIAm)
+    }
     else if(whereIAm.isEmpty) {
       throw SparkBenchException("Could not determine location for necessary spark-bench jars."); null
     }
-    else findCompiledJarInRepo()
+    else {
+      findCompiledJarInRepo()
+    }
   }
 
   def getSparkConfs(conf: Config): Map[String, String] = {
