@@ -17,10 +17,6 @@
 
 package com.ibm.sparktc.sparkbench.cli
 
-import java.io.File
-import java.util
-
-import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import com.ibm.sparktc.sparkbench.utils.TypesafeAccessories.configToMapStringSeqAny
 
 import scala.collection.JavaConverters._
@@ -71,7 +67,4 @@ object Configurator {
       output
     )
   }
-
-
-
 }

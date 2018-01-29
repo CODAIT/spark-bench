@@ -17,22 +17,16 @@
 
 package com.ibm.sparktc.sparkbench.cli
 
-import java.io.File
-
-import com.ibm.sparktc.sparkbench.utils.SparkBenchException
+import org.slf4j.{Logger, LoggerFactory}
 import com.ibm.sparktc.sparkbench.workload.MultipleSuiteKickoff
 
 object CLIKickoff extends App {
-
   override def main(args: Array[String]): Unit = {
-    args.length match {
-      case 1 => {
-//        val file = new File(args.head)
-//        if(!file.exists()) throw SparkBenchException(s"Cannot find configuration file: ${file.getPath}")
-        val worksuites = Configurator(args.head)
-        MultipleSuiteKickoff.run(worksuites)
-      }
-      case _ => throw new IllegalArgumentException("Requires exactly one option: config file path")
-    }
+    val log: Logger = LoggerFactory.getLogger(this.getClass)
+    log.info(s"args received: ${args.mkString(", ")}")
+    if(args.isEmpty) throw new IllegalArgumentException("CLIKickoff received no arguments")
+    val oneStr = args.mkString(" ")
+    val worksuites = Configurator(oneStr)
+    MultipleSuiteKickoff.run(worksuites)
   }
 }
