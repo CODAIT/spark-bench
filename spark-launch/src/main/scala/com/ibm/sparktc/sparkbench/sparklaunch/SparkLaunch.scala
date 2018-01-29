@@ -26,9 +26,7 @@ import com.ibm.sparktc.sparkbench.sparklaunch.submission.sparksubmit.SparkSubmit
 
 import scala.collection.parallel.ForkJoinTaskSupport
 import scala.collection.JavaConverters._
-import scala.sys.process._
 import scala.util.Try
-import com.ibm.sparktc.sparkbench.sparklaunch.{SparkLaunchDefaults => SLD}
 
 object SparkLaunch extends App {
 
