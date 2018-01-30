@@ -19,6 +19,7 @@ package com.ibm.sparktc.sparkbench.utils
 
 import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import com.databricks.spark.avro._
 
 object SparkFuncs {
 
@@ -35,6 +36,9 @@ object SparkFuncs {
     format match {
       case "parquet" => data.write.parquet(outputDir)
       case "csv" => data.write.option("header", "true").csv(outputDir)
+      case "orc" => data.write.orc(outputDir)
+      case "avro" => data.write.avro(outputDir)
+      case "json" => data.write.json(outputDir)
       case "console" => data.show()
       case _ => throw new Exception(s"Unrecognized or unspecified save format. " +
         s"Please check the file extension or add a file format to your arguments: $outputDir")
@@ -52,6 +56,9 @@ object SparkFuncs {
 
     inputFormat match {
       case "parquet" => spark.read.parquet(inputDir)
+      case "orc" => spark.read.orc(inputDir)
+      case "avro" => spark.read.avro(inputDir)
+      case "json" => spark.read.json(inputDir)
       case "csv" | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
     }
   }
