@@ -18,6 +18,7 @@
 package com.ibm.sparktc.sparkbench.workload.ml
 
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.classification.LogisticRegression
@@ -50,6 +51,7 @@ object LogisticRegressionWorkload extends WorkloadDefaults {
   def apply(m: Map[String, Any]) = new LogisticRegressionWorkload(
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
     testFile = getOrThrow(m, "testfile").asInstanceOf[String],
     numPartitions = getOrDefault[Int](m, "numpartitions", 32),
     cacheEnabled = getOrDefault[Boolean](m, "cacheenabled", true)
@@ -60,6 +62,7 @@ object LogisticRegressionWorkload extends WorkloadDefaults {
 case class LogisticRegressionWorkload(
                                        input: Option[String],
                                        output: Option[String],
+                                       saveMode: String,
                                        testFile: String,
                                        numPartitions: Int,
                                        cacheEnabled: Boolean

@@ -18,7 +18,7 @@
 package com.ibm.sparktc.sparkbench.workload
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, addConfToResults}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
 
 trait WorkloadDefaults {
   val name: String
@@ -28,6 +28,7 @@ trait WorkloadDefaults {
 trait Workload {
   val input: Option[String]
   val output: Option[String]
+  val saveMode: String
 
   /**
     *  Validate that the data set has a correct schema and fix if necessary.
@@ -43,6 +44,8 @@ trait Workload {
   def doWorkload(df: Option[DataFrame], sparkSession: SparkSession): DataFrame
 
   def run(spark: SparkSession): DataFrame = {
+
+    verifyCanWriteOrThrow(output, saveMode, spark)
 
     val df = input match {
       case None => None

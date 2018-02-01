@@ -19,6 +19,7 @@ package com.ibm.sparktc.sparkbench.workload.custom
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 // Create a quick case class with a member for each field we want to return in the results.
@@ -63,6 +64,7 @@ object HelloString extends WorkloadDefaults {
 case class HelloString(
                         input: Option[String] = None,
                         output: Option[String] = None,
+                        saveMode: String = SaveModes.error,
                         str: String
                       ) extends Workload {
 

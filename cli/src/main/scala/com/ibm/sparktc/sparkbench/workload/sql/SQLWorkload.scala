@@ -18,6 +18,7 @@
 package com.ibm.sparktc.sparkbench.workload.sql
 
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -36,6 +37,7 @@ object SQLWorkload extends WorkloadDefaults {
   def apply(m: Map[String, Any]) =
     new SQLWorkload(input = m.get("input").map(_.asInstanceOf[String]),
       output = m.get("output").map(_.asInstanceOf[String]),
+      saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
       queryStr = getOrThrow(m, "query").asInstanceOf[String],
       cache = getOrDefault[Boolean](m, "cache", false)
     )
@@ -44,6 +46,7 @@ object SQLWorkload extends WorkloadDefaults {
 
 case class SQLWorkload (input: Option[String],
                         output: Option[String] = None,
+                        saveMode: String,
                         queryStr: String,
                         cache: Boolean) extends Workload {
 
@@ -59,7 +62,7 @@ case class SQLWorkload (input: Option[String],
   }
 
   def save(res: DataFrame, where: String, spark: SparkSession): (Long, Unit) = time {
-    writeToDisk(where, res, spark)
+    writeToDisk(where, saveMode, res, spark)
   }
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {

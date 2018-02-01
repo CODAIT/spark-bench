@@ -20,6 +20,7 @@ package com.ibm.sparktc.sparkbench.workload.exercise
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
 
@@ -37,6 +38,7 @@ object PartitionAndSleepWorkload extends WorkloadDefaults {
 
 case class PartitionAndSleepWorkload(input: Option[String] = None,
                                      output: Option[String] = None,
+                                     saveMode: String = SaveModes.error,
                                      partitions: Int,
                                      sleepMS: Long) extends Workload {
 

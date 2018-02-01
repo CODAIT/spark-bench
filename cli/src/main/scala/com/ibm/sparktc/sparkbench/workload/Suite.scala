@@ -24,6 +24,7 @@ case class Suite(
                   repeat: Int = 1,
                   parallel: Boolean = false,
                   benchmarkOutput: Option[String],
+                  saveMode: String,
                   workloadConfigs: Seq[Map[String, Any]]
                 )
 
@@ -32,12 +33,14 @@ object Suite {
             description: Option[String],
             repeat: Int,
             parallel: Boolean,
+            saveMode: String,
             benchmarkOutput: Option[String]): Suite = {
     Suite(
       description,
       repeat,
       parallel,
       benchmarkOutput,
+      saveMode,
       confsFromArgs.flatMap( splitGroupedConfigToIndividualConfigs )
     )
   }

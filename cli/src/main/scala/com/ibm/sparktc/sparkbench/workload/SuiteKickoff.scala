@@ -17,7 +17,7 @@
 
 package com.ibm.sparktc.sparkbench.workload
 
-import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{writeToDisk, addConfToResults}
+import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.sql.functions.{col, lit}
 
@@ -58,6 +58,8 @@ import scala.collection.parallel.ForkJoinTaskSupport
 object SuiteKickoff {
 
   def run(s: Suite, spark: SparkSession): Unit = {
+    verifyCanWriteOrThrow(s.benchmarkOutput, s.saveMode, spark)
+
     // Translate the maps into runnable workloads
     val workloads: Seq[Workload] = s.workloadConfigs.map(ConfigCreator.mapToConf)
 
@@ -82,7 +84,7 @@ object SuiteKickoff {
     val plusSparkConf = addConfToResults(singleDF, strSparkConfs)
     val plusDescription = addConfToResults(plusSparkConf, Map("description" -> s.description)).coalesce(1)
     // And write to disk. We're done with this suite!
-    if(s.benchmarkOutput.nonEmpty) writeToDisk(s.benchmarkOutput.get, plusDescription, spark)
+    if(s.benchmarkOutput.nonEmpty) writeToDisk(s.benchmarkOutput.get, s.saveMode, plusDescription, spark)
   }
 
   private def runParallel(workloadConfigs: Seq[Workload], spark: SparkSession): Seq[DataFrame] = {

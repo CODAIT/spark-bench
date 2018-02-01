@@ -17,8 +17,8 @@
 package com.ibm.sparktc.sparkbench.datageneration
 
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkBenchException
-import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, getOrThrow, time, any2Long}
+import com.ibm.sparktc.sparkbench.utils.{SaveModes, SparkBenchException}
+import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{any2Long, getOrDefault, getOrThrow, time}
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
 import org.apache.spark.graphx.util.GraphGenerators
@@ -42,11 +42,13 @@ object GraphDataGen extends WorkloadDefaults {
         val s = verifySuitabilityOfOutputFileFormat(str)
         Some(s)
       }
+    val saveMode = getOrDefault[String](m, "save-mode", SaveModes.error)
 
     new GraphDataGen(
       numVertices = numVertices,
       input = None,
       output = output,
+      saveMode = saveMode,
       mu = mu,
       sigma = sigma,
       seed = seed,
@@ -89,6 +91,7 @@ case class GraphDataGen (
                           numVertices: Int,
                           input: Option[String] = None,
                           output: Option[String],
+                          saveMode: String,
                           mu: Double = 4.0,
                           sigma: Double = 1.3,
                           seed: Long = 1,
