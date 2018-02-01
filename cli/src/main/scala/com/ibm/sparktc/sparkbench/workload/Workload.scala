@@ -17,6 +17,7 @@
 
 package com.ibm.sparktc.sparkbench.workload
 
+import com.ibm.sparktc.sparkbench.utils.{SaveModes, SparkBenchException}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs._
 
@@ -46,6 +47,10 @@ trait Workload {
   def run(spark: SparkSession): DataFrame = {
 
     verifyCanWriteOrThrow(output, saveMode, spark)
+    if(saveMode == SaveModes.append){
+      throw SparkBenchException("Save-mode \"append\" not available for workload results. " +
+        "Please use \"errorifexists\", \"ignore\", or \"overwrite\" instead.")
+    }
 
     val df = input match {
       case None => None
