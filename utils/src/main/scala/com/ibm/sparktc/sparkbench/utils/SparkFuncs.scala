@@ -38,6 +38,7 @@ object SparkFuncs {
         case (true, SaveModes.append) => true
         case (true, SaveModes.error) => false
         case (true, SaveModes.ignore) => true // allow write operation to no-op when the time comes
+        case (true, _) => throw SparkBenchException(s"Unrecognized or unimplemented save-mode: $saveMode")
       }
     }
   }
