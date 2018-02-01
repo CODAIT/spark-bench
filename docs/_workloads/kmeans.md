@@ -21,6 +21,7 @@ will be passed upwards and outputted with the workload suite.
 | name       | yes | -- | "kmeans" |
 | input | yes | -- | the input dataset |
 | output | no | -- | If users wish to capture the actual results of the kmeans algorithm, they can specify an output file here. |
+| save-mode | no | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), and "overwrite" |
 | k     | no | 2 | number of clusters |
 | seed  | no | 127L | initial values |
 | maxiterations  | no | 2 | maximum number of times the algorithm should iterate |  

@@ -23,6 +23,7 @@ select `0` from input where `0` < -0.9
 | name        | yes      | -- | "sql" |
 | input       | yes      | -- | the input dataset |
 | output      | no       | -- | If users wish to capture the actual results of the SQL query, they can specify an output file here. |
+| save-mode | no | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), and "overwrite" |
 | query    | yes      | --    | the sql query to perform. The table name must be "input" as shown in the examples above. |
 | cache       | no       | false | whether the dataset should be cached after being read from disk |
 

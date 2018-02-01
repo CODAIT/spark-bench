@@ -30,6 +30,7 @@ All other output file formats will cause an error.
 | ------- |---------------| ---------| ----------- |  
 | name       | yes | -- | "graph-data-generator" |  
 | output   | yes | -- | output file. MUST BE .TXT FORMAT |
+| save-mode | no | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), and "overwrite" |
 | vertices      | yes | -- | Number of vertices in the graph |  
 | mu | no | 4.0 | mean of out-degree distribution |  
 | sigma | no| 1.3 | standard deviation of out-degree distribution |  
