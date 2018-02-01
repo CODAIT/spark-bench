@@ -19,6 +19,7 @@ package com.ibm.sparktc.sparkbench.workload.sql
 
 import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import com.ibm.sparktc.sparkbench.testfixtures.BuildAndTeardownData
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
@@ -44,6 +45,7 @@ class SQLWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     val workload = SQLWorkload(input = Some(smallData),
       output = Some(resOutput),
+      saveMode = SaveModes.error,
       queryStr = "select `0` from input where `0` < -0.9",
       cache = false)
 

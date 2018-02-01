@@ -26,6 +26,7 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 
 /*
  * (C) Copyright IBM Corp. 2015 
@@ -58,6 +59,7 @@ object KMeansWorkload extends WorkloadDefaults {
   def apply(m: Map[String, Any]) = new KMeansWorkload(
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
+    saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
     k = getOrDefault[Int](m, "k", numOfClusters),
     seed = getOrDefault(m, "seed", seed, any2Long),
     maxIterations = getOrDefault[Int](m, "maxiterations", maxIteration))
@@ -66,6 +68,7 @@ object KMeansWorkload extends WorkloadDefaults {
 
 case class KMeansWorkload(input: Option[String],
                           output: Option[String],
+                          saveMode: String,
                           k: Int,
                           seed: Long,
                           maxIterations: Int) extends Workload {
@@ -141,7 +144,7 @@ case class KMeansWorkload(input: Option[String],
       }
       import spark.implicits._
       // Already performed the match one level up so these are guaranteed to be Some(something)
-      writeToDisk(output.get, vectorsAndClusterIdx.toDF(), spark = spark)
+      writeToDisk(output.get, saveMode, vectorsAndClusterIdx.toDF(), spark = spark)
     }
     ds.unpersist()
     res

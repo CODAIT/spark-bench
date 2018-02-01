@@ -21,7 +21,7 @@ import org.apache.spark.mllib.util.LinearDataGenerator
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import com.ibm.sparktc.sparkbench.utils.SparkBenchException
+import com.ibm.sparktc.sparkbench.utils.{SaveModes, SparkBenchException}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions.{getOrDefault, getOrThrow, time}
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
@@ -40,6 +40,7 @@ object LinearRegressionDataGen extends WorkloadDefaults {
     numRows = getOrThrow(m, "rows").asInstanceOf[Int],
     numCols = getOrThrow(m, "cols").asInstanceOf[Int],
     output = Some(getOrThrow(m, "output").asInstanceOf[String]),
+    saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
     eps = getOrDefault[Double](m, "eps", eps),
     intercepts = getOrDefault[Double](m, "intercepts", intercepts),
     numPartitions = getOrDefault[Int](m, "partitions", numOfPartitions)
@@ -51,6 +52,7 @@ case class LinearRegressionDataGen (
                                       numCols: Int,
                                       input: Option[String] = None,
                                       output: Option[String],
+                                      saveMode: String,
                                       eps: Double,
                                       intercepts: Double,
                                       numPartitions: Int
@@ -79,7 +81,7 @@ case class LinearRegressionDataGen (
     val (saveTime, _) = time {
       val outputstr = output.get
       if(outputstr.endsWith(".csv")) throw SparkBenchException("LabeledPoints cannot be saved to CSV. Please try outputting to Parquet instead.")
-      writeToDisk(output.get, dataDF, spark)
+      writeToDisk(output.get, saveMode, dataDF, spark)
     }//TODO you can't output this to CSV. Parquet is fine
 
     val timeResultSchema = StructType(

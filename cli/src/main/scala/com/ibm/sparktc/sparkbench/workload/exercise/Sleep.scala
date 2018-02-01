@@ -21,7 +21,7 @@ import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import breeze.stats.distributions.{Poisson, Rand}
-import com.ibm.sparktc.sparkbench.utils.SparkBenchException
+import com.ibm.sparktc.sparkbench.utils.{SaveModes, SparkBenchException}
 
 case class SleepResult(
                         name: String,
@@ -138,6 +138,7 @@ object Sleep extends WorkloadDefaults {
 case class Sleep(
                 input: Option[String] = None,
                 output: Option[String] = None,
+                saveMode: String = SaveModes.error,
                 sleepMS: Long,
                 distribution: Option[String] = None,
                 distributionMean: Option[Double] = None,

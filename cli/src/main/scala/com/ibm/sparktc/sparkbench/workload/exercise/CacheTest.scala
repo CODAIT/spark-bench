@@ -19,6 +19,7 @@ package com.ibm.sparktc.sparkbench.workload.exercise
 
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 case class CacheTestResult(name: String, timestamp: Long, runTime1: Long, runTime2: Long, runTime3: Long)
@@ -32,8 +33,9 @@ object CacheTest extends WorkloadDefaults {
 }
 
 case class CacheTest(input: Option[String],
-                    output: Option[String],
-                    sleepMs: Long) extends Workload {
+                     output: Option[String],
+                     saveMode: String = SaveModes.error,
+                     sleepMs: Long) extends Workload {
 
   def doWorkload(df: Option[DataFrame], spark: SparkSession): DataFrame = {
     import spark.implicits._

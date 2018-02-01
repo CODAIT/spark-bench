@@ -41,7 +41,7 @@ class HelpersTest extends FlatSpec with Matchers {
       Map("z" -> 20),
       Map("z" -> 30)
     )
-    val suite = Suite.build(conf, Some("description"), 1, false, Some("output"))
+    val suite = Suite.build(conf, Some("description"), 1, false, "error", Some("output"))
     suite.description shouldBe Some("description")
     suite.repeat shouldBe 1
     suite.parallel shouldBe false

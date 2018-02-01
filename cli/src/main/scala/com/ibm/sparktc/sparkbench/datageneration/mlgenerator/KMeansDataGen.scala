@@ -21,6 +21,7 @@ import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import com.ibm.sparktc.sparkbench.workload.{Workload, WorkloadDefaults}
 import com.ibm.sparktc.sparkbench.utils.GeneralFunctions._
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StructField, StructType}
@@ -33,6 +34,7 @@ object KMeansDataGen extends WorkloadDefaults {
     numRows = getOrThrow(m, "rows").asInstanceOf[Int],
     numCols = getOrThrow(m, "cols").asInstanceOf[Int],
     output = Some(getOrThrow(m, "output").asInstanceOf[String]),
+    saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
     k = getOrDefault[Int](m, "k", KMeansWorkload.numOfClusters),
     scaling = getOrDefault[Double](m, "scaling", KMeansWorkload.scaling),
     numPartitions = getOrDefault[Int](m, "partitions", KMeansWorkload.numOfPartitions)
@@ -44,6 +46,7 @@ case class KMeansDataGen(
                           numCols: Int,
                           input: Option[String] = None,
                           output: Option[String],
+                          saveMode: String,
                           k: Int,
                           scaling: Double,
                           numPartitions: Int
@@ -71,7 +74,7 @@ case class KMeansDataGen(
       spark.createDataFrame(rowRDD, schema)
     }
 
-    val (saveTime, _) = time { writeToDisk(output.get, dataDF, spark) }
+    val (saveTime, _) = time { writeToDisk(output.get, saveMode, dataDF, spark) }
 
     val timeResultSchema = StructType(
       List(

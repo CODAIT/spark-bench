@@ -23,23 +23,36 @@ import com.databricks.spark.avro._
 
 object SparkFuncs {
 
-  def writeToDisk(outputDir: String, data: DataFrame, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
+  private def parseFormat(outputDir: String, fileFormat: Option[String]): String = (outputDir, fileFormat) match {
+    case (Formats.console, None) => Formats.console
+    case (_, None)         => outputDir.split('.').last
+    case (_, Some(s))      => s
+  }
 
-    verifyPathNotExistsOrThrow(outputDir, s"Error: $outputDir already exists!", spark)
-
-    val format = (outputDir, fileFormat) match {
-      case ("console", None) => "console"
-      case (_, None)         => outputDir.split('.').last
-      case (_, Some(s))      => s
+  def verifyCanWrite(outputDir: String, saveMode: String, spark: SparkSession, fileFormat: Option[String] = None): Boolean = {
+    if(outputDir == Formats.console) true
+    else {
+      (pathExists(outputDir, spark), saveMode) match {
+        case (false, _) => true
+        case (true, SaveModes.overwrite) => true
+        case (true, SaveModes.append) => true
+        case (true, SaveModes.error) => false
+        case (true, SaveModes.ignore) => true // allow write operation to no-op when the time comes
+      }
     }
+  }
+
+  def writeToDisk(outputDir: String, saveMode: String, data: DataFrame, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
+
+    val format = parseFormat(outputDir, fileFormat)
 
     format match {
-      case "parquet" => data.write.parquet(outputDir)
-      case "csv" => data.write.option("header", "true").csv(outputDir)
-      case "orc" => data.write.orc(outputDir)
-      case "avro" => data.write.avro(outputDir)
-      case "json" => data.write.json(outputDir)
-      case "console" => data.show()
+      case Formats.parquet => data.write.mode(saveMode).parquet(outputDir)
+      case Formats.csv => data.write.mode(saveMode).option("header", "true").csv(outputDir)
+      case Formats.orc => data.write.mode(saveMode).orc(outputDir)
+      case Formats.avro => data.write.mode(saveMode).avro(outputDir)
+      case Formats.json => data.write.mode(saveMode).json(outputDir)
+      case Formats.console => data.show()
       case _ => throw new Exception(s"Unrecognized or unspecified save format. " +
         s"Please check the file extension or add a file format to your arguments: $outputDir")
     }
@@ -55,26 +68,36 @@ object SparkFuncs {
     }
 
     inputFormat match {
-      case "parquet" => spark.read.parquet(inputDir)
-      case "orc" => spark.read.orc(inputDir)
-      case "avro" => spark.read.avro(inputDir)
-      case "json" => spark.read.json(inputDir)
-      case "csv" | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
+      case Formats.parquet => spark.read.parquet(inputDir)
+      case Formats.orc => spark.read.orc(inputDir)
+      case Formats.avro => spark.read.avro(inputDir)
+      case Formats.json => spark.read.json(inputDir)
+      case Formats.csv | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
     }
   }
 
-  def verifyPathExistsOrThrow(path: String, errorMessage: String, spark: SparkSession): String = {
+  def pathExists(path: String, spark: SparkSession): Boolean = {
     val conf = spark.sparkContext.hadoopConfiguration
     val fs = org.apache.hadoop.fs.FileSystem.get(conf)
-    if (fs.exists(new org.apache.hadoop.fs.Path(path))) { path } // "It is true that this file exists"
+    fs.exists(new org.apache.hadoop.fs.Path(path))
+  }
+
+  def verifyPathExistsOrThrow(path: String, errorMessage: String, spark: SparkSession): String = {
+    if (pathExists(path, spark)) { path } // "It is true that this file exists"
     else { throw SparkBenchException(errorMessage) }
   }
 
   def verifyPathNotExistsOrThrow(path: String, errorMessage: String, spark: SparkSession): String = {
-    val conf = spark.sparkContext.hadoopConfiguration
-    val fs = org.apache.hadoop.fs.FileSystem.get(conf)
-    if ( ! fs.exists(new org.apache.hadoop.fs.Path(path))) { path } // "It is true that this file does not exist"
+    if (!pathExists(path, spark)) { path } // "It is true that this file does not exist"
     else { throw SparkBenchException(errorMessage) }
+  }
+
+  def verifyCanWriteOrThrow(outputDir: Option[String], saveMode: String, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
+    if(outputDir.nonEmpty) {
+      if(!verifyCanWrite(outputDir.get, saveMode, spark, fileFormat)){
+        throw SparkBenchException(s"File ${outputDir.get} already exists and save-mode $saveMode prevents further action")
+      }
+    }
   }
 
   def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {

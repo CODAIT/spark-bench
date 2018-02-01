@@ -20,6 +20,7 @@ package com.ibm.sparktc.sparkbench.testfixtures
 import java.io.File
 
 import com.holdenkarau.spark.testing.Utils
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.writeToDisk
 import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import org.apache.spark.mllib.util.KMeansDataGenerator
@@ -62,6 +63,6 @@ class BuildAndTeardownData(dirname: String = System.currentTimeMillis.toString) 
 
     val df = spark.createDataFrame(rowRDD, schema)
 
-    writeToDisk(outputFile, df, spark)
+    writeToDisk(outputFile, SaveModes.overwrite, df, spark)
   }
 }
