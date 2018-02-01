@@ -10,6 +10,7 @@ title: Data Generator - Linear Regression
 | rows      | yes | -- | number of rows to generate |
 | cols     | yes | -- | number of columns to generate |
 | output   | yes | -- | output file |
+| save-mode | no | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), and "overwrite" |
 | eps      | no | 2 | epsilon factor by which examples are scaled |
 | intercepts | no | 0.1 | data intercept |
 | partitions | no| 10 | number of partitions|

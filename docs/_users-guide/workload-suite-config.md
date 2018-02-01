@@ -20,12 +20,13 @@ Workload suites can be composed with each other for benchmarking tasks or to sim
 
 ## Parameters
 
-| Name    | Required | Description |  
-| ---------- | ----- | --- |    
-| benchmark-output | no | path to the file where benchmark results should be stored, or use `"console"` to print to the terminal |
-| descr | yes | Human-readable string description of what the suite intends to do |
-| parallel  | no | Whether the workloads in the suite run serially or in parallel. Defaults to `false`. |  
-| repeat  | no | How many times the workloads in the suite should be repeated. |  
+| Name             | Required | Default | Description |  
+| ---------------- | -------- | ------- | ----------- |    
+| benchmark-output | no       | -       | path to the file where benchmark results should be stored, or use `"console"` to print to the terminal |
+| save-mode        | no       | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), "overwrite", and "append" |
+| descr            | yes      | -       | Human-readable string description of what the suite intends to do |
+| parallel         | no       | false   | Whether the workloads in the suite run serially or in parallel. Defaults to `false`. |  
+| repeat           | no       | 1       | How many times the workloads in the suite should be repeated. |  
 
 ## benchmark-output
 
@@ -67,6 +68,18 @@ workload-suites = [
   }
 ]
 ```
+
+## save-mode
+
+If users specify benchmark-output they can use this option to specify write behavior.
+Options are
+  - errorifexists: if the file exists, throw an error
+  - ignore: if the file exists, no-op
+  - overwrite: if the file exists, overwrite it
+  - append: if the file exists, append to it
+
+Note: "append" is allowed for benchmark-output as it may be conceptually the same dataset,
+but disallowed for workload output as those are conceptually different datasets.
 
 ## descr
 

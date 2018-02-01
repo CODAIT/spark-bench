@@ -15,6 +15,7 @@ Runs LogisticRegression over the input datasets.
 | input          | yes | --    | path to the training dataset |
 | testfile       | yes | --    | path to the test dataset |
 | output         | no  | --    | If users wish to capture the actual results of the workload, they can specify an output file here. |
+| save-mode | no | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), and "overwrite" |
 | numpartitions  | no  | 32    | number of partitions |
 | cacheenabled   | no  | false | whether or not the datasets are cached after being read from disk |
 
