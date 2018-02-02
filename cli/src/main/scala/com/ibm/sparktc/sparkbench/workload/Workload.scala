@@ -46,7 +46,7 @@ trait Workload {
 
   def run(spark: SparkSession): DataFrame = {
 
-    verifyCanWriteOrThrow(output, saveMode, spark)
+    verifyOutput(output, saveMode, spark)
     if(saveMode == SaveModes.append){
       throw SparkBenchException("Save-mode \"append\" not available for workload results. " +
         "Please use \"errorifexists\", \"ignore\", or \"overwrite\" instead.")

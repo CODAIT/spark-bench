@@ -17,6 +17,7 @@
 
 package com.ibm.sparktc.sparkbench.cli
 
+import com.ibm.sparktc.sparkbench.utils.SaveModes
 import com.ibm.sparktc.sparkbench.workload.Suite
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -41,7 +42,7 @@ class HelpersTest extends FlatSpec with Matchers {
       Map("z" -> 20),
       Map("z" -> 30)
     )
-    val suite = Suite.build(conf, Some("description"), 1, false, "error", Some("output"))
+    val suite = Suite.build(conf, Some("description"), 1, false, SaveModes.error, Some("output"))
     suite.description shouldBe Some("description")
     suite.repeat shouldBe 1
     suite.parallel shouldBe false

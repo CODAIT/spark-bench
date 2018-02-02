@@ -58,7 +58,7 @@ import scala.collection.parallel.ForkJoinTaskSupport
 object SuiteKickoff {
 
   def run(s: Suite, spark: SparkSession): Unit = {
-    verifyCanWriteOrThrow(s.benchmarkOutput, s.saveMode, spark)
+    verifyOutput(s.benchmarkOutput, s.saveMode, spark)
 
     // Translate the maps into runnable workloads
     val workloads: Seq[Workload] = s.workloadConfigs.map(ConfigCreator.mapToConf)
