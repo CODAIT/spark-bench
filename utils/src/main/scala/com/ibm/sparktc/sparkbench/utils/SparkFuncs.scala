@@ -29,6 +29,11 @@ object SparkFuncs {
     case (_, Some(s))      => s
   }
 
+  def verifyOutput(outputDir: Option[String], saveMode: String, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
+    verifyCanWriteOrThrow(outputDir, saveMode, spark, fileFormat)
+    verifyFormatOrThrow(outputDir, fileFormat)
+  }
+  
   def verifyCanWrite(outputDir: String, saveMode: String, spark: SparkSession, fileFormat: Option[String] = None): Boolean = {
     if(outputDir == Formats.console) true
     else {
@@ -43,37 +48,17 @@ object SparkFuncs {
     }
   }
 
-  def writeToDisk(outputDir: String, saveMode: String, data: DataFrame, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
-
+  def verifyFormat(outputDir: String, fileFormat: Option[String] = None): Boolean = {
     val format = parseFormat(outputDir, fileFormat)
 
     format match {
-      case Formats.parquet => data.write.mode(saveMode).parquet(outputDir)
-      case Formats.csv => data.write.mode(saveMode).option("header", "true").csv(outputDir)
-      case Formats.orc => data.write.mode(saveMode).orc(outputDir)
-      case Formats.avro => data.write.mode(saveMode).avro(outputDir)
-      case Formats.json => data.write.mode(saveMode).json(outputDir)
-      case Formats.console => data.show()
-      case _ => throw new Exception(s"Unrecognized or unspecified save format. " +
-        s"Please check the file extension or add a file format to your arguments: $outputDir")
-    }
-  }
-
-  def load(spark: SparkSession, inputDir: String, fileFormat: Option[String] = None): DataFrame = {
-
-    verifyPathExistsOrThrow(inputDir, s"Error: $inputDir does not exist!", spark)
-
-    val inputFormat = fileFormat match {
-      case None => inputDir.split('.').last
-      case Some(s) => s
-    }
-
-    inputFormat match {
-      case Formats.parquet => spark.read.parquet(inputDir)
-      case Formats.orc => spark.read.orc(inputDir)
-      case Formats.avro => spark.read.avro(inputDir)
-      case Formats.json => spark.read.json(inputDir)
-      case Formats.csv | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
+      case Formats.parquet => true
+      case Formats.csv => true
+      case Formats.orc => true
+      case Formats.avro => true
+      case Formats.json => true
+      case Formats.console => true
+      case _ => false
     }
   }
 
@@ -100,6 +85,51 @@ object SparkFuncs {
       }
     }
   }
+
+  def verifyFormatOrThrow(outputDir: Option[String], fileFormat: Option[String] = None): Unit = {
+    if(outputDir.nonEmpty) {
+      if(!verifyFormat(outputDir.get, fileFormat)) {
+        throw new Exception(s"Unrecognized or unspecified save format. " +
+          s"Please check the file extension or add a file format to your arguments: $outputDir")
+      }
+    }
+  }
+
+  def writeToDisk(outputDir: String, saveMode: String, data: DataFrame, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
+
+    val format = parseFormat(outputDir, fileFormat)
+
+    format match {
+      case Formats.parquet => data.write.mode(saveMode).parquet(outputDir)
+      case Formats.csv => data.write.mode(saveMode).option("header", "true").csv(outputDir)
+      case Formats.orc => data.write.mode(saveMode).orc(outputDir)
+      case Formats.avro => data.write.mode(saveMode).avro(outputDir)
+      case Formats.json => data.write.mode(saveMode).json(outputDir)
+      case Formats.console => data.show()
+      case _ => throw new Exception(s"Unrecognized or unspecified save format: $format. " +
+        s"Please check the file extension or add a file format to your arguments: $outputDir")
+    }
+  }
+
+  def load(spark: SparkSession, inputDir: String, fileFormat: Option[String] = None): DataFrame = {
+
+    verifyPathExistsOrThrow(inputDir, s"Error: $inputDir does not exist!", spark)
+
+    val inputFormat = fileFormat match {
+      case None => inputDir.split('.').last
+      case Some(s) => s
+    }
+
+    inputFormat match {
+      case Formats.parquet => spark.read.parquet(inputDir)
+      case Formats.orc => spark.read.orc(inputDir)
+      case Formats.avro => spark.read.avro(inputDir)
+      case Formats.json => spark.read.json(inputDir)
+      case Formats.csv | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
+    }
+  }
+
+
 
   def addConfToResults(df: DataFrame, m: Map[String, Any]): DataFrame = {
     def dealWithNones(a: Any): Any = a match {

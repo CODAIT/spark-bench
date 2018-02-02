@@ -34,7 +34,7 @@ case class SparkPiResult(
 
 object SparkPi extends WorkloadDefaults {
   val name = "sparkpi"
-  def apply(m: Map[String, Any])  =
+  def apply(m: Map[String, Any]) =
     new SparkPi(input = m.get("input").map(_.asInstanceOf[String]),
       output = None,
       slices = getOrDefault[Int](m, "slices", 2)
