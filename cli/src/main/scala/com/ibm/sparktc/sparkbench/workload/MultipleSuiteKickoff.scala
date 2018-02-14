@@ -37,5 +37,5 @@ object MultipleSuiteKickoff {
   private def runSuitesSerially(suiteSeq: Seq[Suite], spark: SparkSession): Unit =
     suiteSeq.foreach(SuiteKickoff.run(_, spark))
 
-  private def createSparkContext: SparkSession = SparkSession.builder.getOrCreate
+  private def createSparkContext: SparkSession = SparkSession.builder.enableHiveSupport().getOrCreate
 }
