@@ -64,7 +64,7 @@ object SparkFuncs {
   }
 
   private def extractHDFSuri(str: String): Option[String] = {
-    val regx = """hdfs://(hdfs:\d+)""".r.unanchored
+    val regx = """hdfs://(\S+:\d+)""".r.unanchored
     str match {
       case regx(uri) => Some(uri)
       case _ => None
