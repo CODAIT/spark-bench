@@ -1,7 +1,7 @@
 <!-- 
     WELCOME to Spark-Bench! Thanks for being a part of the project!
-    Please use Markdown code and syntax highlighting 
-    for you config file and your stack trace. It makes it much easier to read! 
+    Please use Markdown code and syntax highlighting for you config file 
+    and your stack trace. It makes it much easier to read! 
     https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code
 -->
  
