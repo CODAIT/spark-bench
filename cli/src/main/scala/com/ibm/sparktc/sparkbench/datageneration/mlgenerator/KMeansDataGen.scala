@@ -67,7 +67,7 @@ case class KMeansDataGen(
     }
 
     val (convertTime, dataDF) = time {
-      val schemaString = data.first().indices.map(_.toString).mkString(" ")
+      val schemaString = data.first().indices.map(i => "c" + i.toString).mkString(" ")
       val fields = schemaString.split(" ").map(fieldName => StructField(fieldName, DoubleType, nullable = false))
       val schema = StructType(fields)
       val rowRDD = data.map(arr => Row(arr:_*))

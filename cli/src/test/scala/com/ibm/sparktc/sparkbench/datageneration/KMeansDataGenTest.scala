@@ -21,40 +21,41 @@ import java.io.File
 
 import com.ibm.sparktc.sparkbench.datageneration.mlgenerator.KMeansDataGen
 import com.ibm.sparktc.sparkbench.testfixtures.{BuildAndTeardownData, SparkSessionProvider}
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
 import scala.io.Source
 
-class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
+class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   val cool = new BuildAndTeardownData("kmeans-data-gen")
 
-  val fileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}.csv"
+  val fileName = s"${cool.sparkBenchTestFolder}/${java.util.UUID.randomUUID.toString}"
 
   var file: File = _
 
-  override def beforeEach() {
+  override def beforeAll() {
     cool.createFolders()
-    file = new File(fileName)
   }
 
-  override def afterEach() {
+  override def afterAll() {
     cool.deleteFolders()
   }
 
-  "KMeansDataGeneration" should "generate data correctly" in {
+  "KMeansDataGeneration" should "generate a csv correctly" in {
+
+    val csvFile = s"$fileName.csv"
 
     val m = Map(
       "name" -> "kmeans",
       "rows" -> 10,
       "cols" -> 10,
-      "output" -> fileName
+      "output" -> csvFile
     )
 
     val generator = KMeansDataGen(m)
 
-
     generator.doWorkload(spark = SparkSessionProvider.spark)
 
+    file = new File(csvFile)
 
     val fileList = file.listFiles().toList.filter(_.getName.startsWith("part"))
 
@@ -73,5 +74,35 @@ class KMeansDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEach {
     *  test will break, but now you know what's going on so you can fix it :)
     */
     length shouldBe generator.numRows + fileList.length
+  }
+
+  it should "generate an ORC file correctly" in {
+    val spark = SparkSessionProvider.spark
+
+    val orcFile = s"$fileName.orc"
+
+    val m = Map(
+      "name" -> "kmeans",
+      "rows" -> 10,
+      "cols" -> 10,
+      "output" -> orcFile
+    )
+
+    val generator = KMeansDataGen(m)
+
+    generator.doWorkload(spark = spark)
+
+    file = new File(orcFile)
+
+    val list = file.listFiles().toList
+    val fileList = list.filter(_.getName.startsWith("part"))
+
+    fileList.length should be > 0
+
+    println(s"reading file $orcFile")
+
+    val fromDisk = spark.read.orc(orcFile)
+    val rows = fromDisk.count()
+    rows shouldBe 10
   }
 }
