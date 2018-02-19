@@ -39,7 +39,8 @@ object SQLWorkload extends WorkloadDefaults {
       output = m.get("output").map(_.asInstanceOf[String]),
       saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
       queryStr = getOrThrow(m, "query").asInstanceOf[String],
-      cache = getOrDefault[Boolean](m, "cache", false)
+      cache = getOrDefault[Boolean](m, "cache", false),
+      numPartitions = m.get("partitions").map(_.asInstanceOf[Int])
     )
 
 }
@@ -48,7 +49,9 @@ case class SQLWorkload (input: Option[String],
                         output: Option[String] = None,
                         saveMode: String,
                         queryStr: String,
-                        cache: Boolean) extends Workload {
+                        cache: Boolean,
+                        numPartitions: Option[Int] = None
+                       ) extends Workload {
 
   def loadFromDisk(spark: SparkSession): (Long, DataFrame) = time {
     val df = load(spark, input.get)
@@ -62,7 +65,12 @@ case class SQLWorkload (input: Option[String],
   }
 
   def save(res: DataFrame, where: String, spark: SparkSession): (Long, Unit) = time {
-    writeToDisk(where, saveMode, res, spark)
+    if(numPartitions.nonEmpty){
+      writeToDisk(where, saveMode, res.repartition(numPartitions.get), spark)
+    }
+    else {
+      writeToDisk(where, saveMode, res, spark)
+    }
   }
 
   override def doWorkload(df: Option[DataFrame] = None, spark: SparkSession): DataFrame = {

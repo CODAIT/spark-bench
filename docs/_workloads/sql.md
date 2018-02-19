@@ -26,6 +26,8 @@ select `0` from input where `0` < -0.9
 | save-mode | no | errorifexists | Options are "errorifexists", "ignore" (no-op if exists), and "overwrite" |
 | query    | yes      | --    | the sql query to perform. The table name must be "input" as shown in the examples above. |
 | cache       | no       | false | whether the dataset should be cached after being read from disk |
+| partitions | no| Natural partitioning | If users specify `output` for this workload, they can optionally repartion the dataset using this option.|
+
 
 #### Examples
 
@@ -44,5 +46,16 @@ select `0` from input where `0` < -0.9
   input = "/tmp/generated-kmeans-data.parquet"
   query = "select `0` from input where `0` < -0.9"
   cache = true
+}
+```
+
+```hocon
+{
+  name = "sql"
+  input = "/tmp/generated-kmeans-data.parquet"
+  query = "select `0` from input where `0` < -0.9"
+  cache = true
+  output = "hdfs:///query-output-in-three-partitions.csv"
+  partitions = 3 // will repartition the dataset before writing out
 }
 ```
