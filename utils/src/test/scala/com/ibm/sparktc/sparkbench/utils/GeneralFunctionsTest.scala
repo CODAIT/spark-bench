@@ -17,9 +17,9 @@
 
 package com.ibm.sparktc.sparkbench.utils
 
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import org.scalatest.{FlatSpec, Matchers}
 
-class GeneralFunctionsTest extends FlatSpec with Matchers with BeforeAndAfterEach{
+class GeneralFunctionsTest extends FlatSpec with Matchers {
   import GeneralFunctions._
 
   private def stoi(a: Any): Int = {
