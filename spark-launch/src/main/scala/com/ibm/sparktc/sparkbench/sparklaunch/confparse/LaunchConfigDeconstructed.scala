@@ -89,7 +89,7 @@ case class LaunchConfigDeconstructed(
     val livyConf = optionallyGetFromJavaMap[util.HashMap[String, Any]](sparkSubmitOptions, SLD.livy)
     val conf: Option[util.Map[String, Any]] = optionallyGetFromJavaMap[util.Map[String, Any]](sparkSubmitOptions, SLD.sparkConf)
     val sparkBenchJar = optionallyGetFromJavaMap[String](sparkSubmitOptions, SLD.sparkBenchJar)
-
+    val enableHive = optionallyGetFromJavaMap[Boolean](sparkSubmitOptions, SLD.enableHive)
 
     val sparkArgs: Option[util.Map[String, Any]] = {
       val asScala = sparkSubmitOptions.asScala
@@ -114,7 +114,8 @@ case class LaunchConfigDeconstructed(
       conf,
       sparkArgs,
       suitesConfig,
-      sparkBenchJar
+      sparkBenchJar,
+      enableHive
     )
   }
 }
@@ -126,7 +127,8 @@ case class SparkSubmitPieces (
                                conf: Option[util.Map[String, Any]],
                                sparkArgs: Option[util.Map[String, Any]],
                                suitesConfig: Config,
-                               sparkBenchJar: Option[String]
+                               sparkBenchJar: Option[String],
+                               enableHive: Option[Boolean]
                              ) {
   def reconstruct: Config = {
 
@@ -139,7 +141,8 @@ case class SparkSubmitPieces (
       ifItsThere(SLD.livy, livyConf),
       ifItsThere(SLD.sparkConf, conf),
       ifItsThere(SLD.sparkArgs, sparkArgs),
-      ifItsThere(SLD.sparkBenchJar, sparkBenchJar)
+      ifItsThere(SLD.sparkBenchJar, sparkBenchJar),
+      ifItsThere(SLD.enableHive, enableHive)
     ).flatten.toMap.asJava
 
     val sparkSubmitConf = ConfigValueFactory.fromMap(mostOfIt)
