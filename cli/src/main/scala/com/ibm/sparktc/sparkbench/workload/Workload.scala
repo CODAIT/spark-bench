@@ -52,12 +52,9 @@ trait Workload {
         "Please use \"errorifexists\", \"ignore\", or \"overwrite\" instead.")
     }
 
-    val df = input match {
-      case None => None
-      case Some(in) => {
-        val rawDF = load(spark, in)
-        Some(reconcileSchema(rawDF))
-      }
+    val df = input.map { in =>
+      val rawDF = load(spark, in)
+      reconcileSchema(rawDF)
     }
 
     val res = doWorkload(df, spark).coalesce(1)

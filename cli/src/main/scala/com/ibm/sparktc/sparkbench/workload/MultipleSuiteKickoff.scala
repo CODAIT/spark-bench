@@ -23,7 +23,7 @@ import scala.collection.parallel.ForkJoinTaskSupport
 
 object MultipleSuiteKickoff {
   def run(seq: Seq[MultiSuiteRunConfig]): Unit = seq.foreach { contextConf =>
-    val spark = createSparkContext
+    val spark = createSparkContext(seq)
     if (contextConf.suitesParallel) runSuitesInParallel(contextConf.suites, spark)
     else runSuitesSerially(contextConf.suites, spark)
   }
@@ -37,5 +37,10 @@ object MultipleSuiteKickoff {
   private def runSuitesSerially(suiteSeq: Seq[Suite], spark: SparkSession): Unit =
     suiteSeq.foreach(SuiteKickoff.run(_, spark))
 
-  private def createSparkContext: SparkSession = SparkSession.builder.getOrCreate
+  private def createSparkContext(configs: Seq[MultiSuiteRunConfig]): SparkSession = {
+    val builder = SparkSession.builder
+    // if any configs have hive enabled, enable it for all
+    val builderWithHive = if (configs.exists(_.enableHive)) builder.enableHiveSupport else builder
+    builderWithHive.getOrCreate
+  }
 }

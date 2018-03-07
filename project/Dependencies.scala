@@ -19,10 +19,10 @@ import sbt._
 
 object Dependencies {
   // Versions
-  lazy val sparkVersion = "2.1.1"
-  lazy val scalacheckVersion = "1.13.4"
+  lazy val sparkVersion = "2.3.0"
+  lazy val scalacheckVersion = "1.13.5"
   lazy val junitVersion = "4.12"
-  lazy val scalatestVersion = "3.0.1"
+  lazy val scalatestVersion = "3.0.5"
 
   // Libraries
   val sparkDeps = Seq(
@@ -33,16 +33,18 @@ object Dependencies {
   )
 
   val breezeDeps = Seq(
-    "org.scalanlp" % "breeze_2.11" % "0.13.2"
+    "org.scalanlp" %% "breeze" % "0.13.2"
   )
 
   val jsonCreation = Seq(
-    "com.softwaremill.sttp" %% "json4s" % "1.1.3",
-    "com.softwaremill.sttp" %% "core" % "1.1.3"
+    //    "io.spray" % "spray-json_2.11" % "1.3.4",
+    "com.softwaremill.sttp" %% "json4s" % "1.1.8",
+    "com.softwaremill.sttp" %% "core" % "1.1.8",
+    "org.json4s" %% "json4s-native" % "3.5.3"
   )
 
   val typesafe = Seq(
-    "com.typesafe" % "config" % "1.3.1"
+    "com.typesafe" % "config" % "1.3.3"
   )
 
   val otherCompileDeps = Seq(
@@ -54,7 +56,7 @@ object Dependencies {
     "org.scalactic"    %% "scalactic"          % scalatestVersion   % "test",
     "org.scalatest"    %% "scalatest"          % scalatestVersion   % "test",
     "org.apache.spark" %% "spark-hive"         % sparkVersion       % "test",
-    "com.holdenkarau"  %% "spark-testing-base" % "2.1.1_0.7.2"      % "test" excludeAll(
+    "com.holdenkarau"  %% "spark-testing-base" % "2.2.0_0.8.0"      % "test" excludeAll(
       ExclusionRule(organization = "org.scalacheck"),
       ExclusionRule(organization = "org.scalactic"),
       ExclusionRule(organization = "org.scalatest"),

@@ -29,7 +29,7 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
   override def beforeAll(): Unit = {
     super.beforeAll()
     dataStuff.createFolders()
-    dataStuff.generateKMeansData(1000, 5, dataStuff.kmeansFile)
+    dataStuff.generateKMeansData(1000, 5, dataStuff.kmeansFile) // scalastyle:ignore
   }
 
   override def afterAll(): Unit = {
@@ -45,8 +45,8 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
 
     val (out, _) = captureOutput(CLIKickoff.main(Array(text)))
     out should not be ""
-    out.split("\n").length shouldBe 10
-    println(out)
+    out.split("\n").length shouldBe 9
+//    println(out)
   }
 
 
@@ -57,8 +57,6 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
     val text = Source.fromFile(path).mkString
 
     val (out, _) = captureOutput(CLIKickoff.main(Array(text)))
-    out should not be ""
-    out.split("\n").length shouldBe 1
-    println(out)
+    out shouldBe empty
   }
 }

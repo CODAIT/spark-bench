@@ -21,45 +21,26 @@ import java.io.StringWriter
 
 import scala.util.{Failure, Random, Success, Try}
 
-
 object GeneralFunctions {
 
-  val any2Long = (a: Any) => {
-    a.asInstanceOf[Number].longValue()
+  val any2Long: (Any) => Long = {
+    case x: Number => x.longValue
+    case x => x.toString.toLong
   }
 
-  def getOrDefault[A](
-                       map: Map[String, Any],
-                       name: String, default: A,
-                       func: (Any) => A = {(any: Any) => any.asInstanceOf[A]}
-                     ): A = {
+  private def defaultFn[A](any: Any): A = any.asInstanceOf[A]
 
-    val any = map.get(name) match {
-      case None => return default
-      case Some(a) => a
-    }
-
-    Try(func(any)) match {
-      case Success(b) => b
-      case Failure(_) => default
-    }
+  private[utils] def tryWithDefault[A](a: Any, default: A, func: Any => A): A = Try(func(a)) match {
+    case Success(b) => b
+    case Failure(_) => default
   }
 
-  def getOrDefaultOpt[A](
-                       opt: Option[Any],
-                       default: A,
-                       func: (Any) => A = {(any: Any) => any.asInstanceOf[A]}
-                     ): A = {
+  def getOrDefaultOpt[A](opt: Option[Any], default: A, func: Any => A = defaultFn[A](_: Any)): A = {
+    opt.map(tryWithDefault(_, default, func)).getOrElse(default)
+  }
 
-    val any = opt match {
-      case None => return default
-      case Some(a) => a
-    }
-
-    Try(func(any)) match {
-      case Success(b) => b
-      case Failure(_) => default
-    }
+  def getOrDefault[A](map: Map[String, Any], name: String, default: A, func: Any => A = defaultFn[A](_: Any)): A = {
+    getOrDefaultOpt(map.get(name), default, func)
   }
 
   def time[R](block: => R): (Long, R) = {
@@ -93,10 +74,10 @@ object GeneralFunctions {
   }
 
   def getOrThrow(m: Map[String, Any], key: String): Any = getOrThrow(m.get(key))
+  def getOrThrowT[T](m: Map[String, Any], key: String): T = getOrThrow(m.get(key)).asInstanceOf[T]
 
-  def optionallyGet[A](m: Map[String, Any], key: String): Option[A] = m.get(key) match {
-    case None => None
-    case Some(any) => Some(any.asInstanceOf[A])
+  def optionallyGet[A](m: Map[String, Any], key: String): Option[A] = m.get(key).map { any =>
+    any.asInstanceOf[A]
   }
 
   def stringifyStackTrace(e: Throwable): String = {

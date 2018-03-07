@@ -17,9 +17,9 @@
 
 package com.ibm.sparktc.sparkbench.sparklaunch
 
-import com.ibm.sparktc.sparkbench.sparklaunch.submission.livy.{LivySubmit, ResponseBodyDelete}
+import com.ibm.sparktc.sparkbench.sparklaunch.submission.livy.LivySubmit
 import com.ibm.sparktc.sparkbench.sparklaunch.confparse.SparkJobConf
-import com.softwaremill.sttp.{HttpURLConnectionBackend, Method, Request, Response, StringBody, sttp}
+import com.softwaremill.sttp.{HttpURLConnectionBackend, Method, Request, Response, StringBody}
 import com.softwaremill.sttp.testing.SttpBackendStub
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
@@ -90,6 +90,7 @@ class LivySubmitTest extends FlatSpec with Matchers with BeforeAndAfterEach {
         """"driverLogUrl": null,        "sparkUiUrl": null    },    "log": [        "stdout: ",        "\stderr: "    ]}"""
       ),
       code = jobAcceptedCode,
+      statusText = "",
       Nil,
       Nil
     )
@@ -107,7 +108,8 @@ class LivySubmitTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       }
       Response(
         Right(s"""{"id":$id,"state":"$state"}""".stripMargin),
-        code = 200,
+        code = 200, // scalastyle:ignore
+        statusText = "",
         Nil,
         Nil
       )
@@ -123,7 +125,8 @@ class LivySubmitTest extends FlatSpec with Matchers with BeforeAndAfterEach {
       Right(
         s"""{"msg":"deleted"}"""
       ),
-      code = 200,
+      code = 200, // scalastyle:ignore
+      statusText = "",
       Nil,
       Nil
     )

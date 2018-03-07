@@ -114,8 +114,8 @@ object SparkJobConf {
   */
   private def findCompiledJarInRepo(): String = {
     val relativePath = "/jars"
-    val path = getClass.getResource(relativePath)
-    if(path == null) throw SparkBenchException("Failed to find compiled Spark-Bench jars")
+    val path = Option(getClass.getResource(relativePath))
+      .getOrElse(throw SparkBenchException("Failed to find compiled Spark-Bench jars"))
     val folder = new File(path.getPath)
     if(!folder.exists) throw SparkBenchException("Directory does not exist")
     if(!folder.isDirectory) throw SparkBenchException("Expected a directory but found a file")
@@ -135,7 +135,7 @@ object SparkJobConf {
       getDistributionJar(whereIAm)
     }
     else if(whereIAm.isEmpty) {
-      throw SparkBenchException("Could not determine location for necessary spark-bench jars."); null
+      throw SparkBenchException("Could not determine location for necessary spark-bench jars.")
     }
     else {
       findCompiledJarInRepo()

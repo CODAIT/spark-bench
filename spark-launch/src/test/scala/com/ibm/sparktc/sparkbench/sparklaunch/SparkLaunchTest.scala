@@ -27,7 +27,7 @@ class SparkLaunchTest extends FlatSpec with Matchers with BeforeAndAfterEach {
     super.beforeEach()
     dataShiznit.deleteFolders()
     dataShiznit.createFolders()
-    dataShiznit.generateKMeansData(1000, 5, dataShiznit.kmeansFile)
+    dataShiznit.generateKMeansData(1000, 5, dataShiznit.kmeansFile) // scalastyle:ignore
   }
 
   override def afterEach(): Unit = {

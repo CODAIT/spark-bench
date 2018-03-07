@@ -63,7 +63,7 @@ object TypesafeAccessories {
     val unwrapped = cfgObj.unwrapped().asScala.toMap
     val stuff: Map[String, Seq[Any]] = unwrapped.map(kv => {
       val newValue: Seq[Any] = kv._2 match {
-        case al: util.ArrayList[Any] => al.asScala
+        case al: util.ArrayList[_] => al.asScala
         case b: Any => Seq(b)
         //        case _ => throw SparkBenchException(s"Key ${kv._1} with value ${kv._2} had an unexpected type: ${kv._2.getClass.toString}")
       }
@@ -97,8 +97,9 @@ object TypesafeAccessories {
     * @param list
     * @return
     */
-  private def crossJoin(list: Seq[Seq[Any]]): Seq[Seq[Any]] =
+  private def crossJoin(list: List[Seq[Any]]): Seq[Seq[Any]] =
     list match {
+      case Nil => Seq.empty
       case xs :: Nil => xs map (Seq(_))
       case x :: xs => for {
         i <- x
@@ -114,7 +115,7 @@ object TypesafeAccessories {
     */
   def splitGroupedConfigToIndividualConfigs(m: Map[String, Seq[Any]]): Seq[Map[String, Any]] = {
     val keys: Seq[String] = m.keys.toSeq
-    val valuesSeq: Seq[Seq[Any]] = m.map(_._2).toSeq //for some reason .values wasn't working properly
+    val valuesSeq: List[Seq[Any]] = m.values.toList
 
     // All this could be one-lined, I've multi-lined it and explicit typed it for clarity
     val joined: Seq[Seq[Any]] = crossJoin(valuesSeq)

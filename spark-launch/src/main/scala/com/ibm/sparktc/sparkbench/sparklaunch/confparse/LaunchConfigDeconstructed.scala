@@ -86,7 +86,7 @@ case class LaunchConfigDeconstructed(
 
     val sparkHome = optionallyGetFromJavaMap[String](sparkSubmitOptions, SLD.sparkHome)
     val suitesParallel = optionallyGetFromJavaMap[Boolean](sparkSubmitOptions, SLD.suitesParallel)
-    val livyConf = optionallyGetFromJavaMap[util.HashMap[String, Any]](sparkSubmitOptions, "livy")
+    val livyConf = optionallyGetFromJavaMap[util.HashMap[String, Any]](sparkSubmitOptions, SLD.livy)
     val conf: Option[util.Map[String, Any]] = optionallyGetFromJavaMap[util.Map[String, Any]](sparkSubmitOptions, SLD.sparkConf)
     val sparkBenchJar = optionallyGetFromJavaMap[String](sparkSubmitOptions, SLD.sparkBenchJar)
 
@@ -96,6 +96,7 @@ case class LaunchConfigDeconstructed(
       val filtered = asScala.filterKeys {
         case SLD.sparkConf => false
         case SLD.suitesParallel => false
+        case SLD.enableHive => false
         case SLD.sparkHome => false
         case SLD.sparkBenchJar => false
         case SLD.livy => false
