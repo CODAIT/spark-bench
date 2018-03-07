@@ -24,6 +24,7 @@ import com.ibm.sparktc.sparkbench.utils.SparkBenchException
 import scala.sys.process.Process
 
 object SparkSubmit extends Submitter {
+  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
   override def launch(conf: SparkJobConf): Unit = {
     val errorMessage = "Spark installation home not specified. Failed to find the spark-submit executable. " +
@@ -45,7 +46,7 @@ object SparkSubmit extends Submitter {
 
   private def submit(strSeq: Seq[String], sparkHome: String): Unit = {
     val process = Process(strSeq, None, "SPARK_HOME" -> sparkHome)
-    println(" *** SPARK-SUBMIT: " + process.toString)
+    log.error(" *** SPARK-SUBMIT: " + process.toString)
     if (process.! != 0) {
       throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${strSeq.mkString("\n")}")
     }

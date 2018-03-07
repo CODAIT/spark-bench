@@ -44,11 +44,9 @@ class OutputTest extends FlatSpec with Matchers with BeforeAndAfterAll with Capt
     val text = Source.fromFile(path).mkString
 
     val (out, _) = captureOutput(CLIKickoff.main(Array(text)))
-    out should not be ""
+    out should not be empty
     out.split("\n").length shouldBe 9
-//    println(out)
   }
-
 
   "Want to see configuration added to results when there's crazy stuff" should "work" in {
     val relativePath = "/etc/testConfFile4.conf"
