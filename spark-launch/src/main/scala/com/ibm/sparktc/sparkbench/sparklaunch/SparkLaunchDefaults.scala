@@ -30,6 +30,7 @@ object SparkLaunchDefaults {
   val url = "url"
   val pollSeconds = "poll-seconds"
   val sparkBenchJar = "spark-bench-jar"
+  val enableHive = "enable-hive"
 
   val suitesParallelDefaultValue = false
   val pollSecondsDefault = 5

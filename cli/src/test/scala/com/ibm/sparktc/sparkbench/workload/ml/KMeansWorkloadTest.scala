@@ -22,7 +22,6 @@ import java.io.File
 import com.holdenkarau.spark.testing.Utils
 import com.ibm.sparktc.sparkbench.testfixtures.SparkSessionProvider
 import com.ibm.sparktc.sparkbench.utils.SaveModes
-import com.ibm.sparktc.sparkbench.workload.ml.KMeansWorkload
 import com.ibm.sparktc.sparkbench.utils.SparkFuncs.{load, writeToDisk}
 import org.apache.spark.mllib.util.KMeansDataGenerator
 import org.apache.spark.rdd.RDD
@@ -31,8 +30,8 @@ import org.apache.spark.sql.types.{DoubleType, StructField, StructType}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class KMeansWorkloadTest extends FlatSpec with Matchers with BeforeAndAfterEach {
-  val spark = SparkSessionProvider.spark
-  val fileName = s"/tmp/spark-bench-scalatest/kmeans-${java.util.UUID.randomUUID.toString}.csv"
+  private val spark = SparkSessionProvider.spark
+  private val fileName = s"/tmp/spark-bench-scalatest/kmeans-${java.util.UUID.randomUUID.toString}.csv"
 
   override def afterEach() {
     Utils.deleteRecursively(new File(fileName))

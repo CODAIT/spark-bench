@@ -56,7 +56,7 @@ object KMeansWorkload extends WorkloadDefaults {
   val maxIteration: Int = 2
   val seed: Long = 127L
 
-  def apply(m: Map[String, Any]) = new KMeansWorkload(
+  def apply(m: Map[String, Any]): KMeansWorkload = new KMeansWorkload(
     input = Some(getOrThrow(m, "input").asInstanceOf[String]),
     output = getOrDefault[Option[String]](m, "workloadresultsoutputdir", None),
     saveMode = getOrDefault[String](m, "save-mode", SaveModes.error),
@@ -79,13 +79,8 @@ case class KMeansWorkload(input: Option[String],
     val (loadtime, data) = loadToCache(df.get, spark) // Should fail loudly if df == None
     val (trainTime, model) = train(data, spark)
     val (testTime, _) = test(model, data, spark)
-    val (saveTime, _) = output match {
-      case Some(_) => save(data, model, spark)
-      case _ => (null, Unit)
-    }
-
-    val total = loadtime + trainTime + testTime
-                + (if (saveTime == null) 0L else saveTime.asInstanceOf[Long])
+    val saveTime = output.foldLeft(0L) { case (_, _) => save(data, model, spark) }
+    val total = loadtime + trainTime + testTime + saveTime
 
     val schema = StructType(
       List(
@@ -136,8 +131,8 @@ case class KMeansWorkload(input: Option[String],
     model.computeCost(df)
   }
 
-  def save(ds: RDD[Vector], model: KMeansModel, spark: SparkSession): (Long, Unit) = {
-    val res = time {
+  def save(ds: RDD[Vector], model: KMeansModel, spark: SparkSession): Long = {
+    val (duration, _) = time {
       val vectorsAndClusterIdx: RDD[(String, Int)] = ds.map { point =>
         val prediction = model.predict(point)
         (point.toString, prediction)
@@ -147,6 +142,6 @@ case class KMeansWorkload(input: Option[String],
       writeToDisk(output.get, saveMode, vectorsAndClusterIdx.toDF(), spark = spark)
     }
     ds.unpersist()
-    res
+    duration
   }
 }

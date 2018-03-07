@@ -41,6 +41,7 @@ object Configurator {
     val workloadConfs = sparkContextConfs.map { sparkContextConf => {
         MultiSuiteRunConfig(
           suitesParallel = Try(sparkContextConf.getBoolean("suites-parallel")).getOrElse(false),
+          enableHive = Try(sparkContextConf.getBoolean("enable-hive")).getOrElse(false),
           suites = getConfigListByName("workload-suites", sparkContextConf).map(parseSuite)
         )
       }
