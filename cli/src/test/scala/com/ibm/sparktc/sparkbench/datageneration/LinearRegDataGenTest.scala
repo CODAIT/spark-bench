@@ -64,7 +64,7 @@ class LinearRegDataGenTest extends FlatSpec with Matchers with BeforeAndAfterEac
 
   //TODO ultimately fix LabeledPoints being output to CSV. Surely there's a way...
   it should "throw an exception when somebody tries to output to CSV" in {
-    a[SparkBenchException] should be thrownBy {
+    a [SparkBenchException] should be thrownBy {
       val m = Map(
         "name" -> "kmeans",
         "rows" -> 10,

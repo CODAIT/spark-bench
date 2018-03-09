@@ -37,7 +37,6 @@ object Dependencies {
   )
 
   val jsonCreation = Seq(
-    //    "io.spray" % "spray-json_2.11" % "1.3.4",
     "com.softwaremill.sttp" %% "json4s" % "1.1.8",
     "com.softwaremill.sttp" %% "core" % "1.1.8",
     "org.json4s" %% "json4s-native" % "3.5.3"
