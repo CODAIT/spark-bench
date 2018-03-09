@@ -46,7 +46,7 @@ object SparkSubmit extends Submitter {
 
   private def submit(strSeq: Seq[String], sparkHome: String): Unit = {
     val process = Process(strSeq, None, "SPARK_HOME" -> sparkHome)
-    log.error(" *** SPARK-SUBMIT: " + process.toString)
+    log.info(" *** SPARK-SUBMIT: " + process.toString)
     if (process.! != 0) {
       throw new Exception(s"spark-submit failed to complete properly given these arguments: \n\t${strSeq.mkString("\n")}")
     }
