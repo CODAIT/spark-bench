@@ -166,7 +166,7 @@ spark-bench = {
             cols = 14
           },
           {
-            name = "data-generation-logistic-regression"
+            name = "data-generation-lr"
             output = "/tmp/spark-bench-test/logistic-regression.parquet"
             rows = 1000000
             cols = 14
@@ -185,7 +185,7 @@ spark-bench = {
             // not specifying any kmeans arguments as we want the defaults for benchmarking
           },
           {
-            name = "logisticregression"
+            name = "lr-bml"
             input = "/tmp/spark-bench-test/logistic-regression.parquet"
             // again, not specifying arguments
           },
