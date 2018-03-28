@@ -16,13 +16,13 @@
 # spark-bench
 ## Benchmark Suite for Apache Spark
 
-[![GitHub issues](https://img.shields.io/github/release/SparkTC/spark-bench.svg)](https://github.com/SparkTC/spark-bench/releases/latest)
+[![GitHub issues](https://img.shields.io/github/release/SparkTC/spark-bench.svg)](https://github.com/codait/spark-bench/releases/latest)
 [![Build Status](https://travis-ci.org/SparkTC/spark-bench.svg?branch=master)](https://travis-ci.org/SparkTC/spark-bench)
 [![codecov](https://codecov.io/gh/SparkTC/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/SparkTC/spark-bench)
-<a href="https://github.com/SparkTC/spark-bench#boards?repos=40686427"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
+<a href="https://github.com/codait/spark-bench#boards?repos=40686427"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
 # READ OUR DOCS
-The documentation for Spark-Bench is all in our shiny new docs site: <https://sparktc.github.io/spark-bench/>
+The documentation for Spark-Bench is all in our shiny new docs site: <https://codait.github.io/spark-bench/>
 
 # Versions And Compatibility
 
@@ -37,7 +37,7 @@ Spark-Bench is written using Scala 2.11.8. It is _incompatible_ with Spark versi
 
 # Installation
 
-Follow the [Quickstart guide](https://sparktc.github.io/spark-bench/quickstart/) from our docs site. For more details, see the [Installation page](https://sparktc.github.io/spark-bench/installation).
+Follow the [Quickstart guide](https://codait.github.io/spark-bench/quickstart/) from our docs site. For more details, see the [Installation page](https://codait.github.io/spark-bench/installation).
 
 # Legacy Version
 
@@ -45,6 +45,6 @@ spark-bench has recently gone through an extensive rewrite.
 While we think you'll like the new capabilities, it is not quite feature complete with the previous version of spark-bench.
 Many of the workloads that were available in the legacy have not yet been ported over, but they will be!
 
-In the meantime, if you would like to see the old version of spark-bench, it's preserved in [the legacy branch](https://github.com/SparkTC/spark-bench/tree/legacy).
+In the meantime, if you would like to see the old version of spark-bench, it's preserved in [the legacy branch](https://github.com/codait/spark-bench/tree/legacy).
 
-You can also grab the last official release of the legacy version [from here](https://github.com/SparkTC/spark-bench/releases/tag/SparkBench_spark-v1.6).
+You can also grab the last official release of the legacy version [from here](https://github.com/codait/spark-bench/releases/tag/SparkBench_spark-v1.6).
