@@ -37,7 +37,7 @@ Spark-Bench is written using Scala 2.11.8. It is _incompatible_ with Spark versi
 
 # Installation
 
-Follow the [Quickstart guide](https://codait.github.io/spark-bench/quickstart/) from our docs site. For more details, see the [Installation page](https://codait.github.io/spark-bench/installation).
+Follow the [Quickstart guide](https://codait.github.io/spark-bench/quickstart/) from our docs site. For more details, see the [Installation page](https://codait.github.io/spark-bench/users-guide/installation).
 
 # Legacy Version
 
