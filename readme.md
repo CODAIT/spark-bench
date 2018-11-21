@@ -1,4 +1,4 @@
-<!-- 
+<!--
  (C) Copyright IBM Corp. 2015 - 2017
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,9 @@
 # spark-bench
 ## Benchmark Suite for Apache Spark
 
-[![GitHub issues](https://img.shields.io/github/release/SparkTC/spark-bench.svg)](https://github.com/codait/spark-bench/releases/latest)
-[![Build Status](https://travis-ci.org/SparkTC/spark-bench.svg?branch=master)](https://travis-ci.org/SparkTC/spark-bench)
-[![codecov](https://codecov.io/gh/SparkTC/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/SparkTC/spark-bench)
+[![GitHub issues](https://img.shields.io/github/release/CODAIT/spark-bench.svg)](https://github.com/codait/spark-bench/releases/latest)
+[![Build Status](https://travis-ci.org/CODAIT/spark-bench.svg?branch=master)](https://travis-ci.org/CODAIT/spark-bench)
+[![codecov](https://codecov.io/gh/CODAIT/spark-bench/branch/master/graph/badge.svg)](https://codecov.io/gh/CODAIT/spark-bench)
 <a href="https://github.com/codait/spark-bench#boards?repos=40686427"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
 # READ OUR DOCS
