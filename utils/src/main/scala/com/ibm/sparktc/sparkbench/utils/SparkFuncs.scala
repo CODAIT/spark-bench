@@ -32,7 +32,6 @@ object SparkFuncs {
 
   def verifyOutput(outputDir: Option[String], saveMode: String, spark: SparkSession, fileFormat: Option[String] = None): Unit = {
     verifyCanWriteOrThrow(outputDir, saveMode, spark, fileFormat)
-    verifyFormatOrThrow(outputDir, fileFormat)
   }
   
   def verifyCanWrite(outputDir: String, saveMode: String, spark: SparkSession, fileFormat: Option[String] = None): Boolean = {
