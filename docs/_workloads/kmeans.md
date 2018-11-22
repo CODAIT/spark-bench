@@ -36,11 +36,3 @@ will be passed upwards and outputted with the workload suite.
     k = 10
   }
 ```
-
-```hocon
-  {
-    name = "kmeans"
-    input = "/tmp/kmeans-data.parquet"
-    k = 10
-  }
-```
