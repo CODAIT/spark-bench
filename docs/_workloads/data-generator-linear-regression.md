@@ -20,15 +20,6 @@ title: Data Generator - Linear Regression
 ```hocon
 {
   name = "data-generation-lr"
-  rows = 100000100
-  cols = 24
-  output = "/tmp/kmeans-data.csv"
-}
-```
-
-```hocon
-{
-  name = "data-generation-lr"
   rows = 100000000
   cols = 24
   output = "/tmp/kmeans-data.parquet"
