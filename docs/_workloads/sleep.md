@@ -50,19 +50,19 @@ _To Draw From A Distribution_
 }
 ```
 ```hocon
-// Sleep the thread for a number of milliseconds chosen from a Poisson distribution with a mean of 30000
+// Sleep the thread for a number of milliseconds chosen from a Poisson distribution with a mean of 30000.001
 {
   name = "sleep"
   distribution = "poisson"
-  mean = 30000
+  mean = 30000.001
 }
 ```
 ```hocon
-// Sleep the thread for a number of milliseconds chosen from a gaussian distribution with a mean of 30000 and standard deviation of 1000
+// Sleep the thread for a number of milliseconds chosen from a gaussian distribution with a mean of 30000.001 and standard deviation of 1000.001
 {
   name = "sleep"
   distribution = "gaussian"
-  mean = 30000
-  std = 1000
+  mean = 30000.001
+  std = 1000.001
 }
 ```
