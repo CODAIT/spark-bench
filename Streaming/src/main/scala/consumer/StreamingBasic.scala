@@ -57,22 +57,33 @@ object StreamingBasic {
       }).persist()
 
     /**
-      * map操作
+      * ===================map操作==================
+      * 把状态码乘以10
       */
-    ds.foreachRDD(rdd => {
+    /*ds.foreachRDD(rdd => {
       rdd.foreachPartition(part => {
         part.map("\n[map]==>Http Status times 10:" + _._2.status*10).foreach(print)
       })
-    })
+    })*/
 
     /**
-      * flatMap操作
+      * ===================flatMap操作==============
+      * 把key拆分铺开
       */
-    ds.flatMap(rec=>{
+    /*ds.flatMap(rec=>{
       rec._1.split("-")
     }).foreachRDD(rdd => {
       rdd.foreachPartition(part => {
         part.map("\n[flatMap]==>key splits:" + _).foreach(print)
+      })
+    })*/
+
+    /**
+      * =====================filter操作=====================
+      */
+    ds.filter(_._2.zipCode == "ZZ").foreachRDD(rdd => {
+      rdd.foreachPartition(part => {
+        part.map("\n[filter]==>郑州员工访问记录:" + _).foreach(print)
       })
     })
 
