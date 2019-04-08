@@ -49,7 +49,7 @@ object StreamingBasic {
     }
 
     /**
-      * ========================缓存数据=====================
+      * ========================缓存数据====================
       */
     val ds = getKafkaStreamingRDD(Array(topicName), consumerGroup)
       .map(record => {
@@ -57,7 +57,7 @@ object StreamingBasic {
       }).persist()
 
     /**
-      * ===================map操作==================
+      * ======================map操作======================
       * 把状态码乘以10
       */
     ds.foreachRDD(rdd => {
@@ -88,7 +88,7 @@ object StreamingBasic {
     })
 
     /**
-      * ==================repartition重分区操作================
+      * =================repartition重分区操作=================
       */
     ds.foreachRDD(rdd => {
       rdd.partitions.foreach(part => {
@@ -113,6 +113,7 @@ object StreamingBasic {
     /**
       *======================count操作======================
       */
+    println("本批次的消息数:"+ds.count().print())
     /**
       *======================reduce操作=====================
       */
