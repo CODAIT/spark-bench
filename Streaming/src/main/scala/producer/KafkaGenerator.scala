@@ -1,7 +1,9 @@
+package producer
+
 import java.util.Properties
 
-import org.apache.log4j.{Level, Logger}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
+import org.apache.log4j.{Level, Logger}
 
 import scala.util.Random
 
@@ -20,7 +22,13 @@ object KafkaGenerator {
   case class PageClick(url: String, status: Int, zipCode: String, userID: Int)
     extends Serializable {
     override def toString: String = {
-      "%s\t%s\t%s\t%s\n".format(url, status, zipCode, userID)
+      "%s\t%s\t%s\t%s".format(url, status, zipCode, userID)
+    }
+  }
+  object PageClick extends Serializable {
+    def fromString(in : String) : PageClick = {
+      val parts = in.split("\t")
+      new PageClick(parts(0), parts(1).toInt, parts(2), parts(3).toInt)
     }
   }
 
@@ -72,7 +80,7 @@ object KafkaGenerator {
     val brokers = args(0)
     val viewsPerSecond = args(1).toFloat
     var toTopic = "my-output-topic"
-    var limit = 999
+    var limit = 99
     if (args.length == 3) {
       toTopic = args(2)
       println("复写了Kafka Topic,默认是my-output-topic")
