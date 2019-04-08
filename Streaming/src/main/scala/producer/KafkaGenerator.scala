@@ -76,9 +76,11 @@ object KafkaGenerator {
 
 //    val brokers = "10.166.16.35:6667"
 //    val viewsPerSecond = 5.0
-    //两个主要参数
+    //kafka的broker地址和端口号，可以写一个多多个
     val brokers = args(0)
+    //每秒生成的消息数，可以是小数
     val viewsPerSecond = args(1).toFloat
+    //默认的topic，已创建，如需更改可先行在kafka中创建一个主题。
     var toTopic = "my-output-topic"
     var limit = 99
     if (args.length == 3) {
