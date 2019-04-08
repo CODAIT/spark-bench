@@ -66,19 +66,20 @@ object KafkaGenerator {
     }
     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
 
-    //    val brokers = "10.166.16.35:6667"
-    //    val viewsPerSecond = 1.0
+//    val brokers = "10.166.16.35:6667"
+//    val viewsPerSecond = 5.0
+    //两个主要参数
     val brokers = args(0)
     val viewsPerSecond = args(1).toFloat
     var toTopic = "my-output-topic"
     var limit = 999
     if (args.length == 3) {
       toTopic = args(2)
-      println("设置了Kafka Topic,默认是my-output-topic")
+      println("复写了Kafka Topic,默认是my-output-topic")
     }
     if (args.length == 4) {
       limit = args(3).toInt
-      println("设置了单次生成消息上限,默认是999")
+      println("复写了单次生成消息上限,默认是999")
     }
     val sleepDelayMs = (1000.0 / viewsPerSecond).toInt
     println("开始运行 Start Writing to topic: " + toTopic)
