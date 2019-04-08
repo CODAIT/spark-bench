@@ -4,7 +4,7 @@ import producer.KafkaGenerator.PageClick
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.SparkConf
+import org.apache.spark.{SparkConf, TaskContext}
 import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
@@ -60,23 +60,23 @@ object StreamingBasic {
       * ===================map操作==================
       * 把状态码乘以10
       */
-    /*ds.foreachRDD(rdd => {
+    ds.foreachRDD(rdd => {
       rdd.foreachPartition(part => {
         part.map("\n[map]==>Http Status times 10:" + _._2.status*10).foreach(print)
       })
-    })*/
+    })
 
     /**
       * ===================flatMap操作==============
       * 把key拆分铺开
       */
-    /*ds.flatMap(rec=>{
+    ds.flatMap(rec=>{
       rec._1.split("-")
     }).foreachRDD(rdd => {
       rdd.foreachPartition(part => {
         part.map("\n[flatMap]==>key splits:" + _).foreach(print)
       })
-    })*/
+    })
 
     /**
       * =====================filter操作=====================
@@ -87,7 +87,30 @@ object StreamingBasic {
       })
     })
 
-    println("This App is Running now…… hold on!")
+    /**
+      * =====================repartition重分区操作=================
+      */
+    ds.foreachRDD(rdd => {
+      rdd.partitions.foreach(part => {
+        println("Old partitionId:"+part.index)
+      })
+    })
+    ds.repartition(5).foreachRDD(rdd => {
+      rdd.partitions.foreach(part => {
+        println("New partitionId:"+part.index)
+      })
+    })
+
+    /**
+      *======================union操作===================
+      */
+    val arrays = List(PageClick("我是路人甲",200,"HK",100),PageClick("我是路人乙",200,"HK",100))
+    val rdd = ssc.sparkContext.parallelize(arrays)
+    ds.map(_._2).transform(p=>{
+      p.union(rdd).map(_.toString)
+    }).print()
+
+    println("This app is running now…… hold on!")
     ssc.start()
     ssc.awaitTermination()
 
