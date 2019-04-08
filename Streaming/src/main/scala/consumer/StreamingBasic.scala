@@ -40,5 +40,11 @@ object StreamingBasic {
       stream
     }
 
+    def getKafkaStreamingRDD(topic: Array[String], consumerGroup: String)
+    : InputDStream[ConsumerRecord[String, String]] = {
+      getStreamByKafka(ssc, topic, consumerGroup, KafkaServerHostsCluster)
+    }
+
+
   }
 }
