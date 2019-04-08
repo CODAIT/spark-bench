@@ -48,22 +48,34 @@ object StreamingBasic {
       getStreamByKafka(ssc, topic, consumerGroup, KafkaServerHostsCluster)
     }
 
+    /**
+      * ========================缓存数据=====================
+      */
     val ds = getKafkaStreamingRDD(Array(topicName), consumerGroup)
       .map(record => {
         (record.key(), PageClick.fromString(record.value()))
       }).persist()
+
+    /**
+      * map操作
+      */
     ds.foreachRDD(rdd => {
       rdd.foreachPartition(part => {
         part.map("\n[map]==>Http Status times 10:" + _._2.status*10).foreach(print)
       })
     })
+
+    /**
+      * flatMap操作
+      */
     ds.flatMap(rec=>{
       rec._1.split("-")
     }).foreachRDD(rdd => {
       rdd.foreachPartition(part => {
-        part.map("\n[flatMap]==>key split number:" + _(1)).foreach(print)
+        part.map("\n[flatMap]==>key splits:" + _).foreach(print)
       })
     })
+
     println("This App is Running now…… hold on!")
     ssc.start()
     ssc.awaitTermination()
