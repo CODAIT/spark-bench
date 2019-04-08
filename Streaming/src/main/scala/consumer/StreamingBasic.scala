@@ -1,8 +1,9 @@
 package consumer
 
+import producer.KafkaGenerator.PageClick
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.log4j.Level
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.kafka010.KafkaUtils
@@ -14,13 +15,15 @@ object StreamingBasic {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf()
       .setAppName("StreamingKafkaTest")
+      .setMaster("local[2]")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    org.apache.log4j.Logger.getRootLogger.setLevel(Level.WARN)
+    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
     conf.registerKryoClasses(Array(classOf[ConsumerRecord[String, String]]))
     val ssc = new StreamingContext(conf, Seconds(5))
     val KafkaServerHostsCluster = "10.166.16.35:6667"
     val consumerGroup = "oneTest"
     val topicName = "my-output-topic"
+
     //ssc.checkpoint("/user/data/checkpoint/streamingTest_1")
     //ssc.checkpoint("file:///data/spark/checkpoint/streamingTest_1")
     def getStreamByKafka(ssc: StreamingContext, topic: Array[String], group: String, broker: String)
@@ -45,6 +48,25 @@ object StreamingBasic {
       getStreamByKafka(ssc, topic, consumerGroup, KafkaServerHostsCluster)
     }
 
+    val ds = getKafkaStreamingRDD(Array(topicName), consumerGroup)
+      .map(record => {
+        (record.key(), PageClick.fromString(record.value()))
+      }).persist()
+    ds.foreachRDD(rdd => {
+      rdd.foreachPartition(part => {
+        part.map("\n[map]==>Http Status times 10:" + _._2.status*10).foreach(print)
+      })
+    })
+    ds.flatMap(rec=>{
+      rec._1.split("-")
+    }).foreachRDD(rdd => {
+      rdd.foreachPartition(part => {
+        part.map("\n[flatMap]==>key split number:" + _(1)).foreach(print)
+      })
+    })
+    println("This App is Running now…… hold on!")
+    ssc.start()
+    ssc.awaitTermination()
 
   }
 }
