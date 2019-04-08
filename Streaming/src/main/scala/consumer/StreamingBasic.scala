@@ -67,7 +67,7 @@ object StreamingBasic {
     })
 
     /**
-      * ===================flatMap操作==============
+      * ===================flatMap操作===================
       * 把key拆分铺开
       */
     ds.flatMap(rec=>{
@@ -88,7 +88,7 @@ object StreamingBasic {
     })
 
     /**
-      * =====================repartition重分区操作=================
+      * ==================repartition重分区操作================
       */
     ds.foreachRDD(rdd => {
       rdd.partitions.foreach(part => {
@@ -102,13 +102,35 @@ object StreamingBasic {
     })
 
     /**
-      *======================union操作===================
+      *======================union/transform操作==============
       */
     val arrays = List(PageClick("我是路人甲",200,"HK",100),PageClick("我是路人乙",200,"HK",100))
     val rdd = ssc.sparkContext.parallelize(arrays)
     ds.map(_._2).transform(p=>{
       p.union(rdd).map(_.toString)
     }).print()
+
+    /**
+      *======================count操作======================
+      */
+    /**
+      *======================reduce操作=====================
+      */
+    /**
+      *======================countByValue操作===============
+      */
+    /**
+      *======================reduceByKey操作================
+      */
+    /**
+      *=====================join、transform操作==============
+      */
+    /**
+      *======================cogroup操作=====================
+      */
+    /**
+      *===================updateStateByKey操作================
+      */
 
     println("This app is running now…… hold on!")
     ssc.start()
