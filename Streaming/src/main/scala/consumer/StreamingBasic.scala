@@ -4,7 +4,7 @@ import producer.KafkaGenerator.PageClick
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.{SparkConf, TaskContext}
+import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
@@ -25,7 +25,8 @@ object StreamingBasic {
     val topicName = "my-output-topic"
 
     //ssc.checkpoint("/user/data/checkpoint/streamingTest_1")
-    //ssc.checkpoint("file:///data/spark/checkpoint/streamingTest_1")
+    ssc.checkpoint("file:///data/spark/checkpoint/streamingTest_1")
+
     def getStreamByKafka(ssc: StreamingContext, topic: Array[String], group: String, broker: String)
     : InputDStream[ConsumerRecord[String, String]] = {
       //消费者配置
@@ -130,22 +131,41 @@ object StreamingBasic {
     /**
       * ======================reduceByKey操作================
       **/
-    ds.map(a=>(a._2.url,1)).reduceByKey(_+_).print()
+    ds.map(a => (a._2.status, 1)).reduceByKey(_ + _).print()
     /**
       * =====================join、transform操作==============
       **/
-    val array2 = List(("m-learning.inspur.com", 101),("office.inspur.com/news", 201))
+    val array2 = List(("m-learning.inspur.com", 101), ("office.inspur.com/news", 201))
     val rdd2 = ssc.sparkContext.parallelize(array2)
-    ds.map(a=>(a._2.url,1)).transform(p => {
+    ds.map(a => (a._2.url, 1)).transform(p => {
       p.join(rdd2)
     }).print()
     /**
       * ======================cogroup操作=====================
       **/
+    val array3 = List(("m-learning.inspur.com", 101), ("office.inspur.com/news", 201), ("office.inspur.com/news", 301))
+    val rdd3 = ssc.sparkContext.parallelize(array3)
+    ds.map(a => (a._2.url, 1)).transform(p => {
+      p.cogroup(rdd3)
+    }).print()
+
     /**
       * ===================updateStateByKey操作================
       **/
+    def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] = {
+      var newCount = runningCount.getOrElse(0)
+      // add the new values with the previous running count to get the new count
+      for (value <- newValues) {
+        newCount += value
+      }
+      Some(newCount)
+    }
 
+    ds.map(a => (a._2.url, 1)).updateStateByKey[Int](updateFunction _).print()
+
+    /**
+      * ***************************************OVER**************************************
+      */
     println("This app is running now…… hold on!")
     ssc.start()
     ssc.awaitTermination()
