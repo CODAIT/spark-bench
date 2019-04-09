@@ -50,7 +50,7 @@ object StreamingBasic {
 
     /**
       * ========================缓存数据====================
-      */
+      **/
     val ds = getKafkaStreamingRDD(Array(topicName), consumerGroup)
       .map(record => {
         (record.key(), PageClick.fromString(record.value()))
@@ -62,7 +62,7 @@ object StreamingBasic {
       */
     ds.foreachRDD(rdd => {
       rdd.foreachPartition(part => {
-        part.map("\n[map]==>Http Status times 10:" + _._2.status*10).foreach(print)
+        part.map("\n[map]==>Http Status times 10:" + _._2.status * 10).foreach(print)
       })
     })
 
@@ -70,7 +70,7 @@ object StreamingBasic {
       * ===================flatMap操作===================
       * 把key拆分铺开
       */
-    ds.flatMap(rec=>{
+    ds.flatMap(rec => {
       rec._1.split("-")
     }).foreachRDD(rdd => {
       rdd.foreachPartition(part => {
@@ -92,46 +92,59 @@ object StreamingBasic {
       */
     ds.foreachRDD(rdd => {
       rdd.partitions.foreach(part => {
-        println("Old partitionId:"+part.index)
+        println("Old partitionId:" + part.index)
       })
     })
     ds.repartition(5).foreachRDD(rdd => {
       rdd.partitions.foreach(part => {
-        println("New partitionId:"+part.index)
+        println("New partitionId:" + part.index)
       })
     })
 
     /**
-      *======================union/transform操作==============
-      */
-    val arrays = List(PageClick("我是路人甲",200,"HK",100),PageClick("我是路人乙",200,"HK",100))
+      * ======================union/transform操作==============
+      **/
+    val arrays = List(PageClick("我是路人甲", 200, "HK", 100), PageClick("我是路人乙", 200, "HK", 100))
     val rdd = ssc.sparkContext.parallelize(arrays)
-    ds.map(_._2).transform(p=>{
+    ds.map(_._2).transform(p => {
       p.union(rdd).map(_.toString)
     }).print()
 
     /**
-      *======================count操作======================
+      * ======================count操作======================
       */
-    println("本批次的消息数:"+ds.count().print())
+    ds.count().print()
+
     /**
-      *======================reduce操作=====================
-      */
+      * ======================reduce操作=====================
+      **/
+    ds.map(_._2.status).reduce((a, b) => {
+      a + b
+    }).print()
+
     /**
-      *======================countByValue操作===============
-      */
+      * ======================countByValue操作===============
+      **/
+    ds.map(_._2.url).countByValue().print()
+
     /**
-      *======================reduceByKey操作================
-      */
+      * ======================reduceByKey操作================
+      **/
+    ds.map(a=>(a._2.url,1)).reduceByKey(_+_).print()
     /**
-      *=====================join、transform操作==============
-      */
+      * =====================join、transform操作==============
+      **/
+    val array2 = List(("m-learning.inspur.com", 101),("office.inspur.com/news", 201))
+    val rdd2 = ssc.sparkContext.parallelize(array2)
+    ds.map(a=>(a._2.url,1)).transform(p => {
+      p.join(rdd2)
+    }).print()
     /**
-      *======================cogroup操作=====================
-      */
+      * ======================cogroup操作=====================
+      **/
     /**
-      *===================updateStateByKey操作================
-      */
+      * ===================updateStateByKey操作================
+      **/
 
     println("This app is running now…… hold on!")
     ssc.start()
