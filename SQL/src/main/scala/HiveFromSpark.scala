@@ -85,10 +85,10 @@ object HiveFromSpark {
     //  hiveContext.cacheTable("oitemTab")
 
     var cnt: Long = 0;
-    cnt = sql("SELECT COUNT(*) FROM orderTab").count()
+    cnt = sql("SELECT * FROM orderTab").count()
     println(s"agg COUNT(*): $cnt")
 
-    cnt = sql("SELECT COUNT(*) FROM orderTab where bid>5000").count()
+    cnt = sql("SELECT * FROM orderTab where bid>5000").count()
     println(s"agg COUNT(*) bid>5000: $cnt")
 
     cnt = sql("SELECT * FROM oitemTab WHERE price>500").count()
