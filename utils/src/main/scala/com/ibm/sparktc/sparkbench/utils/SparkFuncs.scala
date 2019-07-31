@@ -20,7 +20,7 @@ package com.ibm.sparktc.sparkbench.utils
 import org.apache.hadoop.fs.Path
 import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.{DataFrame, SparkSession}
-import com.databricks.spark.avro._
+import org.apache.spark.sql.avro._
 
 object SparkFuncs {
 
@@ -103,7 +103,7 @@ object SparkFuncs {
       case Formats.parquet => data.write.mode(saveMode).parquet(outputDir)
       case Formats.csv => data.write.mode(saveMode).option("header", "true").csv(outputDir)
       case Formats.orc => data.write.mode(saveMode).orc(outputDir)
-      case Formats.avro => data.write.mode(saveMode).avro(outputDir)
+      case Formats.avro => data.write.mode(saveMode).format("avro").save(outputDir)
       case Formats.json => data.write.mode(saveMode).json(outputDir)
       case Formats.console => data.show()
       case _ => throw new Exception(s"Unrecognized or unspecified save format: $format. " +
@@ -123,7 +123,7 @@ object SparkFuncs {
     inputFormat match {
       case Formats.parquet => spark.read.parquet(inputDir)
       case Formats.orc => spark.read.orc(inputDir)
-      case Formats.avro => spark.read.avro(inputDir)
+      case Formats.avro => spark.read.format("avro").load(inputDir)
       case Formats.json => spark.read.json(inputDir)
       case Formats.csv | _ => spark.read.option("inferSchema", "true").option("header", "true").csv(inputDir) //if unspecified, assume csv
     }

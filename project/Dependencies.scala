@@ -19,7 +19,7 @@ import sbt._
 
 object Dependencies {
   // Versions
-  lazy val sparkVersion = "2.3.0"
+  lazy val sparkVersion = "2.4.2"
   lazy val scalacheckVersion = "1.13.5"
   lazy val junitVersion = "4.12"
   lazy val scalatestVersion = "3.0.5"
@@ -29,7 +29,7 @@ object Dependencies {
     "org.apache.spark" %% "spark-core"  % sparkVersion % "provided",
     "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
     "org.apache.spark" %% "spark-sql"   % sparkVersion % "provided",
-    "com.databricks"   %% "spark-avro"  % "4.0.0"
+    "org.apache.spark" %% "spark-avro"  % sparkVersion % "provided"
   )
 
   val breezeDeps = Seq(
@@ -55,7 +55,7 @@ object Dependencies {
     "org.scalactic"    %% "scalactic"          % scalatestVersion   % "test",
     "org.scalatest"    %% "scalatest"          % scalatestVersion   % "test",
     "org.apache.spark" %% "spark-hive"         % sparkVersion       % "test",
-    "com.holdenkarau"  %% "spark-testing-base" % "2.2.0_0.8.0"      % "test" excludeAll(
+    "com.holdenkarau"  %% "spark-testing-base" % "2.4.2_0.12.0"      % "test" excludeAll(
       ExclusionRule(organization = "org.scalacheck"),
       ExclusionRule(organization = "org.scalactic"),
       ExclusionRule(organization = "org.scalatest"),
