@@ -69,8 +69,8 @@ spark-bench = {
 Add the spark-home and master keys.
 ```hocon
 spark-bench = {
-  spark-home = "/path/to/your/spark/install/" 
   spark-submit-config = [{
+    spark-home = "/path/to/your/spark/install/" 
     spark-args = {
       master = "local[*]" // or whatever the correct master is for your environment
     }
